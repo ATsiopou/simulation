@@ -22,18 +22,29 @@ public class Lane {
     private int laneExit[]  = new int[2];  
    
     public Lane(int laneEntry[], int laneExit[] ,int lightpo[]) {
-	super();
-	//entry as an ordered pair 
-	this.laneEntry[0]=laneEntry[0]; 
-	this.laneEntry[1]=laneEntry[1]; 
-	//Exit as an ordered pair 
-	this.laneExit[0]=laneExit[0]; 
-	this.laneExit[1]=laneExit[1]; 
-	//Create the position of the lights (This may change, with the trafficlight class)
-	lightPosition[0]=lightpo[0];
-	lightPosition[1]=lightpo[1]; 
+	    super();
+	    //entry as an ordered pair 
+	    this.laneEntry[0]=laneEntry[0]; 
+	    this.laneEntry[1]=laneEntry[1]; 
+	    //Exit as an ordered pair 
+	    this.laneExit[0]=laneExit[0]; 
+	    this.laneExit[1]=laneExit[1]; 
+	    //Create the position of the lights (This may change, with the trafficlight class)
+	    lightPosition[0]=lightpo[0];
+	    lightPosition[1]=lightpo[1]; 
 
     }
+    
+  //  public Lane(int laneEntry[], int laneExit[] ,int lightpo[]) {
+	//    super();
+	    //entry as an ordered pair 
+	  //  this.laneEntry=laneEntry; 
+	    //Exit as an ordered pair 
+	  //  this.laneExit=laneExit; 
+	    //Create the position of the lights (This may change, with the trafficlight class)
+	  //  lightPosition=lightpo;
+
+   /// }
     
     /**
      * Gets the x from: [x,y] entry position
