@@ -7,7 +7,7 @@ class Main {
 
 	public static void main(String[] args) throws InterruptedException {
 		JFrame frame = new JFrame("");
-		Map game = new Map();
+		SystemEngine game = new SystemEngine();
      	frame.add(game);
 		frame.setSize(1200, 800);
 		frame.setVisible(true);
