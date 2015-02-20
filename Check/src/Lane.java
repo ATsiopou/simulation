@@ -1,56 +1,119 @@
-//strange lane only
+/**
+ * Class : Lane 
+ *	   This Class creates a single lane. A single Lane has an entry and exit position, given by  *          an ordered pair [x,y], a direction and the position of the light. Lanes will be used to 
+ *	   populate a roadway. 
+ * 	   
+ *
+ * Last Modified: Friday 13/2015 
+ * Author: Iordanis Paschalidis, Anthony Tsiopoulos
+ * 
+ * TODO:Crate Road class, parent of Lanes.  
+ */
+
 
 public class Lane {
 	
-	private int lineOnex;//first line's x poistion
-	private int lineOneEndx;//where the line is ending
+    private int id;
+    private int lightPosition[]=new int[2];//the position of the light
+    private boolean ligtsConidition;
+    
+    //This should give it an [x,y] entry position 
+    private int laneEntry[] = new int[2]; 
+    private int laneExit[]  = new int[2];  
+   
+    public Lane(int laneEntry[], int laneExit[] ,int lightpo[]) {
+	    super();
+	    //entry as an ordered pair 
+	    this.laneEntry[0]=laneEntry[0]; 
+	    this.laneEntry[1]=laneEntry[1]; 
+	    //Exit as an ordered pair 
+	    this.laneExit[0]=laneExit[0]; 
+	    this.laneExit[1]=laneExit[1]; 
+	    //Create the position of the lights (This may change, with the trafficlight class)
+	    lightPosition[0]=lightpo[0];
+	    lightPosition[1]=lightpo[1]; 
+
+    }
+    
+  //  public Lane(int laneEntry[], int laneExit[] ,int lightpo[]) {
+	//    super();
+	    //entry as an ordered pair 
+	  //  this.laneEntry=laneEntry; 
+	    //Exit as an ordered pair 
+	  //  this.laneExit=laneExit; 
+	    //Create the position of the lights (This may change, with the trafficlight class)
+	  //  lightPosition=lightpo;
+
+   /// }
+    
+    /**
+     * Gets the x from: [x,y] entry position
+     * @param
+     */
+    public int getXEntryPos() {
+	return laneEntry[0];
+    }
+    /**
+     * Gets the y from: [x,y] entry position
+     * @return
+     */
+    public int getYEntryPos(){
+    	return laneEntry[1];
+    }
+    
+    /**
+     * Gets the x from: [x,y] exit position
+     * @param
+     */
+    public int getXExitPos() {
+	return laneEntry[0];
+    }
+    /**
+     * Gets the y from: [x,y] exit position
+     * @return
+     */
+    public int getYExitPos(){
+    	return laneEntry[1];
+    }
+    
+    /**
+    *Set the [x,y] pair for the lane exit
+    * @param xyEntryPos
+    */
+    public void setXYLaneEntryPos(int[] xyEntryPos){
+	this.laneEntry=xyEntryPos; 
+
+    }
+   /**
+    * Set the [x,y] pair for lane exit
+    * @param xyExitPos
+    */
+    public void setXYExitPos(int[] xyExitPos){
+	this.laneExit=xyExitPos; 
+    }
+    
+    public boolean isLigtsGreen() {
+	return ligtsConidition;
+    }
+
+    public void setLigtsConidition(boolean ligtsConidition) {
+	this.ligtsConidition = ligtsConidition;
+    }
+
+    public int getId() {
+	return id;
+    }
 	
-	private int lineTwoy;// same logic
-	private int lineTwoEndx;//same logic
-	
-	
-	//contractor for giving the valiables for values
-	public Lane(int lineOnex, int lineOneEndx, int lineTwoy, int lineTwoEndx) {
-		super();
-		this.lineOnex = lineOnex;
-		this.lineOneEndx = lineOneEndx;
-		this.lineTwoy = lineTwoy;
-		this.lineTwoEndx = lineTwoEndx;
-	}
-	
-	//from here on are setters getters i will write the correct comments in the near future
-	
-	public int getLineOnex() {
-		return lineOnex;
-	}
-	
-	public void setLineOnex(int lineOnex) {
-		this.lineOnex = lineOnex;
-	}
-	
-	public int getLineOneEndx() {
-		return lineOneEndx;
-	}
-	
-	public void setLineOneEndx(int lineOneEndx) {
-		this.lineOneEndx = lineOneEndx;
-	}
-	
-	public int getLineTwoy() {
-		return lineTwoy;
-	}
-	
-	public void setLineTwoy(int lineTwoy) {
-		this.lineTwoy = lineTwoy;
-	}
-	
-	public int getLineTwoEndx() {
-		return lineTwoEndx;
-	}
-	
-	public void setLineTwoEndx(int lineTwoEndx) {
-		this.lineTwoEndx = lineTwoEndx;
-	}
-	
+    public void setId(int id) {
+	this.id = id;
+    }
+
+    public int[] getLightPosition() {
+	return lightPosition;
+    }
+
+    public void setLightPosition(int[] lightPosition) {
+	this.lightPosition = lightPosition;
+    }
 	
 }
