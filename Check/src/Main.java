@@ -13,15 +13,21 @@ class Main {
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+
+		
+		
 		int rea=0;
 		
 		while (true) {
+
 			game.repaint();
-			game.moveBall();
+
+			game.moveCar();
+
 			Thread.sleep(25);
 			
-			if (rea==100){
-				game.changeDirection();//just for testing 
+			if(rea%230==0){
+				game.lightsEngine();
 			}
 			rea++;
 		}
