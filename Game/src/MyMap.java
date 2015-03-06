@@ -1,6 +1,6 @@
-/*Authors : Iordanis Paschalidis 
+/*Authors : Iordanis Paschalidis, 
  * 			Anthony Tsiopoulos 
- * 
+ * 			
  * Class  : MyMap
  *  		The MyMap class is the class used in the mapping of the JSON file to their 
  *  		respective fields. For this reason the class contains the lists of traffic 
@@ -15,10 +15,19 @@ import java.util.List;
 public class MyMap {
 	
  List<Lane> lanes;
- List<TrafficLight> lights; 
- 
+ List<TrafficLight> lights;
+ List<Cell> entries; 
 
- public List<Lane> getLanes() {
+ 
+ public List<Cell> getEntryPositions() {
+	return entries;
+}
+
+public void setEntryPositions(List<Cell> entryPositions) {
+	this.entries = entryPositions;
+}
+
+public List<Lane> getLanes() {
   return lanes;
  }
 
@@ -55,6 +64,29 @@ public void printLights(){
 		count++; 
 	}
 }
+
+/**
+ * Print method for lights a an ordered pair
+ */
+public void printEntries(){
+	
+	int count = 1; 
+	System.out.println("");
+	System.out.println("----------------");
+	System.out.println(" Light Position ");
+	System.out.println("     (x,y)      ");
+	System.out.println("----------------");
+	System.out.println("");
+	Iterator<Cell> ittr = entries.iterator(); 
+	while(ittr.hasNext()){
+		Cell entry = ittr.next(); 
+		System.out.println("Entries: "+ count);
+		System.out.println("("+ entry.getCol() +","+ entry.getRow() +")");
+		System.out.println(" ");
+		count++; 
+	}
+}
+
 
 /**
  * Prints the lanes start and end positions as ordered pair 

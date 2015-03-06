@@ -1,6 +1,6 @@
-/*Authors : Iordanis Paschalidis 
+/*Authors : Iordanis Paschalidis, 
  * 			Anthony Tsiopoulos 
- * 
+ * 			
  * Class  : TrafficLight 
  * 			This class is responsible for constructing a traffic light. A traffic light object 
  * 			consists of a 
@@ -9,7 +9,7 @@
  * 			lane, rather it controls the flow of traffic on the lane. 
  * 
  * 
- * Moded  : 
+ * Moded  :  03/06/15
  * 
  */
 

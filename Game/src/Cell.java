@@ -1,20 +1,18 @@
-/*Authors : Iordanis Paschalidis 
- * 			Anthony Tsiopoulos 
+/*Authors :
  * 
  * Class  : Cell 
  * 			The Cell class represents a coordinate on a planar grid. The object has two fields, 
  * 			which can be seen as an ordered pair - representing their coordinates on a 2D grid. 
  * 			A cell is the basis of the program, that is everything stems from this class. 
  * 
- * Moded  : 
+ * Moded  : 03/02/15
  * 
  */ 
 
 public class Cell {
 	 
- int row;
- int col;
- 
+ private int row;
+ private int col;
  boolean occupied;
  
  public Cell(){}

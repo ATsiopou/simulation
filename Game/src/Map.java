@@ -1,6 +1,6 @@
-/*Authors : Iordanis Paschalidis 
+/*Authors : Iordanis Paschalidis, 
  * 			Anthony Tsiopoulos 
- * 
+ * 			
  * Class   : Map
  * 			This class is responsible for building the map. A map is created from a JSON text file.
  * 			The file is read in, initialising the lights and lanes. The constructor takes the file
@@ -46,7 +46,6 @@ public class Map {
 	/**
 	 * This method is responsible for reading the contents of the JSON file and
 	 * mapping it into the MyMap class.
-	 * 
 	 */
 	private void initMap() {
 
@@ -60,17 +59,18 @@ public class Map {
 					map[row][col] = 0;
 				}
 			}
-
+	
 		} catch (IOException e) {
 
 			e.printStackTrace();
-			System.out.println("such wallstreet,  " + e.getMessage());
+			System.out.println("such error,  " + e.getMessage());
 		}
-
 	}
 
+	
+	//Should the cars be updated through here ? 
 	public void update() {
-
+		
 	}
 
 	/**
@@ -84,16 +84,13 @@ public class Map {
 		drawBoard(g);
 		drawLanes(g);
 		drawDashedLane(g);
-		// drawLaneBoarders(g);
-
 		drawLights(g);
+		// drawLaneBoarders(g);
 		// drawIntersection(g);
 	}
 
-	// The grey board is not showing to screen ? ??
 	/**
 	 * This method draws the background of the game board
-	 * 
 	 * @param g
 	 */
 	private void drawBoard(Graphics2D g) {
@@ -110,7 +107,6 @@ public class Map {
 	/**
 	 * This method is used to draw the lanes to the map. The lanes are held
 	 * within a JSON file.
-	 * 
 	 * @param g
 	 */
 	private void drawLanes(Graphics2D g) {
@@ -162,7 +158,6 @@ public class Map {
 
 		List<Lane> lanes = testMap.getLanes();
 		Iterator<Lane> itter = lanes.iterator();
-		//int numberOfLanes = lanes.size();
 		int count = 1;
 		float dash1[] = { 5.0f }; // This is for the lanes
 		BasicStroke dashed1 = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
@@ -189,9 +184,6 @@ public class Map {
 	@SuppressWarnings("unused")
 	private void drawIntersection(Graphics2D g) {
 
-		
-		
-		
 		
 	}
 

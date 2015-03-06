@@ -1,4 +1,5 @@
 {
+   
     "lights": [
         {
             "position": {
@@ -12,7 +13,7 @@
                 "col": 42
             }
         },
-                {
+        {
             "position": {
                 "row": 32,
                 "col": 37
