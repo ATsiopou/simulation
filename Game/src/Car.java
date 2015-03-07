@@ -23,7 +23,7 @@ public class Car implements Runnable{
 	private Cell entryPosition;
 	private Lane lane; 
 	private int id; 
-	private int cellResolution =10; 
+	private int tileSize =10; 
 	private int current; 
 
 	private boolean running; 
@@ -50,8 +50,11 @@ public class Car implements Runnable{
 	public void move() {
 		
 		Cell currentCell = entryPosition; 
-				
-		if(!(currentCell).isOccupied()){
+		//currentCell.setOccupied(true);
+		//then check the next cell if it is occupied.  
+		
+		
+		if(!currentCell.isOccupied()){
 			accelerate(); 
 		}else{
 			brake(); 
@@ -72,39 +75,26 @@ public class Car implements Runnable{
 	 * set previous cell unoccoupied
 	 * }
 	 * 
+	 * Try to remove the magic numbers => make it more general 
+	 * 
+	 * 
 	 */
 	private void accelerate(){
 		
 		if(isEven(id)){
 			if(entryPosition.getRow() == 60){
-			
-				y0--; 
-				//current = lane.getStart().getRow(); 
-				//current += cellResolution; 
+				y0-=tileSize; 
+				
 			}else{
-				x0--;
-				//current = lane.getStart().getCol(); 
-				//current -= cellResolution; 
+				x0-=tileSize;
 			}
-			
 		}else{ //ODD
 			if(entryPosition.getCol() == 0){
-				
-				x0++; 
-				//current = lane.getStart().getCol();
-				//current += cellResolution;
-				//current +=cellResolution; 
-				
+				x0+=tileSize; 
 			}else{
-				y0++; 
-				//current = lane.getStart().getRow(); 
-				//current-=cellResolution; 
+				y0+=tileSize;  
 			}
-			
 		}
-		
-		
-		
 	}
 	
 	/**
@@ -149,7 +139,7 @@ public class Car implements Runnable{
 			move(); 
 		
 			timeDiff = System.currentTimeMillis() - startTime; 
-			sleep = 10 - timeDiff; 
+			sleep = 1000 - timeDiff; 
 			
 			if(sleep < 50){
 				sleep = 50; 
@@ -183,7 +173,8 @@ public class Car implements Runnable{
 	private void drawCar(Graphics2D g){
 		
 		Image im1 = Toolkit.getDefaultToolkit().getImage("res/car.png"); 		
-		g.drawImage(im1, x0*cellResolution, y0*cellResolution, cellResolution, cellResolution, null, null);
+		g.drawImage(im1, x0*tileSize, y0*tileSize, tileSize, tileSize, null, null);
+		//g.drawImage(im1, x0, y0, tileSize, tileSize, null, null);
 	}
 	
 	

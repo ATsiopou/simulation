@@ -1,31 +1,48 @@
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
+import java.awt.*;
 
+public class GridPanel extends JPanel {
 
-public class GridPanel extends JPanel{
-
+	private int WIDTH;
+	private int HEIGHT; 
+	private int TILE; 
 	
-	
-	//private String width;
-	//private 
-	
-	
-	/*
-	private void showGridLines(Graphics g) {
-		Jpanel grid = new JPanel()
-		for width/cell resolution 
-		draw column lines
-		g.drawLine(x1, y1, x2, y2);
+	public GridPanel(int WIDTH, int HEIGHT, int TILE){
 		
-		for height/cell resolution
-		drwa row lines
-		g.drawLine(x1, y1, x2, y2);
-	
-		g.drawString("(i,j)", x, y);
-				
+		this.WIDTH = WIDTH; 
+		this.HEIGHT=HEIGHT;
+		this.TILE=TILE; 
 	}
-*/
 	
+	@Override
+	public Dimension getPreferredSize() {
+		return new Dimension(WIDTH, HEIGHT);
+	}
+
+	protected void paintComponent(Graphics g) {
+		showGridLines(g);
+	}
+
+	private void showGridLines(Graphics g) {
+
+	    int rowHt = HEIGHT/TILE ;
+	    int rowWid = WIDTH/TILE ;
+	    
+	    // draw the rows
+	    for (int i = 0; i < HEIGHT; i++)
+	      g.drawLine(0, i * rowHt, WIDTH, i * rowHt);
+
+	    // draw the columns
+	    for (int i = 0; i < WIDTH; i++)
+	      g.drawLine(i * rowWid, 0, i * rowWid, HEIGHT);	
+	    
+	   
+	    
+	}
 	
 }

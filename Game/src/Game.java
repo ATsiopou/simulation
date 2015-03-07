@@ -8,35 +8,45 @@
  * Moded  : 03/02/15
  * 
  */
+import java.awt.BorderLayout;
 import java.awt.DisplayMode;
+import java.awt.EventQueue;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 
 import javax.swing.JFrame;
+import javax.swing.*;
 
 public class Game {
 
-	public static void main(String[] args) {
-
-		JFrame window = new JFrame("SortaSim");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setContentPane(new GamePanel());
-		
-		/*
-		if(showGrid) {
-			//check if this works and both are showing.
-			//make sure that the background of this gridPanel is transparent
-			window.setContentPane(new GridPane());
-		}
-		//Second Approach
-		ContentPanel (JPanel) >> Add this to contentPane()
-			- GamePanel
-			- Conidtionally - GridPanel
-			
-			*/
-		window.setResizable(true);
-		window.pack();
-		window.setLocationRelativeTo(null);
-		window.setVisible(true);
+	public Game() {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				JFrame window = new JFrame("Traffic Simulation");	
+				
+				GridPanel gridPanel = new GridPanel(800, 600, 10);
+				window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				
+				gridPanel.setVisible(true);
+				gridPanel.setOpaque(false);
+							
+				
+				window.setLayout(new BorderLayout());
+				
+				window.add(new GamePanel());
+			//	window.add(gridPanel);	
+				window.pack();
+				window.setResizable(true);
+				window.setLocationRelativeTo(null);
+				window.setVisible(true);
+			}
+		});
 	}
+	
+	
+	public static void main(String[] args) {
+		new Game();
+	}
+	
+	
 }

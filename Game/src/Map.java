@@ -130,11 +130,6 @@ public class Map {
 		Iterator<Lane> lit = lanes.iterator();
 		while (lit.hasNext()) {
 			Lane l = lit.next();
-			
-			
-			
-			
-			
 			// There is something wrong with this loop which is drawing the
 			// square in the top left corner
 			for (int row = l.getStart().getRow(); row <= l.getEnd().getRow(); row++) {
