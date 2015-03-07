@@ -21,6 +21,19 @@ public class Game {
 		JFrame window = new JFrame("SortaSim");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setContentPane(new GamePanel());
+		
+		/*
+		if(showGrid) {
+			//check if this works and both are showing.
+			//make sure that the background of this gridPanel is transparent
+			window.setContentPane(new GridPane());
+		}
+		//Second Approach
+		ContentPanel (JPanel) >> Add this to contentPane()
+			- GamePanel
+			- Conidtionally - GridPanel
+			
+			*/
 		window.setResizable(true);
 		window.pack();
 		window.setLocationRelativeTo(null);

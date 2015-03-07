@@ -85,6 +85,14 @@ public class Map {
 		return testMap.getRandomCell(); 
 	}
 	
+	/**
+	 * Returns a lane - chosen at random.
+	 * @return
+	 */
+	public Lane getRandomLane(){
+		return testMap.getRandomLane(); 
+	}
+	
 	public void update() {
 		
 	}

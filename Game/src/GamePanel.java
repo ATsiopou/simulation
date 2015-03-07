@@ -34,6 +34,7 @@ public class GamePanel extends JPanel implements Runnable {
 	private BufferedImage image;
 	private Map map;
 	private Car car;
+	private Lane lane; 
 
 	public GamePanel() {
 		super();
@@ -132,23 +133,27 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 
 	/**
-	 * Initialises the cars and places the cars on the map 
+	 * Initialises the cars and places the cars on the map. A call is made 
+	 * to getRandomLane(), which returns a random lane. The starting cell 
+	 * is then accessed and given to the car as the starting position. 
+	 * 
 	 * @throws Exception
 	 */
 	private void initCar() throws Exception {
-		
-		// Create a starting cell by accessing a random cell element from the
-		// entries list in class MyMap
-		Cell startingPosition;
-		startingPosition = map.getRandomEntryPosition();
+		Lane lane; 
+		lane = map.getRandomLane(); 
+
+		//Cell startingPosition;
+		//startingPosition = map.getRandomEntryPosition();
 
 		// create a new car
-		car = new Car(startingPosition);
+		car = new Car(lane);
 		// pass the car to the car thread
 		Thread carThread = new Thread(car);
 		// Start the thread for the car
 		carThread.start();
 	}
+	
 
 	
 	

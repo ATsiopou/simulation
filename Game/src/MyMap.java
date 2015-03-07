@@ -56,6 +56,18 @@ public class MyMap {
 		return randomCell;
 	}
 
+
+	/**
+	 * Returns a random lane 
+	 * @return
+	 */
+	public Lane getRandomLane(){
+		Lane randomLane = new Lane(); 
+		Random rand = new Random(); 
+		randomLane = lanes.get(rand.nextInt(lanes.size())); 
+		return randomLane; 
+	}
+	
 	/**
 	 * Print method for lights as an ordered pair
 	 */

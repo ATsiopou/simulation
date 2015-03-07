@@ -36,9 +36,10 @@ public class Car implements Runnable{
 		this.running = true;
 	}
 
-	public Car(Cell entryPosition){ 
+	public Car(Lane lane){ 
 		this.running = true; 
-		this.entryPosition = entryPosition; 
+		this.lane=lane; 
+		this.entryPosition=lane.getStart(); 
 	}
 
 	/**
@@ -48,7 +49,33 @@ public class Car implements Runnable{
 	 * break. 
 	 */
 	public void move() {
-
+		
+		/*
+		
+		lane.getId()%2 = odd or even
+				
+				decide direction to move as follows
+		X++ //odd
+		current = lane.getStart().getCol();
+		curent += cell resolution;
+			lane.getStart().getCol() ++;
+		X-- //even
+			current = lane.getStart().getRow() --;
+		currentt += cell resolution
+		y++ //odd
+			lane.getStart
+		y-- //even
+		
+		//for curved lanes
+		foreach(Cell cell: lane.getCells()) {
+			move your car in each cell
+			set cell occupied
+			set previous cell unoccoupied.
+		}
+		
+		lane.getCells()
+		
+		*/
 		currentCell = entryPosition; 
 		//System.out.println("current cell: (" + currentCell.getCol()+","+currentCell.getRow() +")");
 		//System.out.println("Cell occupied: " + currentCell.isOccupied()); 
@@ -78,7 +105,7 @@ public class Car implements Runnable{
 	 * if time is small => faster speed  
 	 */
 	private void accelerate(){
-		x0+= speed; 
+		x0++; 
 	}
 	
 	/**
@@ -86,6 +113,7 @@ public class Car implements Runnable{
 	 * it's current direction
 	 */
 	private void brake(){
+		//current = current;
 		x0 = x0; 
 	}
 	
