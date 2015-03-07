@@ -11,12 +11,11 @@
  * 
  */
 
-import java.awt.*; 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -26,34 +25,33 @@ public class GamePanel extends JPanel implements Runnable {
 	public static final int HEIGHT = 600;
 	public static final int WIDTH = 800;
 	public static final int DELAY = 15;
-	public static final int TILE = 10; 
-	public static final int TOTALNUMEROFCARS = 10; 
+	public static final int TILE = 10;
+	public static final int TOTALNUMEROFCARS = 10;
+	public static final int ENTRYFREQUENCY = 5; 
 	private Thread thread;
-	private boolean running; 
+	private boolean running;
 	private Graphics2D g;
 	private BufferedImage image;
 	private Map map;
-	private Car car; 
+	private Car car;
 
 	public GamePanel() {
 		super();
-		initGamePanel(); 
+		initGamePanel();
 	}
-	
 
-	private void initGamePanel(){
+	private void initGamePanel() {
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		setFocusable(true);
 		requestFocus();
 	}
-	
-	
+
 	@Override
 	public void addNotify() {
 		super.addNotify();
-		if(thread == null){
-			thread = new Thread(this); 
-			thread.start(); 
+		if (thread == null) {
+			thread = new Thread(this);
+			thread.start();
 		}
 	}
 
@@ -64,28 +62,30 @@ public class GamePanel extends JPanel implements Runnable {
 			init();
 		} catch (IOException e1) {
 			e1.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
-		long startTime; // holds the starting time 
-		long timeDiff;  // 
-		long sleep;     //waitTime
-		
+
+		long startTime; // holds the starting time
+		long timeDiff;  //
+		long sleep;     // waitTime
+
 		startTime = System.currentTimeMillis();
-		
+
 		while (running) {
 
 			update();
 			render();
 			draw();
-			
-			//Calculate the time difference and then assign to sleep
+
+			// Calculate the time difference and then assign to sleep
 			timeDiff = System.currentTimeMillis() - startTime;
 			sleep = DELAY - timeDiff;
 
-			if(sleep < 0){
-				sleep = 2; 
+			if (sleep < 0) {
+				sleep = 2;
 			}
-			
+
 			try {
 				Thread.sleep(sleep);
 			} catch (InterruptedException e) {
@@ -97,56 +97,74 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 
 	/**
-	 * Init will hold the map initialisation of the map and car.
-	 * A map object is created and is instantiated with a JSON file, which 
-	 * holds the information of the map and lights. The second argument, TILE, 
-	 * defines the size of pixel we choose to represent a single cell object as
-	 * through the draw method. 
-	 * A car object is first instantiated with the position of a single cell
-	 * (later to be changed to a random cell chosen from a a static array whose
-	 * elements are the entry positions). 
+	 * Init will hold the map initialisation of the map and car. 
+	 * A map object is instantiated with the JSON file, which holds the information
+	 * of the map, lights and lane entries.
+	 * A car object is first instantiated with the position of a single
+	 * cell (later to be changed to a random cell chosen from a a static array
+	 * whose elements are the entry positions).
+	 *
+	 * @throws Exception 
 	 * @throws IOException
 	 */
-	private void init() throws IOException {
-		
-		running = true; 
-		
-		
-		
-		
-		
-		map = new Map("res/filemap.json",TILE);		
-		// The Second map, works like a charm 
-		// map = new Map("res/map2_4Intersection.json",TILE);
-		//Create a starting cell
-		Cell startingPosition = new Cell(28,0);
-		//create a new car
-		car = new Car(startingPosition);
-		//pass the car to the car thread 
-		Thread carThread = new Thread(car);
-		//Start the thread for the car 
-		carThread.start();
-		
-		
+	private void init() throws Exception{
+
+		running = true;
+		initMap(); 
+		initCar();
 		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		g = (Graphics2D) image.getGraphics();
-
-		
-	
 	}
 
-
-/////////////////////////////////////////////////////////////////////
-// The following called from inside the run method. 
+	
+	///////////////////////////////////////////////////////////////////////
+	//       private calls from the init() method 
+	//////////////////////////////////////////////////////////////////////
+	
 	/**
-	 * Update the map. Used in the run method. 	
+	 * Initialises the map 
+	 * @throws Exception
+	 */
+	private void initMap() throws Exception{
+		map = new Map("res/map1_1Intersection.json", TILE);
+		// The Second map, works like a charm
+		// map = new Map("res/map2_4Intersection.json",TILE);
+	}
+
+	/**
+	 * Initialises the cars and places the cars on the map 
+	 * @throws Exception
+	 */
+	private void initCar() throws Exception {
+		
+		// Create a starting cell by accessing a random cell element from the
+		// entries list in class MyMap
+		Cell startingPosition;
+		startingPosition = map.getRandomEntryPosition();
+
+		// create a new car
+		car = new Car(startingPosition);
+		// pass the car to the car thread
+		Thread carThread = new Thread(car);
+		// Start the thread for the car
+		carThread.start();
+	}
+
+	
+	
+	//////////////////////////////////////////////////////////////////////
+	// The following called from inside the run() method.
+	//////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Update the map. Used in the run method.
 	 */
 	private void update() {
 		map.update();
 	}
 
 	/**
-	 * Draw object from the classes through this mthod 
+	 * Draw object from the classes through this mthod
 	 * 
 	 */
 	private void render() {
@@ -155,8 +173,8 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 
 	/**
-	 * Draws the image in the panel. The image is
-	 * anchored in the (0,0) position.   
+	 * Draws the image in the panel. The image is anchored in the (0,0)
+	 * position.
 	 */
 	private void draw() {
 		Graphics g2 = getGraphics();

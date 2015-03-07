@@ -1,14 +1,76 @@
 {
+    "entries": [
+        {
+            "row": 28,
+            "col": 0,
+            "occupied": "false"
+        },
+        {
+            "row": 29,
+            "col": 0,
+            "occupied": "false"
+        },
+        {
+            "row": 30,
+            "col": 80,
+            "occupied": "false"
+        },
+        {
+            "row": 31,
+            "col": 80,
+            "occupied": "false"
+        },
+        {
+            "row": 60,
+            "col": 38,
+            "occupied": "false"
+        },
+        {
+            "row": 60,
+            "col": 39,
+            "occupied": "false"
+        },
+        {
+            "row": 0,
+            "col": 40,
+            "occupied": "false"
+        },
+        {
+            "row": 0,
+            "col": 41,
+            "occupied": "false"
+        } 
+    ],
     "lights": [
         {
             "position": {
-                "row": 4,
-                "col": 40
+                "row": 27,
+                "col": 37
+            }
+        },
+        {
+            "position": {
+                "row": 32,
+                "col": 42
+            }
+        },
+        {
+            "position": {
+                "row": 32,
+                "col": 37
+            }
+        },
+        {
+            "position": {
+                "row": 27,
+                "col": 42
             }
         }
     ],
     "lanes": [
         {
+        	"id": 3,
+        	"direction": "EAST",
             "start": {
                 "row": 28,
                 "col": 0
@@ -19,6 +81,8 @@
             }
         },
         {
+        	"id": 1,
+        	"direction": "EAST",
             "start": {
                 "row": 29,
                 "col": 0
@@ -29,6 +93,8 @@
             }
         },
         {
+        	"id": 2,
+        	"direction": "WEST",        
             "start": {
                 "row": 30,
                 "col": 0
@@ -39,6 +105,8 @@
             }
         },
         {
+        	"id": 4,
+        	"direction": "WEST",        
             "start": {
                 "row": 31,
                 "col": 0
@@ -49,6 +117,8 @@
             }
         },
         {
+        	"id": 4,
+        	"direction": "NORTH",        
             "start": {
                 "row": 0,
                 "col": 38
@@ -59,6 +129,8 @@
             }
         },
         {
+        	"id": 2,
+        	"direction": "NORTH",        
             "start": {
                 "row": 0,
                 "col": 39
@@ -69,6 +141,8 @@
             }
         },
         {
+        	"id": 1,
+        	"direction": "SOUTH",        
             "start": {
                 "row": 0,
                 "col": 40
@@ -79,6 +153,9 @@
             }
         },
         {
+        	"id": 3,
+        	"direction": "SOUTH",        
+        
             "start": {
                 "row": 0,
                 "col": 41

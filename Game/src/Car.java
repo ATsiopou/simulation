@@ -22,28 +22,23 @@ public class Car implements Runnable{
 	//2. starting position 
 	//3. current position 
 	
-	private int speed;
+	private int speed = 1;
 	private int x0; 
 	private int y0; 
 	private Cell currentCell; 
-	private Cell startPosition;
+	private Cell entryPosition;
+	private Lane lane; 
+	
+
 	private boolean running; 
-	// Thread animator; 
 	
 	public Car(){
 		this.running = true;
-		
-	
 	}
 
-	public Car(Cell startPosition){ 
+	public Car(Cell entryPosition){ 
 		this.running = true; 
-		this.startPosition = startPosition; 
-	//	startPosition.setOccupied(true);
-	
-		//animator = new Thread(this);
-		//animator.start();
-		
+		this.entryPosition = entryPosition; 
 	}
 
 	/**
@@ -54,27 +49,25 @@ public class Car implements Runnable{
 	 */
 	public void move() {
 
-		currentCell = startPosition; 
-		System.out.println("current cell: (" + currentCell.getCol()+","+currentCell.getRow() +")");
-		System.out.println("Cell occupied: " + currentCell.isOccupied()); 
+		currentCell = entryPosition; 
+		//System.out.println("current cell: (" + currentCell.getCol()+","+currentCell.getRow() +")");
+		//System.out.println("Cell occupied: " + currentCell.isOccupied()); 
 		
 		//How to access the next cell currnetCell+1 ? 
+		System.out.println("(x,y)"+"("+entryPosition.getCol()+","+entryPosition.getRow()+")");
+		
+		//if condition needs to change to return the currentCell + 1 value
+		
+		//System.out.println(lane.getDirection().name().toString()); 
+		
+		
 		if(!(currentCell).isOccupied()){
 			accelerate(); 
 		}else{
 			brake(); 
 		}
-		 
 	}
 	
-	/**
-	 * This method draws the car to the UI
-	 * place the car on a position.
-	 * @param g
-	 */
-	public void draw(Graphics2D g){
-		drawCar(g); 
-	}
 
 	/**
 	 * This method will increase the *speed* of the car as 
@@ -85,7 +78,7 @@ public class Car implements Runnable{
 	 * if time is small => faster speed  
 	 */
 	private void accelerate(){
-		x0++; 
+		x0+= speed; 
 	}
 	
 	/**
@@ -109,10 +102,8 @@ public class Car implements Runnable{
 		
 		long startTime,timeDiff,sleep; 
 		
-		System.out.println("Inside the run method in car"); 
-		
-		x0 = startPosition.getCol();
-		y0 = startPosition.getRow();
+		x0 = entryPosition.getCol();
+		y0 = entryPosition.getRow();
 		
 		startTime = System.currentTimeMillis(); 
 		
@@ -138,7 +129,15 @@ public class Car implements Runnable{
 		}
 	}
 
-	
+
+	/**
+	 * This method draws the car to the UI
+	 * place the car on a position.
+	 * @param g
+	 */
+	public void draw(Graphics2D g){
+		drawCar(g); 
+	}
 
 	/**
 	 * This method is responsible for drawing the car 
@@ -146,9 +145,9 @@ public class Car implements Runnable{
 	 * @param g
 	 */
 	private void drawCar(Graphics2D g){
-		 
-		g.fillRect(x0*10, y0*10, 10, 10);
-		g.setColor(Color.GREEN);
+		
+		Image im1 = Toolkit.getDefaultToolkit().getImage("res/car.png"); 		
+		g.drawImage(im1, x0*10, y0*10, 10, 10, null, null);
 	}
 	
 	

@@ -65,17 +65,37 @@ public class Map {
 			e.printStackTrace();
 			System.out.println("such error,  " + e.getMessage());
 		}
-	}
-
 	
-	//Should the cars be updated through here ? 
-	public void update() {
-		
 	}
 
 	/**
-	 * Draw the map. This method draws the map by going through the row and
-	 * column.
+	 * This returns the entry cells for the loaded map. 
+	 * @return
+	 */
+	public List<Cell> getMapEntryPositions(){
+		return testMap.getEntries();
+	}
+
+	/**
+	 * Returns a cell element from the entries array in
+	 * MyMap which was loaded from the JSON config file.
+	 * @return
+	 */
+	public Cell getRandomEntryPosition(){
+		return testMap.getRandomCell(); 
+	}
+	
+	public void update() {
+		
+	}
+	
+	//////////////////////////////////////////////////////////////////
+	//					 Draw Methods  								//
+	//////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Draws the map my drawing the components of the map. Inside the 
+	 * method are private method calls to each component of the map.
 	 * 
 	 * @param g
 	 */
