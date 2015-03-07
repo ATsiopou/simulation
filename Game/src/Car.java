@@ -17,18 +17,14 @@ import java.awt.*;
 import javax.swing.JPanel;
 
 public class Car implements Runnable{
-
-	//1. Need an array of starting positions 
-	//2. starting position 
-	//3. current position 
 	
-	private int speed = 1;
 	private int x0; 
 	private int y0; 
-	private Cell currentCell; 
 	private Cell entryPosition;
 	private Lane lane; 
-	
+	private int id; 
+	private int cellResolution =10; 
+	private int current; 
 
 	private boolean running; 
 	
@@ -39,7 +35,10 @@ public class Car implements Runnable{
 	public Car(Lane lane){ 
 		this.running = true; 
 		this.lane=lane; 
+		this.id = lane.getId(); 
 		this.entryPosition=lane.getStart(); 
+		this.x0 = entryPosition.getCol();
+		this.y0 = entryPosition.getRow();
 	}
 
 	/**
@@ -50,44 +49,8 @@ public class Car implements Runnable{
 	 */
 	public void move() {
 		
-		/*
-		
-		lane.getId()%2 = odd or even
+		Cell currentCell = entryPosition; 
 				
-				decide direction to move as follows
-		X++ //odd
-		current = lane.getStart().getCol();
-		curent += cell resolution;
-			lane.getStart().getCol() ++;
-		X-- //even
-			current = lane.getStart().getRow() --;
-		currentt += cell resolution
-		y++ //odd
-			lane.getStart
-		y-- //even
-		
-		//for curved lanes
-		foreach(Cell cell: lane.getCells()) {
-			move your car in each cell
-			set cell occupied
-			set previous cell unoccoupied.
-		}
-		
-		lane.getCells()
-		
-		*/
-		currentCell = entryPosition; 
-		//System.out.println("current cell: (" + currentCell.getCol()+","+currentCell.getRow() +")");
-		//System.out.println("Cell occupied: " + currentCell.isOccupied()); 
-		
-		//How to access the next cell currnetCell+1 ? 
-		System.out.println("(x,y)"+"("+entryPosition.getCol()+","+entryPosition.getRow()+")");
-		
-		//if condition needs to change to return the currentCell + 1 value
-		
-		//System.out.println(lane.getDirection().name().toString()); 
-		
-		
 		if(!(currentCell).isOccupied()){
 			accelerate(); 
 		}else{
@@ -97,15 +60,51 @@ public class Car implements Runnable{
 	
 
 	/**
-	 * This method will increase the *speed* of the car as 
-	 * it traverses the cells 
-	 * Speed can be defined as the time spent in a current
-	 * cell. 
-	 * if time is large => slower speed
-	 * if time is small => faster speed  
+	 * This method moves the car in a direction. The directions 
+	 * is decided by first checking the id of the lane. For an even
+	 * id, the car is travelling in a northbound or westbound lane. 
+	 * if the id is odd: The car is in a southboun/eastbound lane. 
+	 * 
+	 * 		//for curved lanes
+	 * foreach(Cell cell: lane.getCells()) {
+	 * move your car in each cell
+	 * set cell occupied
+	 * set previous cell unoccoupied
+	 * }
+	 * 
 	 */
 	private void accelerate(){
-		x0++; 
+		
+		if(isEven(id)){
+			if(entryPosition.getRow() == 60){
+			
+				y0--; 
+				//current = lane.getStart().getRow(); 
+				//current += cellResolution; 
+			}else{
+				x0--;
+				//current = lane.getStart().getCol(); 
+				//current -= cellResolution; 
+			}
+			
+		}else{ //ODD
+			if(entryPosition.getCol() == 0){
+				
+				x0++; 
+				//current = lane.getStart().getCol();
+				//current += cellResolution;
+				//current +=cellResolution; 
+				
+			}else{
+				y0++; 
+				//current = lane.getStart().getRow(); 
+				//current-=cellResolution; 
+			}
+			
+		}
+		
+		
+		
 	}
 	
 	/**
@@ -121,6 +120,19 @@ public class Car implements Runnable{
       //randomly call accelerate OR randomly call brake
 	}
 
+	/**
+	 * Checks if the id is odd or even 
+	 * @param id
+	 * @return
+	 */
+	private boolean isEven(int value){
+		
+		if(value % 2 == 0){
+			return true; 
+		}else{
+			return false; 
+		}
+	}
 	
 	// Overriding methods 
 	// The car class should be act as an independent "agent" 
@@ -129,10 +141,6 @@ public class Car implements Runnable{
 	public void run() {
 		
 		long startTime,timeDiff,sleep; 
-		
-		x0 = entryPosition.getCol();
-		y0 = entryPosition.getRow();
-		
 		startTime = System.currentTimeMillis(); 
 		
 		while(running){
@@ -141,10 +149,10 @@ public class Car implements Runnable{
 			move(); 
 		
 			timeDiff = System.currentTimeMillis() - startTime; 
-			sleep = 15 - timeDiff; 
+			sleep = 10 - timeDiff; 
 			
-			if(sleep < 2){
-				sleep = 2; 
+			if(sleep < 50){
+				sleep = 50; 
 			}
 			
 			try{
@@ -175,7 +183,7 @@ public class Car implements Runnable{
 	private void drawCar(Graphics2D g){
 		
 		Image im1 = Toolkit.getDefaultToolkit().getImage("res/car.png"); 		
-		g.drawImage(im1, x0*10, y0*10, 10, 10, null, null);
+		g.drawImage(im1, x0*cellResolution, y0*cellResolution, cellResolution, cellResolution, null, null);
 	}
 	
 	

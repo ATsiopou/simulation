@@ -119,15 +119,22 @@ public class Map {
 	/**
 	 * This method is used to draw the lanes to the map. The lanes are held
 	 * within a JSON file.
+	 * 
+	 * The Json file changed, as a result the drawLanes method is not working
+	 * 
 	 * @param g
 	 */
 	private void drawLanes(Graphics2D g) {
 
 		List<Lane> lanes = testMap.getLanes();
 		Iterator<Lane> lit = lanes.iterator();
-		// Create a lane object, to hold the next lane object
 		while (lit.hasNext()) {
 			Lane l = lit.next();
+			
+			
+			
+			
+			
 			// There is something wrong with this loop which is drawing the
 			// square in the top left corner
 			for (int row = l.getStart().getRow(); row <= l.getEnd().getRow(); row++) {
