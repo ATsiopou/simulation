@@ -1,46 +1,4 @@
 {
-    "entries": [
-        {
-            "row": 28,
-            "col": 0,
-            "occupied": "false"
-        },
-        {
-            "row": 29,
-            "col": 0,
-            "occupied": "false"
-        },
-        {
-            "row": 30,
-            "col": 80,
-            "occupied": "false"
-        },
-        {
-            "row": 31,
-            "col": 80,
-            "occupied": "false"
-        },
-        {
-            "row": 60,
-            "col": 38,
-            "occupied": "false"
-        },
-        {
-            "row": 60,
-            "col": 39,
-            "occupied": "false"
-        },
-        {
-            "row": 0,
-            "col": 40,
-            "occupied": "false"
-        },
-        {
-            "row": 0,
-            "col": 41,
-            "occupied": "false"
-        } 
-    ],
     "lights": [
         {
             "position": {
@@ -97,11 +55,11 @@
         	"direction": "WEST",        
             "start": {
                 "row": 30,
-                "col": 0
+                "col": 80
             },
             "end": {
                 "row": 30,
-                "col": 80
+                "col": 0
             }
         },
         {
@@ -109,22 +67,22 @@
         	"direction": "WEST",        
             "start": {
                 "row": 31,
-                "col": 0
+                "col": 80
             },
             "end": {
                 "row": 31,
-                "col": 80
+                "col": 0
             }
         },
         {
         	"id": 4,
         	"direction": "NORTH",        
             "start": {
-                "row": 0,
+                "row": 60,
                 "col": 38
             },
             "end": {
-                "row": 60,
+                "row": 0,
                 "col": 38
             }
         },
@@ -132,11 +90,11 @@
         	"id": 2,
         	"direction": "NORTH",        
             "start": {
-                "row": 0,
+                "row": 60,
                 "col": 39
             },
             "end": {
-                "row": 60,
+                "row": 0,
                 "col": 39
             }
         },
