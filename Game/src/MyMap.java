@@ -17,15 +17,6 @@ public class MyMap {
 
 	List<Lane> lanes;
 	List<TrafficLight> lights;
-	List<Cell> entries;
-
-	public List<Cell> getEntries() {
-		return entries;
-	}
-
-	public void setEntries(List<Cell> entries) {
-		this.entries = entries;
-	}
 
 	public List<Lane> getLanes() {
 		return lanes;
@@ -41,19 +32,6 @@ public class MyMap {
 
 	public void setLights(List<TrafficLight> lights) {
 		this.lights = lights;
-	}
-
-	/**
-	 * Returns a Cell object at random.
-	 * 
-	 * @return
-	 */
-	public Cell getRandomCell() {
-
-		Cell randomCell = new Cell();
-		Random rand = new Random();
-		randomCell = entries.get(rand.nextInt(entries.size()));
-		return randomCell;
 	}
 
 
@@ -91,28 +69,6 @@ public class MyMap {
 		}
 	}
 
-	/**
-	 * Print method for entries as an ordered pair
-	 */
-	public void printEntries() {
-
-		int count = 1;
-		System.out.println("");
-		System.out.println("-----------------");
-		System.out.println(" Entry Positions ");
-		System.out.println("      (x,y)      ");
-		System.out.println("-----------------");
-		System.out.println("");
-		Iterator<Cell> ittr = entries.iterator();
-		while (ittr.hasNext()) {
-			Cell entry = ittr.next();
-			System.out.println("Entries: " + count);
-			System.out.println("(" + entry.getCol() + "," + entry.getRow()
-					+ ")");
-			System.out.println(" ");
-			count++;
-		}
-	}
 
 	/**
 	 * Prints the lanes start and end positions as ordered pair

@@ -68,23 +68,7 @@ public class Map {
 	
 	}
 
-	/**
-	 * This returns the entry cells for the loaded map. 
-	 * @return
-	 */
-	public List<Cell> getMapEntryPositions(){
-		return testMap.getEntries();
-	}
 
-	/**
-	 * Returns a cell element from the entries array in
-	 * MyMap which was loaded from the JSON config file.
-	 * @return
-	 */
-	public Cell getRandomEntryPosition(){
-		return testMap.getRandomCell(); 
-	}
-	
 	/**
 	 * Returns a lane - chosen at random.
 	 * @return

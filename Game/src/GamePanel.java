@@ -135,18 +135,15 @@ public class GamePanel extends JPanel implements Runnable {
 	/**
 	 * Initialises the cars and places the cars on the map. A call is made 
 	 * to getRandomLane(), which returns a random lane. The starting cell 
-	 * is then accessed and given to the car as the starting position. 
+	 * is then accessed and given to the car as the starting position. A thread 
+	 * carThread is then instantiated with the car object and the thread is
+	 * started. 
 	 * 
 	 * @throws Exception
 	 */
 	private void initCar() throws Exception {
-		Lane lane; 
-		lane = map.getRandomLane(); 
-
-		//Cell startingPosition;
-		//startingPosition = map.getRandomEntryPosition();
-
-		// create a new car
+		 
+		Lane lane = map.getRandomLane(); 
 		car = new Car(lane);
 		// pass the car to the car thread
 		Thread carThread = new Thread(car);
