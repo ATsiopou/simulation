@@ -102,8 +102,9 @@ public class Car implements Runnable{
 	 * it's current direction
 	 */
 	private void brake(){
-		//current = current;
+		
 		x0 = x0; 
+		y0 = y0; 
 	}
 	
 	private void randomize(){
@@ -139,9 +140,9 @@ public class Car implements Runnable{
 			move(); 
 		
 			timeDiff = System.currentTimeMillis() - startTime; 
-			sleep = 1000 - timeDiff; 
+			sleep = 700 - timeDiff; 
 			
-			if(sleep < 50){
+			if(sleep < 0){
 				sleep = 50; 
 			}
 			

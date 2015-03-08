@@ -2,169 +2,276 @@
     "lights": [
         {
             "position": {
-                "row": 4,
-                "col": 40
+                "row": 17,
+                "col": 12
+            }
+        },
+        {
+            "position": {
+                "row": 17,
+                "col": 17
+            }
+        },
+        {
+            "position": {
+                "row": 22,
+                "col": 12
+            }
+        },
+        {
+            "position": {
+                "row": 22,
+                "col": 17
+            }
+        },
+            {
+            "position": {
+                "row": 17,
+                "col": 42
+            }
+        },
+        {
+            "position": {
+                "row": 17,
+                "col": 47
+            }
+        },
+        {
+            "position": {
+                "row": 22,
+                "col": 47
+            }
+        },
+        {
+            "position": {
+                "row": 22,
+                "col": 42
+            }
+        },
+              {
+            "position": {
+                "row": 57,
+                "col": 12
+            }
+        },
+        {
+            "position": {
+                "row": 57,
+                "col": 17
+            }
+        },
+        {
+            "position": {
+                "row": 62,
+                "col": 17
+            }
+        },
+        {
+            "position": {
+                "row": 62,
+                "col": 12
+            }
+        },
+            {
+            "position": {
+                "row": 57,
+                "col": 42
+            }
+        },
+        {
+            "position": {
+                "row": 57,
+                "col": 47
+            }
+        },
+        {
+            "position": {
+                "row": 62,
+                "col": 47
+            }
+        },
+        {
+            "position": {
+                "row": 62,
+                "col": 42
             }
         }
+        
     ],
     "lanes": [
         {
+        	"id": 3,
             "start": {
-                "row": 28,
+                "row": 13,
                 "col": 0
             },
             "end": {
-                "row": 28,
+                "row": 13,
                 "col": 80
             }
         },
         {
+        	"id": 1,
             "start": {
-                "row": 29,
+                "row": 14,
                 "col": 0
             },
             "end": {
-                "row": 29,
+                "row": 14,
                 "col": 80
             }
         },
         {
+        	"id": 2, 
             "start": {
-                "row": 30,
+                "row": 15,
+                "col": 80
+            },
+            "end": {
+                "row": 15,
+                "col": 0
+            }
+        },
+        {
+        	"id": 4, 
+            "start": {
+                "row": 16,
+                "col": 80
+            },
+            "end": {
+                "row": 16,
+                "col": 0
+            }
+        },
+        {
+        	"id": 3,
+            "start": {
+                "row": 43,
                 "col": 0
             },
             "end": {
-                "row": 30,
+                "row": 43,
                 "col": 80
             }
         },
         {
+        	"id": 1, 
             "start": {
-                "row": 31,
+                "row": 44,
                 "col": 0
             },
             "end": {
-                "row": 31,
+                "row": 44,
                 "col": 80
             }
         },
         {
+        	"id": 2,
+            "start": {
+                "row": 45,
+                "col": 80
+            },
+            "end": {
+                "row": 45,
+                "col": 0
+            }
+        },
+        {
+        	"id": 4,
+            "start": {
+                "row": 46,
+                "col": 80
+            },
+            "end": {
+                "row": 46,
+                "col": 0
+            }
+        },
+		{
+			"id": 4,
             "start": {
                 "row": 0,
-                "col": 38
+                "col": 18
             },
             "end": {
                 "row": 60,
-                "col": 38
+                "col": 18
             }
         },
         {
+        	"id": 2,
             "start": {
                 "row": 0,
-                "col": 39
+                "col": 19
             },
             "end": {
                 "row": 60,
-                "col": 39
+                "col": 19
             }
         },
         {
+        	"id": 1, 
             "start": {
                 "row": 0,
-                "col": 40
+                "col": 20
             },
             "end": {
                 "row": 60,
-                "col": 40
+                "col": 20
             }
         },
         {
+        	"id": 3, 
             "start": {
                 "row": 0,
-                "col": 41
+                "col": 21
             },
             "end": {
                 "row": 60,
-                "col": 41
-            }
-        },
-{
-            "start": {
-                "row": 48,
-                "col": 0
-            },
-            "end": {
-                "row": 48,
-                "col": 80
+                "col": 21
             }
         },
         {
+        	"id": 4,
             "start": {
-                "row": 49,
-                "col": 0
-            },
-            "end": {
-                "row": 49,
-                "col": 80
-            }
-        },
-        {
-            "start": {
-                "row": 50,
-                "col": 0
-            },
-            "end": {
-                "row": 50,
-                "col": 80
-            }
-        },
-        {
-            "start": {
-                "row": 51,
-                "col": 0
-            },
-            "end": {
-                "row": 51,
-                "col": 80
-            }
-        },
-        {
-            "start": {
-                "row": 0,
+                "row": 60,
                 "col": 58
             },
             "end": {
-                "row": 60,
+                "row": 0,
                 "col": 58
             }
         },
         {
+        	"id": 2,
             "start": {
-                "row": 0,
+                "row": 60,
                 "col": 59
             },
             "end": {
-                "row": 60,
+                "row": 0,
                 "col": 59
             }
         },
         {
+        	"id": 1,
             "start": {
-                "row": 0,
+                "row": 60,
                 "col": 60
             },
             "end": {
-                "row": 60,
+                "row": 0,
                 "col": 60
             }
         },
         {
+        	"id": 3,
             "start": {
-                "row": 0,
+                "row": 60,
                 "col": 61
             },
             "end": {
-                "row": 60,
+                "row": 0,
                 "col": 61
             }
         }

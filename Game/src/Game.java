@@ -29,12 +29,12 @@ public class Game {
 				window.setLayout(new BorderLayout());	
 			
 				window.add(new GamePanel());
-				//window.setUndecorated(true);	
-				//window.add(gridPanel);	
+			//	window.setUndecorated(true);	
+			//	window.add(gridPanel);	
 				//gridPanel.setBackground(new Color(0,0,0,1));
 				
 				
-				//gridPanel.setVisible(true);
+			//	gridPanel.setVisible(true);
 			
 				
 				window.pack();

@@ -22,19 +22,19 @@ import javax.swing.JPanel;
 public class GamePanel extends JPanel implements Runnable {
 
 	private static final long serialVersionUID = 1L;
-	public static final int HEIGHT = 600;	//600
-	public static final int WIDTH = 800;	//800
+	public static final int HEIGHT = 600; // 600
+	public static final int WIDTH = 800; // 800
 	public static final int DELAY = 15;
 	public static final int TILE = 10;
 	public static final int TOTALNUMEROFCARS = 10;
-	public static final int ENTRYFREQUENCY = 5; 
+	public static final int ENTRYFREQUENCY = 5;
 	private Thread thread;
 	private boolean running;
 	private Graphics2D g;
 	private BufferedImage image;
 	private Map map;
 	private Car car;
-	private Lane lane; 
+	private Lane lane;
 
 	public GamePanel() {
 		super();
@@ -68,9 +68,9 @@ public class GamePanel extends JPanel implements Runnable {
 		}
 
 		long startTime; // holds the starting time
-		long timeDiff;  //
-		long sleep;     // waitTime
-
+		long timeDiff; //
+		long sleep; // waitTime
+		int count =0; 
 		startTime = System.currentTimeMillis();
 
 		while (running) {
@@ -84,80 +84,80 @@ public class GamePanel extends JPanel implements Runnable {
 			sleep = DELAY - timeDiff;
 
 			if (sleep < 0) {
-				sleep = 2;
+				sleep = 2; // orig 2
+				
 			}
 
 			try {
 				Thread.sleep(sleep);
-			} catch (InterruptedException e) {
+				
+			} catch (Exception e) {
 				System.out.println("Interrupted msg: " + e.getMessage());
 			}
 			startTime = System.currentTimeMillis();
+ 
 		}
 
 	}
 
 	/**
-	 * Init will hold the map initialisation of the map and car. 
-	 * A map object is instantiated with the JSON file, which holds the information
-	 * of the map, lights and lane entries.
-	 * A car object is first instantiated with the position of a single
-	 * cell (later to be changed to a random cell chosen from a a static array
-	 * whose elements are the entry positions).
+	 * Init will hold the map initialisation of the map and car. A map object is
+	 * instantiated with the JSON file, which holds the information of the map,
+	 * lights and lane entries. A car object is first instantiated with the
+	 * position of a single cell (later to be changed to a random cell chosen
+	 * from a a static array whose elements are the entry positions).
 	 *
-	 * @throws Exception 
+	 * @throws Exception
 	 * @throws IOException
 	 */
-	private void init() throws Exception{
+	private void init() throws Exception {
 
 		running = true;
-		initMap(); 
+		initMap();
 		initCar();
 		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		g = (Graphics2D) image.getGraphics();
 	}
 
-	
-	///////////////////////////////////////////////////////////////////////
-	//       private calls from the init() method 
-	//////////////////////////////////////////////////////////////////////
-	
+	// /////////////////////////////////////////////////////////////////////
+	// private calls from the init() method
+	// ////////////////////////////////////////////////////////////////////
+
 	/**
-	 * Initialises the map 
+	 * Initialises the map
+	 * 
 	 * @throws Exception
 	 */
-	private void initMap() throws Exception{
-		map = new Map("res/map1_1Intersection.json",HEIGHT,WIDTH, TILE);
+	private void initMap() throws Exception {
+		map = new Map("res/map1_1Intersection.json", HEIGHT, WIDTH, TILE);
 		// The Second map, works like a charm
-		// map = new Map("res/map2_4Intersection.json",TILE);
+		// map = new Map("res/map2_4Intersection.json",HEIGHT,WIDTH,TILE);
 	}
 
 	/**
-	 * Initialises the cars and places the cars on the map. A call is made 
-	 * to getRandomLane(), which returns a random lane. The starting cell 
-	 * is then accessed and given to the car as the starting position. A thread 
+	 * Initialises the cars and places the cars on the map. A call is made to
+	 * getRandomLane(), which returns a random lane. The starting cell is then
+	 * accessed and given to the car as the starting position. A thread
 	 * carThread is then instantiated with the car object and the thread is
-	 * started. 
+	 * started.
 	 * 
 	 * @throws Exception
 	 */
 	private void initCar() throws Exception {
-		 
-		Lane lane = map.getRandomLane(); 
+
+		Lane lane = map.getRandomLane();
 		car = new Car(lane);
 		// pass the car to the car thread
 		Thread carThread = new Thread(car);
 		// Start the thread for the car
 		carThread.start();
-	}
-	
 
-	
-	
-	//////////////////////////////////////////////////////////////////////
+	}
+
+	// ////////////////////////////////////////////////////////////////////
 	// The following called from inside the run() method.
-	//////////////////////////////////////////////////////////////////////
-	
+	// ////////////////////////////////////////////////////////////////////
+
 	/**
 	 * Update the map. Used in the run method.
 	 */
@@ -172,6 +172,20 @@ public class GamePanel extends JPanel implements Runnable {
 	private void render() {
 		map.draw(g);
 		car.draw(g);
+	}
+
+	/**
+	 * Adds a car to map
+	 */
+	private void addCar() {
+
+		Lane lane = map.getRandomLane();
+		car = new Car(lane);
+		// pass the car to the car thread
+		Thread carThread = new Thread(car);
+		// Start the thread for the car
+		carThread.start();
+
 	}
 
 	/**

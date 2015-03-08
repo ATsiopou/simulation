@@ -150,8 +150,8 @@ public class Map {
 				yStart = temp; 
 			}
 				
-			for (int row =yStart; row <= yEnd; row++) {
-				for (int col = xStart; col <= xEnd; col++) {
+			for (int col=xStart; col <= xEnd; col++) {
+				for (int row = yStart; row <= yEnd; row++) {
 					g.setColor(Color.BLACK);
 					g.fillRect(xOffset + col * tileSize, yOffset + row
 							* tileSize, tileSize, tileSize);
@@ -175,9 +175,8 @@ public class Map {
 			TrafficLight l = itter.next();
 			int x = l.getPosition().getCol();
 			int y = l.getPosition().getRow();
-
-			g.drawRect(x * tileSize, y * tileSize, tileSize, tileSize);
 			g.setColor(Color.RED);
+			//g.fillRect(y * tileSize, x * tileSize, tileSize, tileSize);
 			g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
 		}
 	}
