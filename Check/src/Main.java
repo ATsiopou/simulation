@@ -1,11 +1,14 @@
 import java.awt.*;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 class Main {
 
+	
+	//create the frame and make the illusion of cars mobing
 	public static void main(String[] args) throws InterruptedException {
+		
+		//this 6 lines just create a jframe and a systemengine object
 		JFrame frame = new JFrame("");
 		SystemEngine game = new SystemEngine();
      	frame.add(game);
@@ -15,7 +18,8 @@ class Main {
 		
 
 		
-		
+		// this for loop moves every car by calling the car method and the repaint the frame
+		//every 25 miliseconds
 		int rea=0;
 		
 		while (true) {
@@ -27,7 +31,7 @@ class Main {
 			Thread.sleep(25);
 			
 			if(rea%230==0){
-				game.lightsEngine();
+				game.lightsEngine();//every 230 interaction  2-3 seconds chnage the lights color (red- color)
 			}
 			rea++;
 		}

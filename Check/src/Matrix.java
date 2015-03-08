@@ -1,59 +1,66 @@
 
 public class Matrix {
 	
-	private boolean arrayOfPosition[][]=new boolean [1201][801];
+	private boolean matrixArray [][]=new boolean [1200][800];
 	
 	public Matrix(){
-		
-		for(int i=0;i<1201;i++){
-			for(int j=0;j<801;j++){
-				arrayOfPosition[i][j]=false;
+		for (int i=0;i<1200;i++){
+			for(int j=0;j<800;j++){
+				matrixArray[i][j]=false;
+				
 			}
-		}
-		
+		}	
 	}
 	
-	public void remove(int x, int y){
-		//30 is the size of the car
-		for (int i=x;i<(x+30);i++){
-			for(int j=y;j<(y+30);j++){
-				arrayOfPosition[i][j]=false;
-			}
-		}
-	}
-	
-	public void add(int x, int y){
-		//30 is the size of the car
-				for (int i=x;i<(x+30);i++){
-					for(int j=y;j<(y+30);j++){
-						System.out.println(arrayOfPosition[i][j]);
+	public void addPosition(int x,int y){
+		if(x<1200 && x>0 && y <800 && y >0)
+		matrixArray[x][y]=true;
 
-					}
-				}
 	}
 
+	public void removePosition(int x,int y){
+		if(x<1200 && x>0 && y <800 && y >0)
+		matrixArray[x][y]=false;
+	}
 	
-	public boolean isACarInfront(int x,int y){
-		if(x<1100 && y<700){//testing
+	public boolean isCarNear(int x,int y,int direction){
+		// workign only for direction 0
 		
-		int xx=x+31;
-		int yy=y+31;
 		
-		 for(int i=xx;i<xx+10;i++){
-			 for(int j=xx;j<xx+10;j++){
-				 if(arrayOfPosition[i][j]){
-					
-					 return true;
-				 }
-			 }
-		 }
+	  if(direction==0){
+		if(x<1159){
+		  for (int i=x;i<x+40;i++){
+			    if(matrixArray[i][y]) return true;
+		    }
+		  }
+	   }else if(direction==1){
+	     if(x>40 && x<1200){
+
+		   for (int i=x;i>x-40;i--){
+			    if(matrixArray[i][y]) return true;
+		     }
+		  }
+			
+	   }else if(direction==2){
+		   if(y>40 && y<760){
+			   for (int i=y;i<(y+40);i++){
+				    if(matrixArray[x][i])  return true;
+			     }
+			  }
+	   }else{
+		   if(y>0 && y<800){
+			   for (int i=y;i<y-40;i--){
+				    if(matrixArray[x][i])  return true;
+			     }
+			  }
+	   }
 		
-		}
+	
+	  
+		
 		return false;
 	}
 	
-	
-
-	
+    
 	
 }
