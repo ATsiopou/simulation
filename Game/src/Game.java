@@ -9,12 +9,12 @@
  * 
  */
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.DisplayMode;
 import java.awt.EventQueue;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 
-import javax.swing.JFrame;
 import javax.swing.*;
 
 public class Game {
@@ -26,16 +26,19 @@ public class Game {
 				
 				GridPanel gridPanel = new GridPanel(800, 600, 10);
 				window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				
-				gridPanel.setVisible(true);
-				gridPanel.setOpaque(false);
-							
-				
-				window.setLayout(new BorderLayout());
-				
+				window.setLayout(new BorderLayout());	
+			
 				window.add(new GamePanel());
-			//	window.add(gridPanel);	
+				//window.setUndecorated(true);	
+				//window.add(gridPanel);	
+				//gridPanel.setBackground(new Color(0,0,0,1));
+				
+				
+				//gridPanel.setVisible(true);
+			
+				
 				window.pack();
+		
 				window.setResizable(true);
 				window.setLocationRelativeTo(null);
 				window.setVisible(true);

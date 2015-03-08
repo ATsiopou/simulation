@@ -31,15 +31,17 @@ public class Map {
 	private int yOffset;
 	private int tileSize;
 	private int[][] map;
-	private int mapHeight = 60; // ROW: 0 <= Y <= mapHEIGHT not in pixels
-	private int mapWidth = 80; // COL: 0 <= X <= mapWIDTH not in pixels
+	private int mapHeight; // ROW: 0 <= Y <= mapHEIGHT not in pixels
+	private int mapWidth; // COL: 0 <= X <= mapWIDTH not in pixels
 	private String file;
 	private MyMap testMap;
 
-	public Map(String file, int tileSize) throws IOException {
+	public Map(String file,int mapHeight,int mapWidth, int tileSize) throws IOException {
 
 		this.tileSize = tileSize;
 		this.file = file;
+		this.mapHeight = mapHeight/tileSize; 
+		this.mapWidth = mapWidth/tileSize; 
 		initMap();
 	}
 
@@ -130,16 +132,33 @@ public class Map {
 		Iterator<Lane> lit = lanes.iterator();
 		while (lit.hasNext()) {
 			Lane l = lit.next();
-			// There is something wrong with this loop which is drawing the
-			// square in the top left corner
-			for (int row = l.getStart().getRow(); row <= l.getEnd().getRow(); row++) {
-				for (int col = l.getStart().getCol(); col <= l.getEnd()
-						.getCol(); col++) {
+			
+			int xStart = l.getStart().getCol();
+			int yStart = l.getStart().getRow();
+			int xEnd = l.getEnd().getCol();
+			int yEnd = l.getEnd().getRow();
+
+			//Needed to add this here because of the JSON configuration of the 
+			//start/end positions 
+			if(xEnd < xStart){
+				int temp = xEnd; 
+				xEnd = xStart;
+				xStart=temp; 
+			}else if(yEnd < yStart){
+				int temp = yEnd; 
+				yEnd = yStart; 
+				yStart = temp; 
+			}
+				
+			for (int row =yStart; row <= yEnd; row++) {
+				for (int col = xStart; col <= xEnd; col++) {
 					g.setColor(Color.BLACK);
 					g.fillRect(xOffset + col * tileSize, yOffset + row
 							* tileSize, tileSize, tileSize);
 				}
 			}
+		
+		
 		}
 	}
 
@@ -158,7 +177,7 @@ public class Map {
 			int y = l.getPosition().getRow();
 
 			g.drawRect(x * tileSize, y * tileSize, tileSize, tileSize);
-			g.setColor(Color.BLUE);
+			g.setColor(Color.RED);
 			g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
 		}
 	}

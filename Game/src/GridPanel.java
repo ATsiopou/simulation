@@ -8,15 +8,21 @@ import java.awt.*;
 
 public class GridPanel extends JPanel {
 
+
+	private static final long serialVersionUID = 7933994053959437894L;
 	private int WIDTH;
 	private int HEIGHT; 
 	private int TILE; 
 	
 	public GridPanel(int WIDTH, int HEIGHT, int TILE){
 		
-		this.WIDTH = WIDTH; 
-		this.HEIGHT=HEIGHT;
+		//this.WIDTH = WIDTH/TILE; 
+		//this.HEIGHT=HEIGHT/TILE;
+		this.WIDTH=WIDTH; 
+		this.HEIGHT=HEIGHT; 
 		this.TILE=TILE; 
+		setOpaque(false);
+
 	}
 	
 	@Override
@@ -29,20 +35,16 @@ public class GridPanel extends JPanel {
 	}
 
 	private void showGridLines(Graphics g) {
-
-	    int rowHt = HEIGHT/TILE ;
-	    int rowWid = WIDTH/TILE ;
-	    
+		
 	    // draw the rows
 	    for (int i = 0; i < HEIGHT; i++)
-	      g.drawLine(0, i * rowHt, WIDTH, i * rowHt);
-
+	      	g.drawLine(i*TILE, 0, i*TILE, TILE*HEIGHT);
 	    // draw the columns
 	    for (int i = 0; i < WIDTH; i++)
-	      g.drawLine(i * rowWid, 0, i * rowWid, HEIGHT);	
-	    
-	   
-	    
+	    	g.drawLine(0, i*TILE, TILE*WIDTH, i*TILE);	   
+
+//	    	g.setColor(Color.GRAY);
+	    	
 	}
 	
 }

@@ -22,8 +22,8 @@ import javax.swing.JPanel;
 public class GamePanel extends JPanel implements Runnable {
 
 	private static final long serialVersionUID = 1L;
-	public static final int HEIGHT = 600;
-	public static final int WIDTH = 800;
+	public static final int HEIGHT = 600;	//600
+	public static final int WIDTH = 800;	//800
 	public static final int DELAY = 15;
 	public static final int TILE = 10;
 	public static final int TOTALNUMEROFCARS = 10;
@@ -127,7 +127,7 @@ public class GamePanel extends JPanel implements Runnable {
 	 * @throws Exception
 	 */
 	private void initMap() throws Exception{
-		map = new Map("res/map1_1Intersection.json", TILE);
+		map = new Map("res/map1_1Intersection.json",HEIGHT,WIDTH, TILE);
 		// The Second map, works like a charm
 		// map = new Map("res/map2_4Intersection.json",TILE);
 	}
