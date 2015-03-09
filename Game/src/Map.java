@@ -191,9 +191,8 @@ public class Map {
 		List<Lane> lanes = testMap.getLanes();
 		Iterator<Lane> itter = lanes.iterator();
 		int count = 1;
-		float dash1[] = { 5.0f }; // This is for the lanes
-		BasicStroke dashed1 = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
-				BasicStroke.JOIN_MITER, 10.0f, dash1, 0.0f);
+		float[] dash1 = {2f, 0f, 2f};
+		float[] dash2 = { 5.0f }; // This is for the lanes
 
 		while (itter.hasNext()) {
 			Lane l = itter.next();
@@ -206,9 +205,13 @@ public class Map {
 			if (count == 1 || count % 2 == 0) {
 				g.drawLine(xStart * tileSize, yStart * tileSize, xEnd
 						* tileSize, yEnd * tileSize);
+				BasicStroke dashed1 = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
+						BasicStroke.JOIN_MITER, 10.0f, dash1, 0.0f);
 				g.setStroke(dashed1);
 				g.setColor(Color.LIGHT_GRAY);
 			}
+			
+			
 			count++;
 		} // end while
 	}

@@ -70,7 +70,7 @@ public class GamePanel extends JPanel implements Runnable {
 		long startTime; // holds the starting time
 		long timeDiff; //
 		long sleep; // waitTime
-		int count =0; 
+		 
 		startTime = System.currentTimeMillis();
 
 		while (running) {
@@ -144,14 +144,15 @@ public class GamePanel extends JPanel implements Runnable {
 	 * @throws Exception
 	 */
 	private void initCar() throws Exception {
-
-		Lane lane = map.getRandomLane();
-		car = new Car(lane);
-		// pass the car to the car thread
-		Thread carThread = new Thread(car);
-		// Start the thread for the car
-		carThread.start();
-
+		
+			
+			Lane lane = map.getRandomLane();
+			car = new Car(lane);
+			// pass the car to the car thread
+			Thread carThread = new Thread(car);
+			// Start the thread for the car
+			carThread.start();
+	
 	}
 
 	// ////////////////////////////////////////////////////////////////////
@@ -181,7 +182,6 @@ public class GamePanel extends JPanel implements Runnable {
 
 		Lane lane = map.getRandomLane();
 		car = new Car(lane);
-		// pass the car to the car thread
 		Thread carThread = new Thread(car);
 		// Start the thread for the car
 		carThread.start();

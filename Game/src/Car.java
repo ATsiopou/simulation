@@ -37,8 +37,8 @@ public class Car implements Runnable{
 		this.lane=lane; 
 		this.id = lane.getId(); 
 		this.entryPosition=lane.getStart(); 
-		this.x0 = entryPosition.getCol();
-		this.y0 = entryPosition.getRow();
+		this.x0 = entryPosition.getCol();   //initial position
+		this.y0 = entryPosition.getRow();   //initial position
 	}
 
 	/**
@@ -140,10 +140,10 @@ public class Car implements Runnable{
 			move(); 
 		
 			timeDiff = System.currentTimeMillis() - startTime; 
-			sleep = 700 - timeDiff; 
+			sleep = 300 - timeDiff; 
 			
 			if(sleep < 0){
-				sleep = 50; 
+				sleep = 3; 
 			}
 			
 			try{
