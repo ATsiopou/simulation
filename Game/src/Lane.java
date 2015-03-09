@@ -21,8 +21,7 @@
 
 public class Lane {
 
-	private int id;  
-	Direction direction; 	
+	private int id;  	
 	Cell start;
 	Cell end;
 
@@ -50,13 +49,6 @@ public class Lane {
 		this.id = id;
 	}
 
-	public Direction getDirection() {
-		return direction;
-	}
-
-	public void setDirection(Direction direction) {
-		this.direction = direction;
-	}
 
 	/**
 	 * Prints the x and y position of the lanes

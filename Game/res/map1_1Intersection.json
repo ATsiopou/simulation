@@ -28,7 +28,6 @@
     "lanes": [
         {
         	"id": 3,
-        	"direction": "EAST",
             "start": {
                 "row": 28,
                 "col": 0
@@ -40,7 +39,6 @@
         },
         {
         	"id": 1,
-        	"direction": "EAST",
             "start": {
                 "row": 29,
                 "col": 0
@@ -52,7 +50,6 @@
         },
         {
         	"id": 2,
-        	"direction": "WEST",        
             "start": {
                 "row": 30,
                 "col": 80
@@ -64,7 +61,6 @@
         },
         {
         	"id": 4,
-        	"direction": "WEST",        
             "start": {
                 "row": 31,
                 "col": 80
@@ -76,7 +72,6 @@
         },
         {
         	"id": 4,
-        	"direction": "NORTH",        
             "start": {
                 "row": 60,
                 "col": 38
@@ -88,7 +83,6 @@
         },
         {
         	"id": 2,
-        	"direction": "NORTH",        
             "start": {
                 "row": 60,
                 "col": 39
@@ -100,7 +94,6 @@
         },
         {
         	"id": 1,
-        	"direction": "SOUTH",        
             "start": {
                 "row": 0,
                 "col": 40
@@ -112,8 +105,6 @@
         },
         {
         	"id": 3,
-        	"direction": "SOUTH",        
-        
             "start": {
                 "row": 0,
                 "col": 41
