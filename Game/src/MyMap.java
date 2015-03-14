@@ -34,7 +34,6 @@ public class MyMap {
 		this.lights = lights;
 	}
 
-
 	/**
 	 * Returns a random lane 
 	 * @return
@@ -62,8 +61,8 @@ public class MyMap {
 		while (ittr.hasNext()) {
 			TrafficLight light = ittr.next();
 			System.out.println("Traffic Light: " + count);
-			System.out.println("(" + light.getPosition().getCol() + ","
-					+ light.getPosition().getRow() + ")");
+			System.out.println("(" + light.getStart().getCol() + ","+ light.getStart().getRow() + ")" + "-->" +"(" + light.getEnd().getCol() + ","+ light.getEnd().getRow() + ")");
+			
 			System.out.println(" ");
 			count++;
 		}

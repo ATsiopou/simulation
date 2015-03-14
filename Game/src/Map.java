@@ -36,12 +36,13 @@ public class Map {
 	private String file;
 	private MyMap testMap;
 
-	public Map(String file,int mapHeight,int mapWidth, int tileSize) throws IOException {
+	public Map(String file, int mapHeight, int mapWidth, int tileSize)
+			throws IOException {
 
 		this.tileSize = tileSize;
 		this.file = file;
-		this.mapHeight = mapHeight/tileSize; 
-		this.mapWidth = mapWidth/tileSize; 
+		this.mapHeight = mapHeight / tileSize;
+		this.mapWidth = mapWidth / tileSize;
 		initMap();
 	}
 
@@ -61,59 +62,60 @@ public class Map {
 					map[row][col] = 0;
 				}
 			}
-	
+
 		} catch (IOException e) {
 
 			e.printStackTrace();
-			System.out.println("such error,  " + e.getMessage());
+			System.out.println("Error in initMap(): " + e.getMessage());
 		}
-	
-	}
 
+	}
 
 	/**
 	 * Returns a lane - chosen at random.
+	 * 
 	 * @return
 	 */
-	public Lane getRandomLane(){
-		return testMap.getRandomLane(); 
+	public Lane getRandomLane() {
+		return testMap.getRandomLane();
 	}
-	
-	public void update() {
-		
-	}
-	
-	//////////////////////////////////////////////////////////////////
-	//					 Draw Methods  								//
-	//////////////////////////////////////////////////////////////////
-	
+
+
+
+	// ////////////////////////////////////////////////////////////////
+	// 						Paint Methods 			   		   		 //
+	// ////////////////////////////////////////////////////////////////
+
 	/**
-	 * Draws the map my drawing the components of the map. Inside the 
-	 * method are private method calls to each component of the map.
+	 * Draws the map my drawing the components of the map. Inside the method are
+	 * private method calls to each component of the map.
 	 * 
 	 * @param g
 	 */
-	public void draw(Graphics2D g) {
-
+	public void paintMap(Graphics2D g) {
+		
+	
 		drawBoard(g);
 		drawLanes(g);
 		drawDashedLane(g);
-		drawLights(g);
+		//drawLights(g);
 		// drawLaneBoarders(g);
 		// drawIntersection(g);
+	
 	}
 
 	/**
 	 * This method draws the background of the game board
+	 * 
 	 * @param g
 	 */
 	private void drawBoard(Graphics2D g) {
-
+	
+		g.setColor(Color.DARK_GRAY);
 		for (int row = 0; row < mapHeight; row++) {
 			for (int col = 0; col < mapWidth; col++) {
 				g.fillRect(xOffset + col * tileSize, yOffset + row * tileSize,
 						tileSize, tileSize);
-				g.setColor(Color.DARK_GRAY);
 			}
 		}
 	}
@@ -132,33 +134,32 @@ public class Map {
 		Iterator<Lane> lit = lanes.iterator();
 		while (lit.hasNext()) {
 			Lane l = lit.next();
-			
+
 			int xStart = l.getStart().getCol();
 			int yStart = l.getStart().getRow();
 			int xEnd = l.getEnd().getCol();
 			int yEnd = l.getEnd().getRow();
 
-			//Needed to add this here because of the JSON configuration of the 
-			//start/end positions 
-			if(xEnd < xStart){
-				int temp = xEnd; 
+			// Needed to add this here because of the JSON configuration of the
+			// start/end positions
+			if (xEnd < xStart) {
+				int temp = xEnd;
 				xEnd = xStart;
-				xStart=temp; 
-			}else if(yEnd < yStart){
-				int temp = yEnd; 
-				yEnd = yStart; 
-				yStart = temp; 
+				xStart = temp;
+			} else if (yEnd < yStart) {
+				int temp = yEnd;
+				yEnd = yStart;
+				yStart = temp;
 			}
-				
-			for (int col=xStart; col <= xEnd; col++) {
+
+			g.setColor(Color.BLACK);
+			for (int col = xStart; col <= xEnd; col++) {
 				for (int row = yStart; row <= yEnd; row++) {
-					g.setColor(Color.BLACK);
 					g.fillRect(xOffset + col * tileSize, yOffset + row
 							* tileSize, tileSize, tileSize);
 				}
 			}
-		
-		
+
 		}
 	}
 
@@ -169,15 +170,27 @@ public class Map {
 	 */
 	private void drawLights(Graphics2D g) {
 
+		
+		Cell start = new Cell();
+		Cell end = new Cell();
+		Lane lane = new Lane();
+
 		List<TrafficLight> lights = testMap.getLights();
 		Iterator<TrafficLight> itter = lights.iterator();
 		while (itter.hasNext()) {
 			TrafficLight l = itter.next();
-			int x = l.getPosition().getCol();
-			int y = l.getPosition().getRow();
-			g.setColor(Color.RED);
-			//g.fillRect(y * tileSize, x * tileSize, tileSize, tileSize);
-			g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+
+			start = l.getStart();
+			end = l.getEnd();
+
+			// System.out.println("Start: " + start + " End: " + end );
+			TrafficLight light = new TrafficLight(g, start, end, lane);
+		//	testMap.printLights();
+			// g.setColor(Color.RED);
+			// g.fillRect(y * tileSize, x * tileSize, tileSize, tileSize);
+			// g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+
+
 		}
 	}
 
@@ -191,8 +204,8 @@ public class Map {
 		List<Lane> lanes = testMap.getLanes();
 		Iterator<Lane> itter = lanes.iterator();
 		int count = 1;
-		float[] dash1 = {2f, 0f, 2f};
-		float[] dash2 = { 5.0f }; // This is for the lanes
+		float[] dash1 = { 2f, 0f, 2f };
+		// float[] dash2 = { 5.0f }; // This is for the lanes
 
 		while (itter.hasNext()) {
 			Lane l = itter.next();
@@ -202,26 +215,50 @@ public class Map {
 			int xEnd = l.getEnd().getCol();
 			int yEnd = l.getEnd().getRow();
 
+			
 			if (count == 1 || count % 2 == 0) {
 				g.drawLine(xStart * tileSize, yStart * tileSize, xEnd
 						* tileSize, yEnd * tileSize);
-				BasicStroke dashed1 = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
-						BasicStroke.JOIN_MITER, 10.0f, dash1, 0.0f);
-				g.setStroke(dashed1);
+				BasicStroke dashed1 = new BasicStroke(1.0f,
+						BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
+						dash1, 0.0f);
 				g.setColor(Color.LIGHT_GRAY);
+				g.setStroke(dashed1);
+				
 			}
-			
-			
+
 			count++;
 		} // end while
 	}
+	
+	
 
-	@SuppressWarnings("unused")
-	private void drawIntersection(Graphics2D g) {
+	/**
+	 * This is for debugging purposes. Shows the Cells as we have defined them
+	 * and can see where the items are being painted and if they are being
+	 * painted to our liking.
+	 * 
+	 * @param g
+	 */
+	public void paintGrid(Graphics g) {
 
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setColor(Color.GRAY);
 		
+		for (int i = 0; i < mapHeight; i++) {
+			g2d.drawLine(0, i * tileSize, tileSize * mapWidth, i * tileSize);
+			g2d.setComposite(AlphaComposite.getInstance(
+					AlphaComposite.SRC_OVER, 0.3f));
+		}
+
+		// draw the columns
+		for (int i = 0; i < mapWidth; i++) {
+			g2d.setComposite(AlphaComposite.getInstance(
+					AlphaComposite.SRC_OVER, 0.3f));
+			g2d.drawLine(i * tileSize, 0, i * tileSize, tileSize * mapHeight);
+		}
+
 	}
 
-	
-	
+
 }

@@ -14,124 +14,168 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements Runnable {
 
+	public static final boolean debug = false;
 	private static final long serialVersionUID = 1L;
 	public static final int HEIGHT = 600; // 600
 	public static final int WIDTH = 800; // 800
-	public static final int DELAY = 15;
+	public static final int DELAY = 20;
 	public static final int TILE = 10;
 	public static final int TOTALNUMEROFCARS = 10;
-	public static final int ENTRYFREQUENCY = 5;
-	private Thread thread;
-	private boolean running;
-	private Graphics2D g;
-	private BufferedImage image;
+	public static final int ENTRYFREQUENCY = 2000; // in milliseconds (2seconds)
+	private boolean running = true;
+	private Thread animator;
+	private Graphics g;
 	private Map map;
-	private Car car;
-	private Lane lane;
+	private ArrayList<Car> cars;
+	private ArrayList<Cell> occupiedCells;
 
 	public GamePanel() {
-		super();
 		initGamePanel();
 	}
 
 	private void initGamePanel() {
-		setPreferredSize(new Dimension(WIDTH, HEIGHT));
-		setFocusable(true);
-		requestFocus();
+		setDoubleBuffered(true);
+		try {
+			map = new Map("res/map1_1Intersection.json", HEIGHT, WIDTH, TILE);
+			// The Second map, works like a charm
+			// map = new Map("res/map2_4Intersection.json",HEIGHT,WIDTH,TILE);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public Dimension getPreferredSize() {
+		return new Dimension(WIDTH, HEIGHT);
 	}
 
 	@Override
 	public void addNotify() {
 		super.addNotify();
-		if (thread == null) {
-			thread = new Thread(this);
-			thread.start();
-		}
+		animator = new Thread(this);
+		animator.start();
 	}
 
 	@Override
-	public void run() {
+	public void paint(Graphics g) {
+		super.paint(g);
+		Graphics2D g2d = (Graphics2D) g;
 
-		try {
-			init();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+		// Draw map
+		map.paintMap(g2d);
+
+		// Draw the images for the cars
+		for (Car car : this.cars) {
+			g2d.drawImage(car.getCarImage(), (int) car.getX0() * TILE,
+					(int) car.getY0() * TILE, this);
 		}
 
-		long startTime; // holds the starting time
-		long timeDiff; //
-		long sleep; // waitTime
-		 
-		startTime = System.currentTimeMillis();
+		// For testing purpose
+		if (debug) {
+			map.paintGrid(g2d);
+		}
+		repaint();
+		g.dispose();
+	}
+
+	@SuppressWarnings("static-access")
+	@Override
+	public void run() {
+
+		// Create the list of cars
+		// creatCars();
+		cars = new ArrayList<>();
+		// Create the occupied cells lists
+		occupiedCells = createOccupiedCells();
+
+		for (int i = 0; i < TOTALNUMEROFCARS; i++) {
+			Lane lane = new Lane();
+
+			lane = map.getRandomLane(); // something is happening here which is
+										// propogating in car()
+
+			 //lane.setStart(new Cell(41,0));
+			 //lane.setId(1);
+
+			System.out.println("Lane info: " + lane.getStart());
+			System.out.println("Lane info: " + lane.getEnd());
+
+			Car car = new Car(lane, this.g, occupiedCells);
+			// pass the car to the car thread
+			Thread carThread = new Thread(car);
+			// Start the thread for the car
+			try {
+				carThread.sleep(ENTRYFREQUENCY);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			carThread.start();
+			cars.add(car);
+
+		}
 
 		while (running) {
 
-			update();
-			render();
-			draw();
-
-			// Calculate the time difference and then assign to sleep
-			timeDiff = System.currentTimeMillis() - startTime;
-			sleep = DELAY - timeDiff;
-
-			if (sleep < 0) {
-				sleep = 2; // orig 2
-				
+			// Set the occupid cells during the game loop
+			for (Cell cell : occupiedCells) {
+				cell.setOccupied(true);
 			}
 
 			try {
-				Thread.sleep(sleep);
-				
-			} catch (Exception e) {
-				System.out.println("Interrupted msg: " + e.getMessage());
+				for (Car car : this.cars) {
+					car.move();
+				}
+				Thread.sleep(DELAY);
+				repaint();
+			} catch (InterruptedException ex) {
+				Logger.getLogger(GamePanel.class.getName()).log(Level.SEVERE,
+						null, ex);
 			}
-			startTime = System.currentTimeMillis();
- 
+
 		}
 
 	}
 
 	/**
-	 * Init will hold the map initialisation of the map and car. A map object is
-	 * instantiated with the JSON file, which holds the information of the map,
-	 * lights and lane entries. A car object is first instantiated with the
-	 * position of a single cell (later to be changed to a random cell chosen
-	 * from a a static array whose elements are the entry positions).
-	 *
-	 * @throws Exception
-	 * @throws IOException
+	 * create the cells which are set as occupid a the a traffic junction
 	 */
-	private void init() throws Exception {
 
-		running = true;
-		initMap();
-		initCar();
-		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-		g = (Graphics2D) image.getGraphics();
-	}
+	public ArrayList<Cell> createOccupiedCells() {
 
-	// /////////////////////////////////////////////////////////////////////
-	// private calls from the init() method
-	// ////////////////////////////////////////////////////////////////////
+		occupiedCells = new ArrayList<Cell>();
 
-	/**
-	 * Initialises the map
-	 * 
-	 * @throws Exception
-	 */
-	private void initMap() throws Exception {
-		map = new Map("res/map1_1Intersection.json", HEIGHT, WIDTH, TILE);
-		// The Second map, works like a charm
-		// map = new Map("res/map2_4Intersection.json",HEIGHT,WIDTH,TILE);
+		Cell cell1 = new Cell(37, 28); // x++
+		Cell cell2 = new Cell(37, 29); // x++
+		Cell cell3 = new Cell(40, 27); // y++
+		Cell cell4 = new Cell(41, 27); // y++
+		Cell cell5 = new Cell(42, 30); // x--
+		Cell cell6 = new Cell(42, 31); // x--
+		Cell cell7 = new Cell(38, 32); // y--
+		Cell cell8 = new Cell(39, 32); // y--
+
+		occupiedCells.add(cell1);
+		occupiedCells.add(cell2);
+		occupiedCells.add(cell3);
+		occupiedCells.add(cell4);
+		occupiedCells.add(cell5);
+		occupiedCells.add(cell6);
+		// occupiedCells.add(cell7);
+		// occupiedCells.add(cell8);
+
+		return occupiedCells;
+
 	}
 
 	/**
@@ -143,59 +187,16 @@ public class GamePanel extends JPanel implements Runnable {
 	 * 
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unused")
 	private void initCar() throws Exception {
-		
-			
-			Lane lane = map.getRandomLane();
-			car = new Car(lane);
-			// pass the car to the car thread
-			Thread carThread = new Thread(car);
-			// Start the thread for the car
-			carThread.start();
-	
-	}
 
-	// ////////////////////////////////////////////////////////////////////
-	// The following called from inside the run() method.
-	// ////////////////////////////////////////////////////////////////////
+		// Lane lane = map.getRandomLane();
+		// Car car = new Car(lane, g);
+		// // pass the car to the car thread
+		// Thread carThread = new Thread(car);
+		// // Start the thread for the car
+		// carThread.start();
 
-	/**
-	 * Update the map. Used in the run method.
-	 */
-	private void update() {
-		map.update();
-	}
-
-	/**
-	 * Draw object from the classes through this mthod
-	 * 
-	 */
-	private void render() {
-		map.draw(g);
-		car.draw(g);
-	}
-
-	/**
-	 * Adds a car to map
-	 */
-	private void addCar() {
-
-		Lane lane = map.getRandomLane();
-		car = new Car(lane);
-		Thread carThread = new Thread(car);
-		// Start the thread for the car
-		carThread.start();
-
-	}
-
-	/**
-	 * Draws the image in the panel. The image is anchored in the (0,0)
-	 * position.
-	 */
-	private void draw() {
-		Graphics g2 = getGraphics();
-		g2.drawImage(image, 0, 0, null);
-		g2.dispose();
 	}
 
 }

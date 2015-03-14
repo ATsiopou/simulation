@@ -1,27 +1,13 @@
 {
     "lights": [
         {
-            "position": {
+            "start": {
                 "row": 27,
                 "col": 37
-            }
-        },
-        {
-            "position": {
-                "row": 32,
-                "col": 42
-            }
-        },
-        {
-            "position": {
-                "row": 32,
-                "col": 37
-            }
-        },
-        {
-            "position": {
-                "row": 27,
-                "col": 42
+            },
+            "end": {
+            	"row": 27, 
+            	"col": 35
             }
         }
     ],

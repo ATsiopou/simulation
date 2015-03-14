@@ -22,8 +22,8 @@
 public class Lane {
 
 	private int id;  	
-	Cell start;
-	Cell end;
+	private	Cell start;
+	private Cell end;
 
 	public Cell getStart() {
 		return start;

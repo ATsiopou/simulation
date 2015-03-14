@@ -22,34 +22,22 @@ public class Game {
 	public Game() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				JFrame window = new JFrame("Traffic Simulation");	
-				
-				GridPanel gridPanel = new GridPanel(800, 600, 10);
+
+				JFrame window = new JFrame("Traffic Simulation");
 				window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				window.setLayout(new BorderLayout());	
-			
+				window.setLayout(new BorderLayout());
 				window.add(new GamePanel());
-			//	window.setUndecorated(true);	
-			//	window.add(gridPanel);	
-				//gridPanel.setBackground(new Color(0,0,0,1));
-				
-				
-			//	gridPanel.setVisible(true);
-			
-				
 				window.pack();
-		
 				window.setResizable(true);
 				window.setLocationRelativeTo(null);
 				window.setVisible(true);
+
 			}
 		});
 	}
-	
-	
+
 	public static void main(String[] args) {
 		new Game();
 	}
-	
-	
+
 }
