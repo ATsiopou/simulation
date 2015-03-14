@@ -26,6 +26,8 @@ public class Light {
 		//Do nothing
 		}
 	
+	
+	//just setters getters nothing to test
 	public Light(int x1Position, int y1Position) {
 		
 		this.x1Position = x1Position;

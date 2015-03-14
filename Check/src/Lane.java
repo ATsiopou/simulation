@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-//strange lane only
-=======
 public class Lane {
 	
 	private int lineOnex; //first line's x poistion
@@ -8,7 +5,6 @@ public class Lane {
 
 	private int lineOneEndx;//where the line is ending
 	private int lineOneEndy;//where the line is ending
->>>>>>> Stashed changes
 
 	private int lineTwox;// same logic
 	private int lineTwoy;// same logic
@@ -16,32 +12,13 @@ public class Lane {
 	private int lineTwoEndx;//same logic
 	private int lineTwoEndy;//same logic
 	
-<<<<<<< Updated upstream
-	private int lineOnex;//first line's x poistion
-	private int lineOney;
-
-	private int lineOneEndx;//where the line is ending
-	private int lineOneEndy;//where the line is ending
-
-	private int lineTwox;// same logic
-	private int lineTwoy;// same logic
-
-	private int lineTwoEndx;//same logic
-	private int lineTwoEndy;//same logic
-
-=======
 	private Light light; 
     
->>>>>>> Stashed changes
 	
    
-	
+	//just give first values to variables
 	public Lane(int lineOnex, int lineOney, int lineOneEndx, int lineOneEndy,
-<<<<<<< Updated upstream
-			int lineTwox, int lineTwoy, int lineTwoEndx, int lineTwoEndy) {
-=======
 			int lineTwox, int lineTwoy, int lineTwoEndx, int lineTwoEndy, Light light) {
->>>>>>> Stashed changes
 		super();
 		this.lineOnex = lineOnex;
 		this.lineOney = lineOney;
@@ -51,9 +28,6 @@ public class Lane {
 		this.lineTwoy = lineTwoy;
 		this.lineTwoEndx = lineTwoEndx;
 		this.lineTwoEndy = lineTwoEndy;
-<<<<<<< Updated upstream
-	}
-=======
 		this.light=light; 
 		
 	}
@@ -64,21 +38,15 @@ public class Lane {
 	
 	
 	
->>>>>>> Stashed changes
 
 	//from here on are setters getters i will write the correct comments in the near future
 
 	
-<<<<<<< Updated upstream
-=======
 	
->>>>>>> Stashed changes
 	public int getLineOnex() {
 		return lineOnex;
 	}
 	
-<<<<<<< Updated upstream
-=======
 	public Light getLight() {
 		return light;
 	}
@@ -90,7 +58,6 @@ public class Lane {
 	}
 
 
->>>>>>> Stashed changes
 	public int getLineOney() {
 		return lineOney;
 	}
@@ -106,7 +73,6 @@ public class Lane {
 	public void setLineOneEndy(int lineOneEndy) {
 		this.lineOneEndy = lineOneEndy;
 	}
-<<<<<<< Updated upstream
 
 	public int getLineTwoy() {
 		return lineTwoy;
@@ -116,17 +82,6 @@ public class Lane {
 		this.lineTwoy = lineTwoy;
 	}
 
-=======
-
-	public int getLineTwoy() {
-		return lineTwoy;
-	}
-
-	public void setLineTwoy(int lineTwoy) {
-		this.lineTwoy = lineTwoy;
-	}
-
->>>>>>> Stashed changes
 	public int getLineTwoEndy() {
 		return lineTwoEndy;
 	}
