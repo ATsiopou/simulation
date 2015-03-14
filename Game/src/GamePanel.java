@@ -75,6 +75,15 @@ public class GamePanel extends JPanel implements Runnable {
 
 		// Draw map
 		map.paintMap(g2d);
+	/*
+		//Draw trafficlights
+		List<Cell> cells = new ArrayList<>();
+		Cell cell1 = new CEll(41,0);
+		Cell cell2 = new CEll(42,0);
+		cells.addAll(cell1)
+		TrafficLight light1 = new TrafficLight(g2d, cells);
+		*/
+		
 
 		// Draw the images for the cars
 		for (Car car : this.cars) {
@@ -94,6 +103,12 @@ public class GamePanel extends JPanel implements Runnable {
 	@Override
 	public void run() {
 
+		
+		// Create a taffic light 
+		//TrafficLight trafficLight = new TrafficLight(g,occupiedCells); 
+		//trafficLight.cycleLights(0);
+		
+		
 		// Create the list of cars
 		// creatCars();
 		cars = new ArrayList<>();
@@ -109,8 +124,6 @@ public class GamePanel extends JPanel implements Runnable {
 			 //lane.setStart(new Cell(41,0));
 			 //lane.setId(1);
 
-			System.out.println("Lane info: " + lane.getStart());
-			System.out.println("Lane info: " + lane.getEnd());
 
 			Car car = new Car(lane, this.g, occupiedCells);
 			// pass the car to the car thread
@@ -136,9 +149,10 @@ public class GamePanel extends JPanel implements Runnable {
 			try {
 				for (Car car : this.cars) {
 					car.move();
+					map.paintMap((Graphics2D) g);
 				}
 				Thread.sleep(DELAY);
-				repaint();
+				//repaint();
 			} catch (InterruptedException ex) {
 				Logger.getLogger(GamePanel.class.getName()).log(Level.SEVERE,
 						null, ex);

@@ -37,6 +37,7 @@ public class Car implements Runnable {
 	private double acceleration = 0.001;
 	private boolean running = true;
 	private Cell currentCell;
+	
 	private Cell occupiedCell;
 	private ArrayList<Cell> occupiedCells;
 
@@ -49,14 +50,14 @@ public class Car implements Runnable {
 
 		Image im1 = Toolkit.getDefaultToolkit().getImage("res/car.png");
 		this.carImage = im1.getScaledInstance(tileSize, tileSize, 1);
-		this.g = g;
-		// this.setLane(lane);
+	//	this.g = g;
+		this.setLane(lane);
 		this.id = lane.getId();
 		this.entryPosition = lane.getStart();
 		this.x0 = lane.getStart().getCol(); // initial position
 		this.y0 = lane.getStart().getRow(); // initial position
-
 		this.currentCell = lane.getStart();
+		
 		this.occupiedCells = occupiedCells;
 
 	}
@@ -142,8 +143,9 @@ public class Car implements Runnable {
 			}
 		}
 
-		currentCell.setCol((int) x0);
-		currentCell.setRow((int) y0);
+	//	currentCell = (Cell)x0; 
+	//	currentCell.setCol((int) x0);
+	//	currentCell.setRow((int) y0);
 
 	}
 

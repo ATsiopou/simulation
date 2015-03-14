@@ -1,5 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.Timer;
 
 import javax.swing.JPanel;
 
@@ -23,20 +25,62 @@ public class TrafficLight extends JPanel {
 
 	private Cell start;
 	private Cell end;
-	private Lane lane;
-	private Graphics g;
-	private Color lightColor;
+	private Lane lane1;
 
+
+	private Lane lane2; 
+	private Graphics g;
+	private ArrayList<Cell> lightCells; 
+	private int value; 
+	private boolean occupied; 
+	
+	private Timer timer;
+	
 	public TrafficLight() {
 		// Do nothing
 	}
 
-	public TrafficLight(Graphics g, Cell start, Cell end, Lane lane) {
-		this.start = start;
-		this.end = end;
-		this.lane = lane;
-		this.g = g;
+	public TrafficLight(Graphics g, ArrayList<Cell> lightCells){
+		this.g = g; 
+		this.lightCells = lightCells; 
 	}
+
+	public TrafficLight(Graphics g, Lane lane1, Lane lane2, ArrayList<Cell> lightCells){
+		this.g = g; 
+		this.lane1 = lane1; 
+		this.lane2 = lane2; 
+		this.lightCells = lightCells; 
+	//	timer = new Time();
+	//	timer.scheduleAtFixedRate(new LightChangeTask(lightCells), delay, period);
+	}
+
+	
+	/**
+	 * 
+	 * @param status
+	 */
+	public void cycleLights(int value){
+		
+		switch(value){
+		case 0:
+
+			
+			break; 
+			
+		case 1: 
+			
+			break; 
+		
+		
+		}
+		
+		
+		
+	}
+	
+	
+	
+	
 
 	/**
 	 * This method will control the painting of a single light
@@ -52,6 +96,26 @@ public class TrafficLight extends JPanel {
 		turnRight.drawRightTurnLight(g, 4);
 		forward.drawLight(g, 3);
 
+	}
+	
+	
+	
+	
+	
+	public ArrayList<Cell> getLightCells() {
+		return lightCells;
+	}
+
+	public void setLightCells(ArrayList<Cell> lightCells) {
+		this.lightCells = lightCells;
+	}
+
+	public boolean isOccupied() {
+		return occupied;
+	}
+
+	public void setOccupied(boolean occupied) {
+		this.occupied = occupied;
 	}
 
 	public Cell getStart() {
@@ -70,12 +134,5 @@ public class TrafficLight extends JPanel {
 		this.end = end;
 	}
 
-	public Lane getLane() {
-		return lane;
-	}
-
-	public void setLane(Lane lane) {
-		this.lane = lane;
-	}
 
 }

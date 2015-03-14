@@ -170,21 +170,15 @@ public class Map {
 	 */
 	private void drawLights(Graphics2D g) {
 
-		
-		Cell start = new Cell();
-		Cell end = new Cell();
-		Lane lane = new Lane();
+
 
 		List<TrafficLight> lights = testMap.getLights();
 		Iterator<TrafficLight> itter = lights.iterator();
 		while (itter.hasNext()) {
-			TrafficLight l = itter.next();
-
-			start = l.getStart();
-			end = l.getEnd();
+		//	TrafficLight l = itter.next();
 
 			// System.out.println("Start: " + start + " End: " + end );
-			TrafficLight light = new TrafficLight(g, start, end, lane);
+		//	TrafficLight light = new TrafficLight(g, start, end, lane);
 		//	testMap.printLights();
 			// g.setColor(Color.RED);
 			// g.fillRect(y * tileSize, x * tileSize, tileSize, tileSize);
