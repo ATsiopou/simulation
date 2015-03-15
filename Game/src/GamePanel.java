@@ -117,14 +117,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 		for (int i = 0; i < TOTALNUMEROFCARS; i++) {
 			Lane lane = new Lane();
-
-			lane = map.getRandomLane(); // something is happening here which is
-										// propogating in car()
-
-			 //lane.setStart(new Cell(41,0));
-			 //lane.setId(1);
-
-
+			lane = map.getRandomLane(); 
 			Car car = new Car(lane, this.g, occupiedCells);
 			// pass the car to the car thread
 			Thread carThread = new Thread(car);
@@ -141,7 +134,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 		while (running) {
 
-			// Set the occupid cells during the game loop
+			// Set the occupied cells during the game loop
 			for (Cell cell : occupiedCells) {
 				cell.setOccupied(true);
 			}
@@ -149,15 +142,13 @@ public class GamePanel extends JPanel implements Runnable {
 			try {
 				for (Car car : this.cars) {
 					car.move();
-					map.paintMap((Graphics2D) g);
 				}
 				Thread.sleep(DELAY);
-				//repaint();
+				repaint();
 			} catch (InterruptedException ex) {
 				Logger.getLogger(GamePanel.class.getName()).log(Level.SEVERE,
 						null, ex);
 			}
-
 		}
 
 	}
@@ -185,32 +176,13 @@ public class GamePanel extends JPanel implements Runnable {
 		occupiedCells.add(cell4);
 		occupiedCells.add(cell5);
 		occupiedCells.add(cell6);
-		// occupiedCells.add(cell7);
-		// occupiedCells.add(cell8);
+		occupiedCells.add(cell7);
+		occupiedCells.add(cell8);
 
 		return occupiedCells;
 
 	}
 
-	/**
-	 * Initialises the cars and places the cars on the map. A call is made to
-	 * getRandomLane(), which returns a random lane. The starting cell is then
-	 * accessed and given to the car as the starting position. A thread
-	 * carThread is then instantiated with the car object and the thread is
-	 * started.
-	 * 
-	 * @throws Exception
-	 */
-	@SuppressWarnings("unused")
-	private void initCar() throws Exception {
 
-		// Lane lane = map.getRandomLane();
-		// Car car = new Car(lane, g);
-		// // pass the car to the car thread
-		// Thread carThread = new Thread(car);
-		// // Start the thread for the car
-		// carThread.start();
-
-	}
 
 }

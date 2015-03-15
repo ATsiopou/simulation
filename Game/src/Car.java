@@ -21,25 +21,28 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.plaf.synth.SynthSeparatorUI;
 
+import sun.util.resources.cldr.et.CurrencyNames_et;
+
 public class Car implements Runnable {
 
 	private boolean debug = false;
+	private boolean running = true;
+	private Lane lane;
+	private Graphics g;
+	private Image carImage;
+	private Cell currentCell;
+	private Cell previousCell;
+	private Cell occupiedCell;
+	private ArrayList<Cell> occupiedCells;
 	private double x0;
 	private double y0;
 	private int id;
 	private int tileSize = 10;
-	private Cell entryPosition;
-	private Lane lane;
-	private Graphics g;
-	private Image carImage;
 	private double speed = 0.01;
 	private double maxSpeed = 0.005;
 	private double acceleration = 0.001;
-	private boolean running = true;
-	private Cell currentCell;
 	
-	private Cell occupiedCell;
-	private ArrayList<Cell> occupiedCells;
+
 
 	public Car() {
 		Image im1 = Toolkit.getDefaultToolkit().getImage("res/car.png");
@@ -50,14 +53,13 @@ public class Car implements Runnable {
 
 		Image im1 = Toolkit.getDefaultToolkit().getImage("res/car.png");
 		this.carImage = im1.getScaledInstance(tileSize, tileSize, 1);
-	//	this.g = g;
+		this.g = g;
 		this.setLane(lane);
 		this.id = lane.getId();
-		this.entryPosition = lane.getStart();
-		this.x0 = lane.getStart().getCol(); // initial position
-		this.y0 = lane.getStart().getRow(); // initial position
 		this.currentCell = lane.getStart();
-		
+		this.x0 = currentCell.getCol(); // initial position
+		this.y0 = currentCell.getRow(); // initial position
+		this.previousCell = currentCell;
 		this.occupiedCells = occupiedCells;
 
 	}
@@ -68,10 +70,6 @@ public class Car implements Runnable {
 	 * brake.
 	 */
 	public void move() {
-
-		// Cell currentCell = entryPosition;
-		// currentCell.setOccupied(true);
-		// then check the next cell if it is occupied.
 
 		if (currentCell.listEquals(occupiedCells)) {
 			currentCell.setOccupied(true);
@@ -114,39 +112,36 @@ public class Car implements Runnable {
 
 		if (isEven(this.id)) {
 
-			if (entryPosition.getCol() == 38 || entryPosition.getCol() == 39) {
-
+			if (currentCell.getCol() == 38 || currentCell.getCol() == 39) {
 				y0 -= tileSize * speed;
 				if (debug) {
 					System.out.println("In y0 -= tileSize*speed;");
 				}
 
-			} else if (entryPosition.getRow() == 30
-					|| entryPosition.getRow() == 31) {
+			} else if (currentCell.getRow() == 30 || currentCell.getRow() == 31) {
+
 				x0 -= tileSize * speed;
+
 				if (debug) {
 					System.out.println("In x0-= tileSize*speed;");
 				}
 			}
 		} else { // ODD
-			if (entryPosition.getRow() == 28 || entryPosition.getRow() == 29) {
+			if (currentCell.getRow() == 28 || currentCell.getRow() == 29) {
 				x0 += tileSize * speed;
 				if (debug) {
 					System.out.println("In x0 += tileSize*speed;");
 				}
-			} else if (entryPosition.getCol() == 40
-					|| entryPosition.getCol() == 41) {
+			} else if (currentCell.getCol() == 40 || currentCell.getCol() == 41) {
 				y0 += tileSize * speed;
 				if (debug) {
 					System.out.println("In y0 += tileSize*speed;");
 				}
 			}
 		}
-
-	//	currentCell = (Cell)x0; 
-	//	currentCell.setCol((int) x0);
-	//	currentCell.setRow((int) y0);
-
+		currentCell.setOccupied(false);
+		currentCell.setCol((int) x0);
+		currentCell.setRow((int) y0);
 	}
 
 	/**
@@ -177,13 +172,15 @@ public class Car implements Runnable {
 			return false;
 	}
 
-	// Overriding methods
-	// The car class should be act as an independent "agent"
-	// Override the run, an the draw methods
+	
+	/**
+	 * Overrides the run method. Each car runs on it's own thread. This 
+	 * method provides custom control over each car agent. 
+	 */
 	@Override
 	public void run() {
 
-		while (true) {
+		while (running) {
 
 			try {
 				move();
@@ -196,34 +193,65 @@ public class Car implements Runnable {
 		}
 	}
 
-	public void setOcuupied(ArrayList<Cell> listOfCells) {
-
-	}
-
+	/**
+	 * Returns the current x position
+	 * 
+	 * @return
+	 */
 	public double getX0() {
 		return x0;
 	}
 
+	/**
+	 * Returns the current y position
+	 * 
+	 * @return
+	 */
 	public double getY0() {
 		return y0;
 	}
 
+	/**
+	 * Returns the Image of the car
+	 * 
+	 * @return
+	 */
 	public Image getCarImage() {
 		return carImage;
 	}
 
+	/**
+	 * Sets the Image of the car
+	 * 
+	 * @param carImage
+	 */
 	public void setCarImage(Image carImage) {
 		this.carImage = carImage;
 	}
 
+	/**
+	 * Returns the current Lane
+	 * 
+	 * @return
+	 */
 	public Lane getLane() {
 		return lane;
 	}
 
+	/**
+	 * Sets the current Lane
+	 * 
+	 * @param lane
+	 */
 	public void setLane(Lane lane) {
 		this.lane = lane;
 	}
 
+	/**
+	 * Gets the ID of the current Lane
+	 * 
+	 * @return
+	 */
 	public int getId() {
 		return this.id;
 	}
