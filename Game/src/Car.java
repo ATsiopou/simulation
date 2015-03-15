@@ -101,6 +101,9 @@ public class Car implements Runnable {
 	 */
 	private void accelerate() {
 
+
+		
+		
 		// Increase speed by dx/dy (acceleration) in either direction
 		if (speed < maxSpeed) {
 			speed += acceleration;
@@ -139,9 +142,19 @@ public class Car implements Runnable {
 				}
 			}
 		}
+
 		currentCell.setOccupied(false);
-		currentCell.setCol((int) x0);
-		currentCell.setRow((int) y0);
+		
+		int xLocation = (int)(x0/speed); 
+		int yLocation = (int)(y0/speed); 
+		
+		System.out.println("x0: " + x0 + "y0: " + y0  ); 
+		System.out.println("x0: " + xLocation + "y0: " + yLocation  ); 
+		
+		
+		
+	//	currentCell.setCol( xCurrent);
+	//	currentCell.setRow( yCurrent);
 	}
 
 	/**

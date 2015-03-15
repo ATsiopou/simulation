@@ -7,7 +7,7 @@ import java.util.*;
 
 public class SystemEngine extends JPanel {
 	
-	private ArrayList <Car> listOfCars=new ArrayList ();
+	private ArrayList <Car> listOfCars=new ArrayList<>();
     private Matrix matrix=new Matrix();
 
 	
@@ -68,6 +68,7 @@ public class SystemEngine extends JPanel {
 	}
 	
 	//return true if the car should be removed from the lust
+	@SuppressWarnings("unused")
 	private boolean shouldRemoveFromTheList(Car c){
 		 if(c.getDirection()==0){
 			  
