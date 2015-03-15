@@ -1,13 +1,10 @@
 import java.awt.*;
-
 import javax.swing.*;
-
-import java.io.*;
 import java.util.*;
 
 public class SystemEngine extends JPanel {
 	
-	private ArrayList <Car> listOfCars=new ArrayList<>();
+	private ArrayList <Car> listOfCars = new ArrayList<Car>();
     private Matrix matrix=new Matrix();
 
 	
@@ -52,7 +49,7 @@ public class SystemEngine extends JPanel {
 			}else{
 				 Car c=new Car(3,lane4,matrix);
 			 
-				 //listOfCars.add(c);
+				 listOfCars.add(c);
 			       lanepo=0;
 			}
 			
@@ -67,8 +64,25 @@ public class SystemEngine extends JPanel {
 	
 	}
 	
+	//still not working
+	
+	public void clearOutMApCar(){
+		 ArrayList <Car> listOfCars2=listOfCars;
+       
+		 Iterator<Car> i = listOfCars2.iterator();
+		 while (i.hasNext()) {
+		    Car s = i.next(); // must be called before you can call i.remove()
+		    if(shouldRemoveFromTheList(s)){
+			    i.remove();
+
+		    }
+		 } 
+		 
+	
+
+	}
+	
 	//return true if the car should be removed from the lust
-	@SuppressWarnings("unused")
 	private boolean shouldRemoveFromTheList(Car c){
 		 if(c.getDirection()==0){
 			  
@@ -99,7 +113,13 @@ public class SystemEngine extends JPanel {
 	
 	//chne some lights to red some to green
     public void lightsEngine(){
+    
+   
     	
+    	
+    	
+    	
+    	/*
     	if(l.isCondition()){
     	   l.setCondition(false);
     	   l2.setCondition(false);
@@ -113,7 +133,7 @@ public class SystemEngine extends JPanel {
     	   l4.setCondition(false);
 
     	}
-    	
+    	*/
     }
 	
 	
@@ -153,7 +173,7 @@ public class SystemEngine extends JPanel {
 			g2d.drawLine(lane4.getLineTwox(), lane4.getLineTwoy(), lane4.getLineTwoEndx(),  lane4.getLineTwoEndy());
 
 			
-			
+			//Drawing the lights
 			Graphics2D g2 = (Graphics2D) g;
 		  	g2.setColor(l.getColor());
 		    g2.fillOval(l.getX1Position(), l.getY1Position(), 10, 40);
