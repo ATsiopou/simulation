@@ -68,8 +68,9 @@ public class Car implements Runnable {
 	 * This method is responsible for moving a car. It checks the if the cell in
 	 * front of it is occupied and it proceeds to accelerate, otherwise it will
 	 * brake.
+	 * @throws InterruptedException 
 	 */
-	public void move() {
+	public void move() throws InterruptedException {
 
 		if (currentCell.listEquals(occupiedCells)) {
 			currentCell.setOccupied(true);
@@ -96,10 +97,11 @@ public class Car implements Runnable {
 	 * each cell set cell occupied set previous cell unoccoupied }
 	 * 
 	 * Try to remove the magic numbers => make it more general
+	 * @throws InterruptedException 
 	 * 
 	 * 
 	 */
-	private void accelerate() {
+	private void accelerate() throws InterruptedException {
 
 
 		
@@ -143,18 +145,28 @@ public class Car implements Runnable {
 			}
 		}
 
-		currentCell.setOccupied(false);
+		Cell obstacleCell = new Cell((int)x0,(int)y0);
+		for (Cell cell : occupiedCells) {
+			if(obstacleCell.equals(cell) && cell.isOccupied()) { 
+				this.brake(10);
+				cell.setOccupied(false);
+			}
+		}
 		
-		int xLocation = (int)(x0/speed); 
-		int yLocation = (int)(y0/speed); 
+//		int xLocation = (int)(x0/speed); 
+//		int yLocation = (int)(y0/speed); 
+//		
+//		System.out.println("x0: " + x0 + "y0: " + y0  ); 
+//		System.out.println("x0: " + xLocation + "y0: " + yLocation  ); 
+//		
 		
-		System.out.println("x0: " + x0 + "y0: " + y0  ); 
-		System.out.println("x0: " + xLocation + "y0: " + yLocation  ); 
 		
-		
-		
-	//	currentCell.setCol( xCurrent);
-	//	currentCell.setRow( yCurrent);
+		//currentCell.setCol( (int)x0);
+		//currentCell.setRow( (int) y0);
+	}
+	
+	private void brake(int stoppage) throws InterruptedException {
+		Thread.sleep(stoppage*1000);
 	}
 
 	/**

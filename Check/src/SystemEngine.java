@@ -4,9 +4,9 @@ import java.util.*;
 
 public class SystemEngine extends JPanel {
 	
-	private ArrayList <Car> listOfCars = new ArrayList<Car>();
+	private int carFrequency = 20; 
+	private ArrayList <Car> listOfCars=new ArrayList<Car> ();
     private Matrix matrix=new Matrix();
-
 	
 	Light l=new Light(550,350);
 	Light l2=new Light(640,391);
@@ -27,7 +27,7 @@ public class SystemEngine extends JPanel {
 
 	public void moveCar() {
 
-		if (inte%20==0){
+		if (inte%carFrequency==0){
 			
           /// add carsto the  arraylist/map
 			if(lanepo==0){
@@ -49,7 +49,7 @@ public class SystemEngine extends JPanel {
 			}else{
 				 Car c=new Car(3,lane4,matrix);
 			 
-				 listOfCars.add(c);
+				 //listOfCars.add(c);
 			       lanepo=0;
 			}
 			
@@ -65,7 +65,8 @@ public class SystemEngine extends JPanel {
 	}
 	
 	//still not working
-	
+
+
 	public void clearOutMApCar(){
 		 ArrayList <Car> listOfCars2=listOfCars;
        
@@ -113,13 +114,7 @@ public class SystemEngine extends JPanel {
 	
 	//chne some lights to red some to green
     public void lightsEngine(){
-    
-   
     	
-    	
-    	
-    	
-    	/*
     	if(l.isCondition()){
     	   l.setCondition(false);
     	   l2.setCondition(false);
@@ -133,7 +128,7 @@ public class SystemEngine extends JPanel {
     	   l4.setCondition(false);
 
     	}
-    	*/
+    	
     }
 	
 	
@@ -173,7 +168,7 @@ public class SystemEngine extends JPanel {
 			g2d.drawLine(lane4.getLineTwox(), lane4.getLineTwoy(), lane4.getLineTwoEndx(),  lane4.getLineTwoEndy());
 
 			
-			//Drawing the lights
+			
 			Graphics2D g2 = (Graphics2D) g;
 		  	g2.setColor(l.getColor());
 		    g2.fillOval(l.getX1Position(), l.getY1Position(), 10, 40);
@@ -214,5 +209,17 @@ public class SystemEngine extends JPanel {
 		}
 		
 	}
+	
+	
+	
+
+	/**
+	 * Setting the car frequency 
+	 * @param carFrequency
+	 */
+	public void setCarFrequency(int carFrequency) {
+		this.carFrequency = carFrequency;
+	}
+	
 
 }

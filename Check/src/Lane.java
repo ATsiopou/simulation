@@ -5,13 +5,21 @@
 public class Lane {
 	
 	private int lineOnex; //first line's x poistion
+	
 	private int lineOney;
+	
 	private int lineOneEndx;//where the line is ending
+	
 	private int lineOneEndy;//where the line is ending
+	
 	private int lineTwox;// same logic
+	
 	private int lineTwoy;// same logic
+	
 	private int lineTwoEndx;//same logic
+	
 	private int lineTwoEndy;//same logic
+	
 	private Light light; 
     
 	
