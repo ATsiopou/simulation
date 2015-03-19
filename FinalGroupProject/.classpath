@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+<<<<<<< HEAD
 	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/home/gaia/jackson-annotations-2.3.3.jar"/>
 	<classpathentry kind="lib" path="/home/gaia/jackson-core-2.3.3.jar"/>
 	<classpathentry kind="lib" path="/home/gaia/jackson-databind-2.3.3.jar"/>
+=======
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 	<classpathentry kind="output" path="bin"/>
 </classpath>

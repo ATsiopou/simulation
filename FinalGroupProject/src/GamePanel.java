@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements Runnable {
 
+<<<<<<< HEAD
 	public static final boolean debug = true;
 	private static final long serialVersionUID = 1L;
 	public static final int HEIGHT = 800; // 600
@@ -41,6 +42,24 @@ public class GamePanel extends JPanel implements Runnable {
 	private ArrayList<Cell> occupiedCells;
 	private int inte = 0;
 
+=======
+	public static final boolean debug = false;
+	private static final long serialVersionUID = 1L;
+	public static final int HEIGHT = 800; // 600
+	public static final int WIDTH = 1200; // 800
+	public static final int DELAY = 20;
+	public static final int TILE = 10;
+	public static final int TOTALNUMEROFCARS = 10;
+	public static final int ENTRYFREQUENCY = 100; // in milliseconds (2seconds)
+	private boolean running = true;
+	private Thread animator;
+	private Graphics g;
+	public Map map;
+	private ArrayList<Car> listOfCars;
+	private ArrayList<Cell> occupiedCells;
+	private int inte = 0;
+	private int totalCarCounter = 0;
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 	private int MAPTYPE = 1;
 
 	public GamePanel() {
@@ -52,7 +71,11 @@ public class GamePanel extends JPanel implements Runnable {
 	 */
 	private void initGamePanel() {
 		setDoubleBuffered(true);
+<<<<<<< HEAD
 		switch (1) {
+=======
+		switch (MAPTYPE) {
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 		case 1:
 			try {
 				map = new Map("res/map1_1Intersection.json", WIDTH, HEIGHT,
@@ -68,8 +91,13 @@ public class GamePanel extends JPanel implements Runnable {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+<<<<<<< HEAD
 			break;
 
+=======
+			break;	
+			
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 		}
 
 	}
@@ -93,6 +121,10 @@ public class GamePanel extends JPanel implements Runnable {
 
 		// Draw map
 		map.paintMap(g2d);
+<<<<<<< HEAD
+=======
+		// Draw traffic Lights here.
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 
 		// Draw the images for the cars
 		for (Car car : listOfCars) {
@@ -102,7 +134,11 @@ public class GamePanel extends JPanel implements Runnable {
 
 		// For testing purpose
 		if (debug) {
+<<<<<<< HEAD
 			map.paintGrid(g2d);
+=======
+			//map.paintGrid(g2d);
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 			map.paintMapOccupiedValues(g2d);
 		}
 		g.dispose();
@@ -113,6 +149,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 		// Create the list of cars
 		listOfCars = new ArrayList<Car>();
+<<<<<<< HEAD
 
         
 		while (running) {
@@ -126,6 +163,22 @@ public class GamePanel extends JPanel implements Runnable {
 						Car car = new Car(lane, g,occupiedCells,map);
 						listOfCars.add(car);
 					}
+=======
+		// Create the occupied cells lists
+		occupiedCells = createOccupiedCells();
+
+		while (running) {
+			try {
+
+				if ((inte % ENTRYFREQUENCY == 0)) {
+					if (totalCarCounter <= TOTALNUMEROFCARS) {
+						Lane lane = new Lane();
+						lane = map.getRandomLane();
+						Car car = new Car(lane, g, occupiedCells);
+						listOfCars.add(car);
+					}
+					totalCarCounter++;
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 				}
 				for (Car car : this.listOfCars) {
 					car.move();
@@ -155,6 +208,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 	public ArrayList<Cell> createOccupiedCells() {
 
+<<<<<<< HEAD
 //	//	occupiedCells = new ArrayList<Cell>();
 //
 //		//Cell cell1 = new Cell(28, 16); // x++
@@ -183,11 +237,42 @@ public class GamePanel extends JPanel implements Runnable {
 //		cell6.setOccupied(true);
 //		cell7.setOccupied(true);
 //		cell8.setOccupied(true);
+=======
+		occupiedCells = new ArrayList<Cell>();
+
+		Cell cell1 = new Cell(37, 28); // x++
+		Cell cell2 = new Cell(37, 29); // x++
+		Cell cell3 = new Cell(40, 27); // y++
+		Cell cell4 = new Cell(41, 27); // y++
+		Cell cell5 = new Cell(42, 30); // x--
+		Cell cell6 = new Cell(42, 31); // x--
+		Cell cell7 = new Cell(38, 32); // y--
+		Cell cell8 = new Cell(39, 32); // y--
+
+		occupiedCells.add(cell1);
+		occupiedCells.add(cell2);
+		occupiedCells.add(cell3);
+		occupiedCells.add(cell4);
+		occupiedCells.add(cell5);
+		occupiedCells.add(cell6);
+		occupiedCells.add(cell7);
+		occupiedCells.add(cell8);
+
+		cell1.setOccupied(true);
+		cell2.setOccupied(true);
+		cell3.setOccupied(true);
+		cell4.setOccupied(true);
+		cell5.setOccupied(true);
+		cell6.setOccupied(true);
+		cell7.setOccupied(true);
+		cell8.setOccupied(true);
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 
 		return occupiedCells;
 
 	}
 
+<<<<<<< HEAD
 	/**
 	 * This method removes the cars from the map when 
 	 * they have passed the maps boundaries. 
@@ -226,3 +311,6 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 
 }
+=======
+}
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f

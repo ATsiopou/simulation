@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import java.util.*;
+=======
+import java.util.ArrayList;
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 
 /*Authors : Iordanis Paschalidis, 
  * 			Anthony Tsiopoulos 

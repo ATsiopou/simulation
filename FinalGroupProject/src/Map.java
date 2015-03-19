@@ -11,6 +11,7 @@
  * Moded  : 
  * 
  */
+<<<<<<< HEAD
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -20,6 +21,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+=======
+import java.awt.*;
+import java.io.*;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Map {
@@ -34,6 +49,7 @@ public class Map {
 	private MyMap testMap;
 	private List<Lane> laneCells;
 
+<<<<<<< HEAD
 	public Map(String file, int mapWidth, int mapHeight, int tileSize)throws IOException {
 
 		this.tileSize = tileSize;
@@ -42,6 +58,16 @@ public class Map {
 		// this.mapWidth = mapHeight;
 		this.mapHeight = mapHeight / tileSize;
 		this.mapWidth = mapWidth / tileSize;
+=======
+	public Map(String file, int mapWidth, int mapHeight, int tileSize)
+			throws IOException {
+
+		this.tileSize = tileSize;
+		this.file = file;
+		this.mapHeight = mapHeight / tileSize;
+		this.mapWidth = mapWidth / tileSize;
+
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 		initMap();
 	}
 
@@ -53,7 +79,13 @@ public class Map {
 
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+<<<<<<< HEAD
 			testMap = mapper.readValue(new FileReader(this.file), MyMap.class);
+=======
+
+			testMap = mapper.readValue(new FileReader(this.file), MyMap.class);
+
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 			map = new Cell[mapWidth][mapHeight];
 
 			for (int col = 0; col < mapWidth; col++) {
@@ -62,8 +94,14 @@ public class Map {
 				}
 			}
 
+<<<<<<< HEAD
 			// TEST TEST TEST
 			map[29][36].setOccupied(true);
+=======
+			//TEST TEST TEST 
+			map[10][10].setOccupied(true);
+			map[25][25].setOccupied(true);
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -78,10 +116,23 @@ public class Map {
 	 * @param x
 	 * @param y
 	 */
+<<<<<<< HEAD
 	public void addPosition(double x, double y) {
 		if (x < mapWidth && x > 0 && y < mapHeight && y > 0) {
 			map[(int) x][(int) y].setOccupied(true);
 		}
+=======
+	public void addPosition(Cell cell) {
+
+		int x = cell.getCol();
+		int y = cell.getRow();
+
+		if (x < mapWidth && x > 0 && y < mapHeight && y > 0) {
+			map[x][y].setOccupied(true);
+			;
+		}
+
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 	}
 
 	/**
@@ -90,9 +141,18 @@ public class Map {
 	 * @param x
 	 * @param y
 	 */
+<<<<<<< HEAD
 	public void removePosition(double x, double y) {
 		if (x < mapWidth && x > 0 && y < mapHeight && y > 0) {
 			map[(int) x][(int) y].setOccupied(false);
+=======
+	public void removePosition(Cell cell) {
+		int x = cell.getCol();
+		int y = cell.getRow();
+
+		if (x < mapWidth && x > 0 && y < mapHeight && y > 0) {
+			map[x][y].setOccupied(false);
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 		}
 	}
 
@@ -120,10 +180,17 @@ public class Map {
 		drawBoard(g);
 		drawLanes(g);
 		drawDashedLane(g);
+<<<<<<< HEAD
 		//drawSideWalk(g);
 		// drawLights(g);
 		// drawLaneBoarders(g);
 		// drawIntersection(g);
+=======
+		// drawLights(g);
+		// drawLaneBoarders(g);
+		// drawIntersection(g);
+
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 	}
 
 	/**
@@ -146,6 +213,11 @@ public class Map {
 	 * This method is used to draw the lanes to the map. The lanes are held
 	 * within a JSON file.
 	 * 
+<<<<<<< HEAD
+=======
+	 * The Json file changed, as a result the drawLanes method is not working
+	 * 
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 	 * @param g
 	 */
 	private void drawLanes(Graphics2D g) {
@@ -174,7 +246,11 @@ public class Map {
 			for (int col = xStart; col <= xEnd; col++) {
 				for (int row = yStart; row <= yEnd; row++) {
 					g.fillRect(xOffset + col * tileSize, yOffset + row
+<<<<<<< HEAD
 							* tileSize, tileSize * 2, tileSize * 2);
+=======
+							* tileSize, tileSize*2, tileSize*2);
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 				}
 			}
 		}
@@ -201,12 +277,21 @@ public class Map {
 			int yEnd = l.getEnd().getRow();
 
 			if (count == 1 || count % 2 == 0) {
+<<<<<<< HEAD
 				g.setColor(Color.LIGHT_GRAY);
+=======
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 				g.drawLine(xStart * tileSize, yStart * tileSize, xEnd
 						* tileSize, yEnd * tileSize);
 				BasicStroke dashed1 = new BasicStroke(1.0f,
 						BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
 						dash1, 0.0f);
+<<<<<<< HEAD
+=======
+				g.setColor(Color.LIGHT_GRAY);
+				g.setStroke(dashed1);
+
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 			}
 
 			count++;
@@ -225,7 +310,11 @@ public class Map {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.GRAY);
 
+<<<<<<< HEAD
 		// Draw the Rows
+=======
+		//Draw the Rows
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 		for (int i = 0; i < mapHeight; i++) {
 			g2d.drawLine(0, i * tileSize, tileSize * mapWidth, i * tileSize);
 			g2d.setComposite(AlphaComposite.getInstance(
@@ -251,10 +340,17 @@ public class Map {
 
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+<<<<<<< HEAD
 				0.2f));
 
 		for (int row = 0; row < mapHeight; row++) {
 			for (int col = 0; col < mapWidth; col++) {
+=======
+				0.08f));
+
+		for (int col = 0; col < mapWidth; col++) {
+			for (int row = 0; row < mapHeight; row++) {
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 				if (!map[col][row].isOccupied()) {
 					g2d.setColor(Color.RED);
 					g2d.fillRect(xOffset + col * tileSize, yOffset + row
@@ -268,6 +364,7 @@ public class Map {
 		}
 	}
 
+<<<<<<< HEAD
 	/**
 	 * This method returns a cell with indices x and y. 
 	 * @param x
@@ -312,3 +409,6 @@ public class Map {
 	}
 
 }
+=======
+}
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f

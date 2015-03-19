@@ -16,6 +16,7 @@ import java.util.Random;
 public class MyMap {
 
 	List<Lane> lanes;
+<<<<<<< HEAD
 	List<Lane> sideWalks; 
 
 	/**
@@ -46,6 +47,14 @@ public class MyMap {
 	 * This method sets a list of lanes. 
 	 * @param lanes - a List of Lane objects
 	 */
+=======
+	List<Cell> entryPositions; 
+
+	public List<Lane> getLanes() {
+		return lanes;
+	}
+
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 	public void setLanes(List<Lane> lanes) {
 		this.lanes = lanes;
 	}
@@ -63,6 +72,26 @@ public class MyMap {
 	}
 	
 	/**
+<<<<<<< HEAD
+=======
+	 * Print method for lights as an ordered pair
+	 */
+	public void printLights() {
+
+		int count = 1;
+		System.out.println("");
+		System.out.println("----------------");
+		System.out.println(" Light Position ");
+		System.out.println("     (x,y)      ");
+		System.out.println("----------------");
+		System.out.println("");
+		
+	
+	}
+
+
+	/**
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 	 * Prints the lanes start and end positions as ordered pair
 	 * 
 	 */
@@ -85,9 +114,12 @@ public class MyMap {
 			count++;
 		}
 	}
+<<<<<<< HEAD
 	
 	
 	
 	
+=======
+>>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 
 }
