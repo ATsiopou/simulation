@@ -21,70 +21,89 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.plaf.synth.SynthSeparatorUI;
 
-import sun.util.resources.cldr.et.CurrencyNames_et;
-
-public class Car implements Runnable {
+public class Car {
 
 	private boolean debug = false;
-	private boolean running = true;
 	private Lane lane;
 	private Graphics g;
 	private Image carImage;
+	private Map map;
 	private Cell currentCell;
-	private Cell previousCell;
-	private Cell occupiedCell;
-	private ArrayList<Cell> occupiedCells;
+	public ArrayList<Cell> occupiedCells;
 	private double x0;
 	private double y0;
 	private int id;
 	private int tileSize = 10;
 	private double speed = 0.01;
-	private double maxSpeed = 0.005;
+	private double maxSpeed = 0.01;
 	private double acceleration = 0.001;
-	
-
 
 	public Car() {
 		Image im1 = Toolkit.getDefaultToolkit().getImage("res/car.png");
 		this.carImage = im1.getScaledInstance(tileSize, tileSize, 1);
 	}
 
-	public Car(Lane lane, Graphics g, ArrayList<Cell> occupiedCells) {
+	public Car(Lane lane, Graphics g, ArrayList<Cell> occupiedCells,Map map) {
 
 		Image im1 = Toolkit.getDefaultToolkit().getImage("res/car.png");
-		this.carImage = im1.getScaledInstance(tileSize, tileSize, 1);
+		this.carImage = im1.getScaledInstance(tileSize * 2, tileSize * 2, 1);
+		this.lane = lane;
 		this.g = g;
 		this.setLane(lane);
 		this.id = lane.getId();
 		this.currentCell = lane.getStart();
 		this.x0 = currentCell.getCol(); // initial position
 		this.y0 = currentCell.getRow(); // initial position
-		this.previousCell = currentCell;
 		this.occupiedCells = occupiedCells;
+		this.map=map;
 
 	}
+
 
 	/**
 	 * This method is responsible for moving a car. It checks the if the cell in
 	 * front of it is occupied and it proceeds to accelerate, otherwise it will
 	 * brake.
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 */
 	public void move() throws InterruptedException {
+       
+		switch(this.getLane().getDirection()){
+		case 0:
 
-		if (currentCell.listEquals(occupiedCells)) {
-			currentCell.setOccupied(true);
-		}
+	     	if(!map.getCell((int)x0+2,(int)y0).isOccupied()){
+              map.removePosition(x0,y0);
+		      accelerate();
+              map.addPosition(x0,y0);
+	     	}
+			
+	     	break;
+		case 1:
 
-		if (!currentCell.isOccupied()) {
-			accelerate();
-			if (debug) {
-				System.out.println("Current cell: " + currentCell);
-			}
-		} else {
-		//	brake();
-		}
-
+	     	if(!map.getCell((int)x0-2,(int)y0).isOccupied()){
+            map.removePosition(x0,y0);
+		    accelerate();
+            map.addPosition(x0,y0);
+	     	}
+			
+	     	break;
+		case 2:
+	     	if(!map.getCell((int)x0,(int)y0+1).isOccupied()){
+            map.removePosition(x0,y0);
+		    accelerate();
+            map.addPosition(x0,y0);
+	     	}
+	     	break;
+		case 3:
+			// if(!map.getCell((int)x0-1,(int)y0-1).isOccupied()){
+	     	if(!map.getCell((int)x0-2,(int)y0-2).isOccupied()){
+            map.removePosition(x0,y0);
+		    accelerate();
+            map.addPosition(x0,y0);
+	     	}
+	     	break;
+	   	}
 	}
 
 	/**
@@ -97,15 +116,13 @@ public class Car implements Runnable {
 	 * each cell set cell occupied set previous cell unoccoupied }
 	 * 
 	 * Try to remove the magic numbers => make it more general
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 * 
 	 * 
 	 */
 	private void accelerate() throws InterruptedException {
 
-
-		
-		
 		// Increase speed by dx/dy (acceleration) in either direction
 		if (speed < maxSpeed) {
 			speed += acceleration;
@@ -117,73 +134,62 @@ public class Car implements Runnable {
 
 		if (isEven(this.id)) {
 
-			if (currentCell.getCol() == 38 || currentCell.getCol() == 39) {
+			if (currentCell.getCol() == lane.getStart().getCol() && lane.getDirection() == 3) {
 				y0 -= tileSize * speed;
 				if (debug) {
 					System.out.println("In y0 -= tileSize*speed;");
 				}
-
-			} else if (currentCell.getRow() == 30 || currentCell.getRow() == 31) {
-
+			} else if (currentCell.getRow() == lane.getStart().getRow() && lane.getDirection() == 1) {
 				x0 -= tileSize * speed;
-
 				if (debug) {
 					System.out.println("In x0-= tileSize*speed;");
 				}
 			}
 		} else { // ODD
-			if (currentCell.getRow() == 28 || currentCell.getRow() == 29) {
+
+			if(currentCell.getRow() == lane.getStart().getRow() && lane.getDirection() == 0){
 				x0 += tileSize * speed;
 				if (debug) {
 					System.out.println("In x0 += tileSize*speed;");
 				}
-			} else if (currentCell.getCol() == 40 || currentCell.getCol() == 41) {
+			} else if (currentCell.getCol() == lane.getStart().getCol() && lane.getDirection() == 2 ){
 				y0 += tileSize * speed;
 				if (debug) {
 					System.out.println("In y0 += tileSize*speed;");
 				}
 			}
 		}
-
-		Cell obstacleCell = new Cell((int)x0,(int)y0);
-		for (Cell cell : occupiedCells) {
-			if(obstacleCell.equals(cell) && cell.isOccupied()) { 
-				brake(cell); 
-				cell.setOccupied(false);
-				System.out.println("Cell: " + cell.isOccupied());
-			}
-		}
-		System.out.println("obstacle cell: "+obstacleCell);
-		
-//		int xLocation = (int)(x0/speed); 
-//		int yLocation = (int)(y0/speed); 
-//		
-//		System.out.println("x0: " + x0 + "y0: " + y0  ); 
-//		System.out.println("x0: " + xLocation + "y0: " + yLocation  ); 
-//		
-		
-		
-		//currentCell.setCol( (int)x0);
-		//currentCell.setRow( (int) y0);
 	}
-	
+
+	/**
+	 * OverLoading the brake method. This tells the thread to sleep for time in
+	 * seconds.
+	 * 
+	 * @param stoppage
+	 * @throws InterruptedException
+	 */
+	@SuppressWarnings("unused")
 	private void brake(int stoppage) throws InterruptedException {
-		Thread.sleep(stoppage*1000);
+		Thread.sleep(stoppage * 1000);
 	}
 
 	/**
 	 * This method (for now) will stop the car from increasing in it's current
 	 * direction
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 */
-	private void brake(Cell cell) throws InterruptedException {
-	
-		System.out.println("Cell: "+cell+ "Occupied: " + cell.isOccupied());
-		brake(10);
+	@SuppressWarnings("unused")
+	private void brake(Cell currentCell) throws InterruptedException {
+
+		if (debug) {
+			System.out.println("In brake");
+		}
 		x0 = x0;
 		y0 = y0;
 	}
 
+	
 	@SuppressWarnings("unused")
 	private void randomize() {
 		// randomly call accelerate OR randomly call brake
@@ -196,32 +202,10 @@ public class Car implements Runnable {
 	 * @return
 	 */
 	private boolean isEven(int value) {
-
 		if (value % 2 == 0)
 			return true;
 		else
 			return false;
-	}
-
-	
-	/**
-	 * Overrides the run method. Each car runs on it's own thread. This 
-	 * method provides custom control over each car agent. 
-	 */
-	@Override
-	public void run() {
-
-		while (running) {
-
-			try {
-				move();
-				Thread.sleep(20);
-			} catch (InterruptedException ex) {
-				Logger.getLogger(Car.class.getName()).log(Level.SEVERE, null,
-						ex);
-			}
-
-		}
 	}
 
 	/**

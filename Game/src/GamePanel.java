@@ -31,7 +31,7 @@ public class GamePanel extends JPanel implements Runnable {
 	public static final int WIDTH = 800; // 800
 	public static final int DELAY = 20;
 	public static final int TILE = 10;
-	public static final int TOTALNUMEROFCARS = 10;
+	public static final int TOTALNUMEROFCARS = 1;
 	public static final int ENTRYFREQUENCY = 2000; // in milliseconds (2seconds)
 	private boolean running = true;
 	private Thread animator;
