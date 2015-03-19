@@ -25,7 +25,7 @@ import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements Runnable {
 
-	public static final boolean debug = true;
+	public static final boolean debug = false;
 	private static final long serialVersionUID = 1L;
 	public static final int HEIGHT = 800; // 600
 	public static final int WIDTH = 1200; // 800

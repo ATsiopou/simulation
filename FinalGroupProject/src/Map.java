@@ -191,7 +191,7 @@ public class Map {
 			for (int col = xStart; col <= xEnd; col++) {
 				for (int row = yStart; row <= yEnd; row++) {
 					g.fillRect(xOffset + col * tileSize, yOffset + row
-							* tileSize, tileSize, tileSize);
+							* tileSize, tileSize*2, tileSize*2);
 				}
 			}
 		}

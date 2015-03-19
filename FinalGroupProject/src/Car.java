@@ -12,9 +12,14 @@
  */
 
 import java.awt.*;
-import java.util.*;
-import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
+import javax.swing.plaf.synth.SynthSeparatorUI;
 
 
 public class Car {
@@ -47,7 +52,7 @@ public class Car {
 	public Car(Lane lane, Graphics g, ArrayList<Cell> occupiedCells) {
 
 		Image im1 = Toolkit.getDefaultToolkit().getImage("res/car.png");
-		this.carImage = im1.getScaledInstance(tileSize, tileSize, 1);
+		this.carImage = im1.getScaledInstance(tileSize*2, tileSize*2, 1);
 		//this.lane=lane; 
 		this.g = g;
 		this.setLane(lane);
@@ -139,13 +144,14 @@ public class Car {
 
 		if (isEven(this.id)) {
 
-			if (currentCell.getCol() == 58 || currentCell.getCol() == 59) {
-				y0 -= tileSize * speed;
+			if (currentCell.getCol() == 56 || currentCell.getCol() == 58) {
+				y0--; 
+				//y0 -= tileSize * speed;
 				if (debug) {
 					System.out.println("In y0 -= tileSize*speed;");
 				}
 
-			} else if (currentCell.getRow() == 30 || currentCell.getRow() == 31) {
+			} else if (currentCell.getRow() == 40 || currentCell.getRow() == 42) {
 
 				x0 -= tileSize * speed;
 
@@ -154,19 +160,20 @@ public class Car {
 				}
 			}
 		} else { // ODD
-			if (currentCell.getRow() == 38 || currentCell.getRow() == 39) {
+			if (currentCell.getRow() == 36 || currentCell.getRow() == 38) {
 				x0 += tileSize * speed;
 				if (debug) {
 					System.out.println("In x0 += tileSize*speed;");
 				}
-			} else if (currentCell.getCol() == 60 || currentCell.getCol() == 61) {
+			} else if (currentCell.getCol() == 60 || currentCell.getCol() == 62) {
 				y0 += tileSize * speed;
 				if (debug) {
 					System.out.println("In y0 += tileSize*speed;");
 				}
 			}
 		}
-		
+		System.out.println("x0: " + x0 + "y0" + y0 );
+		System.out.println("Current CEll: " + currentCell);
 		Cell obstacleCell = new Cell((int)x0,(int)y0);
 		for (Cell cell : occupiedCells) {
 			if(obstacleCell.equals(cell) && cell.isOccupied()) { 
