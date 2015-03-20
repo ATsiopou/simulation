@@ -11,7 +11,6 @@
  * Moded  : 
  * 
  */
-<<<<<<< HEAD
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -21,20 +20,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-=======
-import java.awt.*;
-import java.io.*;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Map {
@@ -57,18 +42,18 @@ public class Map {
 		// this.mapWidth = mapHeight;
 		this.mapHeight = mapHeight / tileSize;
 		this.mapWidth = mapWidth / tileSize;
+		initMap();
 	}
 
 	/**
 	 * This method is responsible for reading the contents of the JSON file and
-	 * mapping it into the MyMap class.
+	 * mapping it into the MyMap class. 
 	 */
 	private void initMap() {
 
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			testMap = mapper.readValue(new FileReader(this.file), MyMap.class);
-
 			map = new Cell[mapWidth][mapHeight];
 
 			for (int col = 0; col < mapWidth; col++) {
@@ -223,6 +208,7 @@ public class Map {
 						BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
 						dash1, 0.0f);
 			}
+
 			count++;
 		} // end while
 	}
@@ -238,6 +224,7 @@ public class Map {
 
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.GRAY);
+
 		// Draw the Rows
 		for (int i = 0; i < mapHeight; i++) {
 			g2d.drawLine(0, i * tileSize, tileSize * mapWidth, i * tileSize);
@@ -263,16 +250,17 @@ public class Map {
 	public void paintMapOccupiedValues(Graphics g) {
 
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.2f));
+		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+				0.2f));
 
 		for (int row = 0; row < mapHeight; row++) {
 			for (int col = 0; col < mapWidth; col++) {
 				if (!map[col][row].isOccupied()) {
-					g2d.setColor(Color.RED);
+					g2d.setColor(Color.GREEN);
 					g2d.fillRect(xOffset + col * tileSize, yOffset + row
 							* tileSize, tileSize, tileSize);
 				} else {
-					g2d.setColor(Color.GREEN);
+					g2d.setColor(Color.RED);
 					g2d.fillRect(xOffset + col * tileSize, yOffset + row
 							* tileSize, tileSize, tileSize);
 				}
@@ -323,5 +311,31 @@ public class Map {
 		return true;
 	}
 
-}
+	/**
+	 * This method checks if an Agent is in the lane next to it. There are four cases for each direction.
+	 * 
+	 * Add Lane lane object as param after 
+	 * 
+	 * @param x
+	 * @param y
+	 * @param direction
+	 * @return
+	 */
+	public boolean isAgentBeside(int x, int y, int direction) {
 
+		switch (direction) {
+		case 0:
+			if (map[x][y+1].isOccupied())
+				return true;
+			break;
+
+		}
+
+		return true;
+	}
+	
+	
+	
+	
+	
+}
