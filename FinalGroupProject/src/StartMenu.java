@@ -1,9 +1,6 @@
 import java.awt.*;
-<<<<<<< HEAD
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-=======
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 
 import javax.swing.*;
 import javax.swing.GroupLayout.*;
@@ -81,6 +78,5 @@ public class StartMenu extends JPanel {
 		vGroup.addGroup(gl.createParallelGroup(Alignment.BASELINE).addComponent(startButton).addComponent(endButton));
 		gl.setVerticalGroup(vGroup);
 	}
-
 
 }
