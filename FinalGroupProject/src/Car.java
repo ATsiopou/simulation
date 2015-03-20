@@ -21,12 +21,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.plaf.synth.SynthSeparatorUI;
 
-
-
 public class Car {
 
 	private boolean debug = false;
-	private boolean running = true;
 	private Lane lane;
 	private Graphics g;
 	private Image carImage;
@@ -41,28 +38,24 @@ public class Car {
 	private double maxSpeed = 0.01;
 	private double acceleration = 0.001;
 
-
 	public Car() {
-		Image im1 = Toolkit.getDefaultToolkit().getImage("res/car.png");
-		this.carImage = im1.getScaledInstance(tileSize, tileSize, 1);
+		Image im1 = getCarImage(lane.getDirection());
 	}
 
-	public Car(Lane lane, Graphics g, ArrayList<Cell> occupiedCells,Map map) {
+	public Car(Lane lane, Graphics g, ArrayList<Cell> occupiedCells, Map map) {
 
-		Image im1 = Toolkit.getDefaultToolkit().getImage("res/car.png");
-		this.carImage = im1.getScaledInstance(tileSize * 2, tileSize * 2, 1);
+		Image im = getCarImage(lane.getDirection());
 		this.lane = lane;
 		this.g = g;
-		//this.setLane(lane);
+		this.setLane(lane);
 		this.id = lane.getId();
 		this.currentCell = lane.getStart();
 		this.x0 = currentCell.getCol(); // initial position
 		this.y0 = currentCell.getRow(); // initial position
 		this.occupiedCells = occupiedCells;
-		this.map=map;
+		this.map = map;
 
 	}
-
 
 	/**
 	 * This method is responsible for moving a car. It checks the if the cell in
@@ -72,59 +65,66 @@ public class Car {
 	 * @throws InterruptedException
 	 */
 	public void move() throws InterruptedException {
-       
-		switch(this.getLane().getDirection()){
+
+		switch (this.getLane().getDirection()) {
 		case 0:
 
-	     	if(!map.getCell((int)x0+2,(int)y0).isOccupied()){
-              map.removePosition(x0,y0);
-		      accelerate();
-              map.addPosition(x0,y0);
-	     	}
-			
-	     	break;
+			if (!map.getCell((int) x0 + 2, (int) y0).isOccupied()) {
+
+				map.removePosition(x0, y0);
+				accelerate();
+				map.addPosition(x0, y0);
+//			}else if(!map.getCell((int) x0 + 2, (int) y0).isOccupied() && map.isAgentBeside((int)x0, (int) y0, getLane().getDirection())){
+//				map.removePosition(x0, y0);
+//				switchLanes();
+//				accelerate();
+//				map.addPosition(x0, y0);
+//				System.out.println("Agent is :"  ); 
+			}
+
+			break;
 		case 1:
 
-	     	if(!map.getCell((int)x0-2,(int)y0).isOccupied()){
-            map.removePosition(x0,y0);
-		    accelerate();
-            map.addPosition(x0,y0);
-	     	}
-			
-	     	break;
+			if (!map.getCell((int) x0 - 2, (int) y0).isOccupied()) {
+				map.removePosition(x0, y0);
+				accelerate();
+				map.addPosition(x0, y0);
+			}
+
+			break;
 		case 2:
-	     	if(!map.getCell((int)x0,(int)y0+1).isOccupied()){
-            map.removePosition(x0,y0);
-		    accelerate();
-            map.addPosition(x0,y0);
-	     	}
-	     	break;
+			if (!map.getCell((int) x0, (int) y0 + 1).isOccupied()) {
+				map.removePosition(x0, y0);
+				accelerate();
+				map.addPosition(x0, y0);
+			}
+			break;
 		case 3:
 			// if(!map.getCell((int)x0-1,(int)y0-1).isOccupied()){
-	     	if(!map.getCell((int)x0-2,(int)y0-2).isOccupied()){
-            map.removePosition(x0,y0);
-		    accelerate();
-            map.addPosition(x0,y0);
-	     	}
-	     	break;
-	   	}
+			if (!map.getCell((int) x0 - 1, (int) y0 - 1).isOccupied()) {
+				map.removePosition(x0, y0);
+				accelerate();
+				map.addPosition(x0, y0);
+			}
+			break;
+		}
 	}
 
 	/**
 	 * This method moves the car in a direction. The directions is decided by
-	 * first checking the id of the lane. For an even id, the car is travelling
+	 * first checking the id of the lane.
+	 * For an even id, the car is travelling
 	 * in a northbound or westbound lane. if the id is odd: The car is in a
-	 * southboun/eastbound lane.
+	 * lane travelling in a southboun/eastbound direction.
 	 * 
-	 * //for curved lanes foreach(Cell cell: lane.getCells()) { move your car in
-	 * each cell set cell occupied set previous cell unoccoupied }
 	 * 
-	 * Try to remove the magic numbers => make it more general
+	 * 
+	 * 
 	 * @throws InterruptedException
 	 * 
 	 */
 	private void accelerate() throws InterruptedException {
-		
+
 		// Increase speed by dx/dy (acceleration) in either direction
 		if (speed < maxSpeed) {
 			speed += acceleration;
@@ -136,24 +136,29 @@ public class Car {
 
 		if (isEven(this.id)) {
 
-			if (currentCell.getCol() == lane.getStart().getCol() && lane.getDirection() == 3) {
+			if (currentCell.getCol() == lane.getStart().getCol()
+					&& lane.getDirection() == 3) {
 				y0 -= tileSize * speed;
 				if (debug) {
 					System.out.println("In y0 -= tileSize*speed;");
 				}
-			} else if (currentCell.getRow() == lane.getStart().getRow() && lane.getDirection() == 1) {
+			} else if (currentCell.getRow() == lane.getStart().getRow()
+					&& lane.getDirection() == 1) {
 				x0 -= tileSize * speed;
 				if (debug) {
 					System.out.println("In x0-= tileSize*speed;");
 				}
 			}
 		} else { // ODD
-			if(currentCell.getRow() == lane.getStart().getRow() && lane.getDirection() == 0){
+
+			if (currentCell.getRow() == lane.getStart().getRow()
+					&& lane.getDirection() == 0) {
 				x0 += tileSize * speed;
 				if (debug) {
 					System.out.println("In x0 += tileSize*speed;");
 				}
-			} else if (currentCell.getCol() == lane.getStart().getCol() && lane.getDirection() == 2 ){
+			} else if (currentCell.getCol() == lane.getStart().getCol()
+					&& lane.getDirection() == 2) {
 				y0 += tileSize * speed;
 				if (debug) {
 					System.out.println("In y0 += tileSize*speed;");
@@ -161,17 +166,42 @@ public class Car {
 			}
 		}
 	}
+	
+	
+	
+	/**
+	 * This method is for a vehicle to switch from their current lane to the
+	 * lane next to them
+	 * @throws InterruptedException
+	 */
+	@SuppressWarnings("unused")
+	private void switchLanes() throws InterruptedException {
+
+		if (isEven(this.id)) {
+			
+		} else { // ODD
+
+			if (currentCell.getRow() == lane.getStart().getRow()
+					&& lane.getDirection() == 0) {
+				y0 += tileSize * speed; 
+				x0 += tileSize * speed;
+	
+			} 
+		}
+	}
+	
+	
 
 	/**
-	 * OverLoading the brake method. This tells the thread to sleep for 
-	 * time in seconds. 
+	 * OverLoading the brake method. This tells the thread to sleep for time in
+	 * seconds.
+	 * 
 	 * @param stoppage
 	 * @throws InterruptedException
 	 */
 	@SuppressWarnings("unused")
 	private void brake(int stoppage) throws InterruptedException {
 		Thread.sleep(stoppage * 1000);
-
 	}
 
 	/**
@@ -226,12 +256,36 @@ public class Car {
 		return y0;
 	}
 
+	
+	public Image getCarImage(){
+		return carImage; 
+	}
+	
 	/**
-	 * Returns the Image of the car
+	 * Returns the Image of the car given a direction
 	 * 
 	 * @return
 	 */
-	public Image getCarImage() {
+	public Image getCarImage(int direction) {
+		
+		switch(direction){
+		case 0: 
+			Image im0 = Toolkit.getDefaultToolkit().getImage("res/car0.png");
+			carImage = im0.getScaledInstance(tileSize * 2, tileSize * 2, 1);
+			break; 	
+		case 1: 
+			Image im1 = Toolkit.getDefaultToolkit().getImage("res/car1.png");
+			carImage = im1.getScaledInstance(tileSize * 2, tileSize * 2, 1);
+			break; 
+		case 2:
+			Image im2 = Toolkit.getDefaultToolkit().getImage("res/car2.png");
+			carImage = im2.getScaledInstance(tileSize * 2, tileSize * 2, 1);
+			break;
+		case 3: 
+			Image im3 = Toolkit.getDefaultToolkit().getImage("res/car3.png");
+			carImage = im3.getScaledInstance(tileSize * 2, tileSize * 2, 1);
+			break;
+		}
 		return carImage;
 	}
 
@@ -272,4 +326,3 @@ public class Car {
 	}
 
 }
-
