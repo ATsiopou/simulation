@@ -1,13 +1,6 @@
-<<<<<<< HEAD
 import java.awt.*;
-
-public class Light {
-
-}
-=======
 import java.awt.Color;
 
-// TODO: Auto-generated Javadoc
 /**
  *Class   : Light 
  *		    This class is responsible for creating a traffic light. A traffic light has a state, a unique Identifier ID and a position.
@@ -102,7 +95,6 @@ public class Light {
 	public void setCondition(boolean condition) {
 		this.condition = condition;
 	}
-
 	
 	/**
 	 * Gets the color.
@@ -116,8 +108,4 @@ public class Light {
 		else{return Color.RED;
 		}
 	}
-	
-	
-	
 }
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f

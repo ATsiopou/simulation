@@ -21,27 +21,17 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.plaf.synth.SynthSeparatorUI;
 
-<<<<<<< HEAD
-public class Car {
 
-	private boolean debug = false;
-=======
 
 public class Car {
 
 	private boolean debug = false;
 	private boolean running = true;
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 	private Lane lane;
 	private Graphics g;
 	private Image carImage;
 	private Map map;
 	private Cell currentCell;
-<<<<<<< HEAD
-=======
-	private Cell previousCell;
-	private Cell occupiedCell;
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 	public ArrayList<Cell> occupiedCells;
 	private double x0;
 	private double y0;
@@ -50,71 +40,34 @@ public class Car {
 	private double speed = 0.01;
 	private double maxSpeed = 0.01;
 	private double acceleration = 0.001;
-<<<<<<< HEAD
-=======
-	
 
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 
 	public Car() {
 		Image im1 = Toolkit.getDefaultToolkit().getImage("res/car.png");
 		this.carImage = im1.getScaledInstance(tileSize, tileSize, 1);
 	}
 
-<<<<<<< HEAD
 	public Car(Lane lane, Graphics g, ArrayList<Cell> occupiedCells,Map map) {
 
 		Image im1 = Toolkit.getDefaultToolkit().getImage("res/car.png");
 		this.carImage = im1.getScaledInstance(tileSize * 2, tileSize * 2, 1);
 		this.lane = lane;
-=======
-	public Car(Lane lane, Graphics g, ArrayList<Cell> occupiedCells) {
-
-		Image im1 = Toolkit.getDefaultToolkit().getImage("res/car.png");
-		this.carImage = im1.getScaledInstance(tileSize*2, tileSize*2, 1);
-		//this.lane=lane; 
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 		this.g = g;
-		this.setLane(lane);
+		//this.setLane(lane);
 		this.id = lane.getId();
 		this.currentCell = lane.getStart();
 		this.x0 = currentCell.getCol(); // initial position
 		this.y0 = currentCell.getRow(); // initial position
-<<<<<<< HEAD
 		this.occupiedCells = occupiedCells;
 		this.map=map;
 
 	}
 
-=======
-		this.previousCell = currentCell;
-		this.occupiedCells = occupiedCells;
-
-	}
-	
-	
-	public Car(Lane lane, Graphics g, Map map) {
-
-		Image im1 = Toolkit.getDefaultToolkit().getImage("res/car.png");
-		this.carImage = im1.getScaledInstance(tileSize, tileSize, 1);
-		//this.lane=lane; 
-		this.g = g;
-		this.setLane(lane);
-		this.id = lane.getId();
-		this.currentCell = lane.getStart();
-		this.x0 = currentCell.getCol(); // initial position
-		this.y0 = currentCell.getRow(); // initial position
-		this.previousCell = currentCell;
-		this.map =map;
-
-	}
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 
 	/**
 	 * This method is responsible for moving a car. It checks the if the cell in
 	 * front of it is occupied and it proceeds to accelerate, otherwise it will
 	 * brake.
-<<<<<<< HEAD
 	 * 
 	 * @throws InterruptedException
 	 */
@@ -155,37 +108,6 @@ public class Car {
 	     	}
 	     	break;
 	   	}
-=======
-	 * @throws InterruptedException 
-	 */
-	public void move() throws InterruptedException {
-
-	//	map.addPosition(new Cell(0,29));
-		
-		
-//		if(currentCell.mapEquals(map)){
-//			System.out.println("Equals ");
-//		}
-		
-		
-		
-		if (currentCell.listEquals(occupiedCells)) {
-			map.addPosition(currentCell);
-		//	currentCell.setOccupied(true);
-		}
-		if (!currentCell.isOccupied()) {
-			accelerate();
-			if (debug) {
-				System.out.println("Current cell: " + currentCell);
-			}
-		} else {
-		//	brake();
-		}
-		
-
-		
-
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 	}
 
 	/**
@@ -198,21 +120,11 @@ public class Car {
 	 * each cell set cell occupied set previous cell unoccoupied }
 	 * 
 	 * Try to remove the magic numbers => make it more general
-<<<<<<< HEAD
-	 * 
 	 * @throws InterruptedException
-=======
-	 * @throws InterruptedException 
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
-	 * 
 	 * 
 	 */
 	private void accelerate() throws InterruptedException {
-<<<<<<< HEAD
-
-=======
 		
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 		// Increase speed by dx/dy (acceleration) in either direction
 		if (speed < maxSpeed) {
 			speed += acceleration;
@@ -224,7 +136,6 @@ public class Car {
 
 		if (isEven(this.id)) {
 
-<<<<<<< HEAD
 			if (currentCell.getCol() == lane.getStart().getCol() && lane.getDirection() == 3) {
 				y0 -= tileSize * speed;
 				if (debug) {
@@ -232,88 +143,40 @@ public class Car {
 				}
 			} else if (currentCell.getRow() == lane.getStart().getRow() && lane.getDirection() == 1) {
 				x0 -= tileSize * speed;
-=======
-			if (currentCell.getCol() == 56 || currentCell.getCol() == 58) {
-				y0--; 
-				//y0 -= tileSize * speed;
-				if (debug) {
-					System.out.println("In y0 -= tileSize*speed;");
-				}
-
-			} else if (currentCell.getRow() == 40 || currentCell.getRow() == 42) {
-
-				x0 -= tileSize * speed;
-
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 				if (debug) {
 					System.out.println("In x0-= tileSize*speed;");
 				}
 			}
 		} else { // ODD
-<<<<<<< HEAD
-
 			if(currentCell.getRow() == lane.getStart().getRow() && lane.getDirection() == 0){
-=======
-			if (currentCell.getRow() == 36 || currentCell.getRow() == 38) {
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 				x0 += tileSize * speed;
 				if (debug) {
 					System.out.println("In x0 += tileSize*speed;");
 				}
-<<<<<<< HEAD
 			} else if (currentCell.getCol() == lane.getStart().getCol() && lane.getDirection() == 2 ){
-=======
-			} else if (currentCell.getCol() == 60 || currentCell.getCol() == 62) {
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 				y0 += tileSize * speed;
 				if (debug) {
 					System.out.println("In y0 += tileSize*speed;");
 				}
 			}
 		}
-<<<<<<< HEAD
 	}
 
 	/**
-	 * OverLoading the brake method. This tells the thread to sleep for time in
-	 * seconds.
-	 * 
-=======
-		System.out.println("x0: " + x0 + "y0" + y0 );
-		System.out.println("Current CEll: " + currentCell);
-		Cell obstacleCell = new Cell((int)x0,(int)y0);
-		for (Cell cell : occupiedCells) {
-			if(obstacleCell.equals(cell) && cell.isOccupied()) { 
-				
-				
-		//		brake(cell); 
-				
-				cell.setOccupied(false);
-			}
-		}
-	
-	}
-	
-	/**
 	 * OverLoading the brake method. This tells the thread to sleep for 
 	 * time in seconds. 
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 	 * @param stoppage
 	 * @throws InterruptedException
 	 */
 	@SuppressWarnings("unused")
 	private void brake(int stoppage) throws InterruptedException {
-<<<<<<< HEAD
 		Thread.sleep(stoppage * 1000);
-=======
-		Thread.sleep(stoppage*1000);
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
+
 	}
 
 	/**
 	 * This method (for now) will stop the car from increasing in it's current
 	 * direction
-<<<<<<< HEAD
 	 * 
 	 * @throws InterruptedException
 	 */
@@ -323,26 +186,10 @@ public class Car {
 		if (debug) {
 			System.out.println("In brake");
 		}
-=======
-	 * @throws InterruptedException 
-	 */
-	@SuppressWarnings("unused")
-	private void brake(Cell currentCell) throws InterruptedException {
-	
-		if(debug){
-			System.out.println("In brake"); 
-		}
-		brake(10); 
-		
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 		x0 = x0;
 		y0 = y0;
 	}
 
-<<<<<<< HEAD
-	
-=======
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 	@SuppressWarnings("unused")
 	private void randomize() {
 		// randomly call accelerate OR randomly call brake
@@ -424,9 +271,5 @@ public class Car {
 		return this.id;
 	}
 
-<<<<<<< HEAD
-}
-=======
 }
 
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f

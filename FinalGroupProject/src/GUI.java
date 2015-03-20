@@ -17,11 +17,8 @@ public class GUI extends JFrame{
 		this.setLayout(new BorderLayout());
 		this.add(startMenu, BorderLayout.NORTH);
 		this.add(gamePanel, BorderLayout.CENTER);
-<<<<<<< HEAD
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
-=======
->>>>>>> f1ae67cfb1f2d40327fdcc4d3d73cb16cb25109f
 	
 	}
 }

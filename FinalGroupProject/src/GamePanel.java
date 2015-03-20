@@ -25,24 +25,7 @@ import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements Runnable {
 
-<<<<<<< HEAD
-	public static final boolean debug = true;
-	private static final long serialVersionUID = 1L;
-	public static final int HEIGHT = 800; // 600
-	public static final int WIDTH = 1200; // 800
-	public static final int DELAY = 15;
-	public static final int TILE = 10;
-	public static final int TOTALNUMEROFCARS = 30;
-	public static final int ENTRYFREQUENCY = 20; // in milliseconds (2seconds)
-	private boolean running = true;
-	private Thread animator;
-	private Graphics g;
-	private Map map;
-	private ArrayList<Car> listOfCars;
-	private ArrayList<Cell> occupiedCells;
-	private int inte = 0;
 
-=======
 	public static final boolean debug = false;
 	private static final long serialVersionUID = 1L;
 	public static final int HEIGHT = 800; // 600
@@ -143,7 +126,7 @@ public class GamePanel extends JPanel implements Runnable {
 						Car car = new Car(lane, g,occupiedCells,map);
 						listOfCars.add(car);
 					}
-
+				}
 				for (Car car : this.listOfCars) {
 					car.move();
 				}
@@ -155,8 +138,8 @@ public class GamePanel extends JPanel implements Runnable {
 						null, ex);
 			}
 		}
-		}
 	}
+	
 
 	@SuppressWarnings("unused")
 	private void addDelay(int stoppage) {
