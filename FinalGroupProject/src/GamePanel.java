@@ -25,34 +25,35 @@ import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements Runnable {
 
-
-	public static final boolean debug = false;
+	public static final boolean debug = true;
 	private static final long serialVersionUID = 1L;
 	public static final int HEIGHT = 800; // 600
 	public static final int WIDTH = 1200; // 800
-	public static final int DELAY = 20;
+	public static final int DELAY = 15;
 	public static final int TILE = 10;
-	public static final int TOTALNUMEROFCARS = 10;
-	public static final int ENTRYFREQUENCY = 100; // in milliseconds (2seconds)
+	public static final int TOTALNUMEROFCARS = 30;
+	public static final int ENTRYFREQUENCY = 20; // in milliseconds (2seconds)
 	private boolean running = true;
 	private Thread animator;
 	private Graphics g;
-	public Map map;
+	private Map map;
 	private ArrayList<Car> listOfCars;
 	private ArrayList<Cell> occupiedCells;
 	private int inte = 0;
-	private int totalCarCounter = 0;
 	private int MAPTYPE = 1;
+	 
 
 	public GamePanel() {
+		setDoubleBuffered(true);
 		initGamePanel();
+		
 	}
 
 	/**
 	 * Private method which sets the map type
 	 */
 	private void initGamePanel() {
-		setDoubleBuffered(true);
+		
 		switch (MAPTYPE) {
 		case 1:
 			try {
@@ -69,9 +70,9 @@ public class GamePanel extends JPanel implements Runnable {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			break;	
+			break;
 		}
-
+		
 	}
 
 	@Override
@@ -93,7 +94,6 @@ public class GamePanel extends JPanel implements Runnable {
 
 		// Draw map
 		map.paintMap(g2d);
-		// Draw traffic Lights here.
 
 		// Draw the images for the cars
 		for (Car car : listOfCars) {
@@ -114,10 +114,10 @@ public class GamePanel extends JPanel implements Runnable {
 
 		// Create the list of cars
 		listOfCars = new ArrayList<Car>();
-		occupiedCells = createOccupiedCells();
-		
+        
 		while (running) {
 			clearOutMApCar();
+
 			try {
 				if ((inte % ENTRYFREQUENCY == 0)) {
 					if (listOfCars.size() < TOTALNUMEROFCARS) {
@@ -139,7 +139,6 @@ public class GamePanel extends JPanel implements Runnable {
 			}
 		}
 	}
-	
 
 	@SuppressWarnings("unused")
 	private void addDelay(int stoppage) {
@@ -189,9 +188,10 @@ public class GamePanel extends JPanel implements Runnable {
 
 	}
 
+	
 	/**
-	 * This method removes the cars from the map when 
-	 * they have passed the maps boundaries. 
+	 * This method removes the cars from the map when they 
+	 * have passed the maps boundaries. 
 	 */
 	public void clearOutMApCar() {
 		ArrayList<Car> listOfCars2 = listOfCars;
@@ -204,27 +204,35 @@ public class GamePanel extends JPanel implements Runnable {
 		}
 	}
 
-	// return true if the car should be removed from the lust
+	/**
+	 * This method checks the direction of the car and compares 
+	 * it to the bounds of the map. If the cars next value exceeds 
+	 * the bounds, then the car should be removed from the map. 
+	 * 
+	 * @param c
+	 * @return boolean
+	 */
 	private boolean shouldRemoveFromTheList(Car c) {
+		
+
 		if (c.getLane().getDirection() == 0) {
-			if (c.getX0() > 120) {
+			if (c.getX0() > c.getLane().getEnd().getCol()) {
 				return true;
 			}
 		} else if (c.getLane().getDirection() == 1) {
-			if (c.getX0() < 1) {
+			if (c.getX0() < c.getLane().getEnd().getCol()) {
 				return true;
 			}
 		} else if (c.getLane().getDirection() == 2) {
-			if (c.getY0() > 80) {
+			if (c.getY0() > c.getLane().getEnd().getRow()) {
 				return true;
 			}
 		} else {
-			if (c.getY0() < 1) {
+			if (c.getY0() < c.getLane().getEnd().getRow()) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-}
 }
