@@ -1,6 +1,4 @@
 import java.util.*;
-import java.util.ArrayList;
-
 
 /*Authors : Iordanis Paschalidis, 
  * 			Anthony Tsiopoulos 
@@ -118,24 +116,6 @@ public class Cell {
 		}
 		return false; 
 	}
-	
-	/*
-	 * This is causing me MUCH stress. phrack. 
-	 */
-	public boolean mapEquals(Cell[][] map){
-		
-		for(int col=0; col < map.length; col++){
-			for(int row =0;row <map[0].length;row++)
-				if(this.row == map[col][row].getRow() && this.col ==  map[col][row].getCol())
-					return true;
-			}
-			return false; 
-				
-			
-			
-		
-	}
-	
 	
 
 }
