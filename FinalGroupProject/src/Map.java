@@ -18,12 +18,15 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Map {
 
+	public static final boolean debug = true;
 	private int xOffset;
 	private int yOffset;
 	private int tileSize;
@@ -33,8 +36,10 @@ public class Map {
 	private String file;
 	private MyMap testMap;
 	private List<Lane> laneCells;
+	private ArrayList<Light> listOfLights;
 
-	public Map(String file, int mapWidth, int mapHeight, int tileSize)throws IOException {
+	public Map(String file, int mapWidth, int mapHeight, int tileSize)
+			throws IOException {
 
 		this.tileSize = tileSize;
 		this.file = file;
@@ -47,7 +52,7 @@ public class Map {
 
 	/**
 	 * This method is responsible for reading the contents of the JSON file and
-	 * mapping it into the MyMap class. 
+	 * mapping it into the MyMap class.
 	 */
 	private void initMap() {
 
@@ -62,14 +67,15 @@ public class Map {
 				}
 			}
 
-			// TEST TEST TEST
-			map[29][36].setOccupied(true);
+			if(debug){
+				map[29][36].setOccupied(true);
+				testMap.printLights();	
+			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Error in initMap(): " + e.getMessage());
 		}
-
 	}
 
 	/**
@@ -105,9 +111,20 @@ public class Map {
 		return testMap.getRandomLane();
 	}
 
-	// ////////////////////////////////////////////////////////////////
-	// Paint Methods //
-	// ////////////////////////////////////////////////////////////////
+	/**
+	 * Gets the lights from testMap
+	 * 
+	 * @return
+	 */
+	public ArrayList<Light> getLightList() {
+		return testMap.getLights();
+
+	}
+
+	/***************************************************************
+	 *                    Paint Methods                            * 
+	 ***************************************************************/
+	
 
 	/**
 	 * Draws the map my drawing the components of the map. Inside the method are
@@ -120,8 +137,9 @@ public class Map {
 		drawBoard(g);
 		drawLanes(g);
 		drawDashedLane(g);
-		//drawSideWalk(g);
-		// drawLights(g);
+		drawLights(g);
+
+		// drawSideWalk(g);
 		// drawLaneBoarders(g);
 		// drawIntersection(g);
 	}
@@ -201,16 +219,46 @@ public class Map {
 			int yEnd = l.getEnd().getRow();
 
 			if (count == 1 || count % 2 == 0) {
-				g.setColor(Color.LIGHT_GRAY);
+
 				g.drawLine(xStart * tileSize, yStart * tileSize, xEnd
 						* tileSize, yEnd * tileSize);
 				BasicStroke dashed1 = new BasicStroke(1.0f,
 						BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
 						dash1, 0.0f);
+				g.setColor(Color.LIGHT_GRAY);
 			}
 
 			count++;
 		} // end while
+	}
+
+	/**
+	 * Simple paint method to draw the occupied Light cell on the map.
+	 * 
+	 * @param g
+	 */
+	private void drawLights(Graphics2D g) {
+
+		ArrayList<Light> lights = testMap.getLights();
+		Iterator<Light> itter = lights.iterator();
+		while (itter.hasNext()) {
+			Light l = itter.next();
+
+			int x = l.getPosition().getCol();
+			int y = l.getPosition().getRow();
+
+			if(l.getPosition().isOccupied()){
+				
+				g.setColor(Color.RED);
+				g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+			}else {
+				g.setColor(Color.GREEN);
+				g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+				
+			}
+	
+
+		}
 	}
 
 	/**
@@ -269,7 +317,8 @@ public class Map {
 	}
 
 	/**
-	 * This method returns a cell with indices x and y. 
+	 * This method returns a cell with indices x and y.
+	 * 
 	 * @param x
 	 * @param y
 	 * @return
@@ -279,7 +328,9 @@ public class Map {
 	}
 
 	/**
-	 * This method checks if a car is near. There are four cases for each direction.
+	 * This method checks if a car is near. There are four cases for each
+	 * direction.
+	 * 
 	 * @param x
 	 * @param y
 	 * @param direction
@@ -312,9 +363,10 @@ public class Map {
 	}
 
 	/**
-	 * This method checks if an Agent is in the lane next to it. There are four cases for each direction.
+	 * This method checks if an Agent is in the lane next to it. There are four
+	 * cases for each direction.
 	 * 
-	 * Add Lane lane object as param after 
+	 * Add Lane lane object as param after
 	 * 
 	 * @param x
 	 * @param y
@@ -325,17 +377,11 @@ public class Map {
 
 		switch (direction) {
 		case 0:
-			if (map[x][y+1].isOccupied())
+			if (map[x][y + 1].isOccupied())
 				return true;
 			break;
-
 		}
-
 		return true;
 	}
-	
-	
-	
-	
-	
+
 }
