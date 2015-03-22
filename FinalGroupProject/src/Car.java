@@ -29,10 +29,9 @@ public class Car {
 	private Image carImage;
 	private Map map;
 	private Cell currentCell;
-	public ArrayList<Cell> occupiedCells;
+	public ArrayList<Light> lights;
 	private double x0;
 	private double y0;
-	private int id;
 	private int tileSize = 10;
 	private double speed = 0.01;
 	private double maxSpeed = 0.01;
@@ -42,17 +41,16 @@ public class Car {
 		Image im1 = getCarImage(lane.getDirection());
 	}
 
-	public Car(Lane lane, Graphics g, ArrayList<Cell> occupiedCells, Map map) {
+	public Car(Lane lane, Graphics g, ArrayList<Light> lights, Map map) {
 
 		Image im = getCarImage(lane.getDirection());
 		this.lane = lane;
 		this.g = g;
 		this.setLane(lane);
-		this.id = lane.getId();
 		this.currentCell = lane.getStart();
 		this.x0 = currentCell.getCol(); // initial position
 		this.y0 = currentCell.getRow(); // initial position
-		this.occupiedCells = occupiedCells;
+		this.lights = lights;
 		this.map = map;
 
 	}
@@ -66,45 +64,76 @@ public class Car {
 	 */
 	public void move() throws InterruptedException {
 
-		switch (this.getLane().getDirection()) {
+		switch (lane.getDirection()) {
 		case 0:
 
-			if (!map.getCell((int) x0 + 2, (int) y0).isOccupied()) {
+			if (!map.getCell((int) x0 + 1, (int) y0).isOccupied()) {
 
-				map.removePosition(x0, y0);
-				accelerate();
-				map.addPosition(x0, y0);
-//			}else if(!map.getCell((int) x0 + 2, (int) y0).isOccupied() && map.isAgentBeside((int)x0, (int) y0, getLane().getDirection())){
-//				map.removePosition(x0, y0);
-//				switchLanes();
-//				accelerate();
-//				map.addPosition(x0, y0);
-//				System.out.println("Agent is :"  ); 
+				if (this.canMoveFromLights()) {
+
+					//turn();
+					map.removePosition(x0, y0);
+					accelerate();
+					map.addPosition(x0, y0);
+				}
+
+				/*
+				 * }else if(!map.getCell((int) x0 + 2, (int) y0).isOccupied() &&
+				 * map.isAgentBeside((int)x0, (int) y0,
+				 * getLane().getDirection())){ map.removePosition(x0, y0);
+				 * switchLanes(); accelerate(); map.addPosition(x0, y0);
+				 */
 			}
-
 			break;
+
 		case 1:
 
-			if (!map.getCell((int) x0 - 2, (int) y0).isOccupied()) {
-				map.removePosition(x0, y0);
-				accelerate();
-				map.addPosition(x0, y0);
-			}
+			if (!map.getCell((int) x0 - 1, (int) y0).isOccupied()) {
 
+				if (this.canMoveFromLights()) {
+
+					//turn();
+					map.removePosition(x0, y0);
+					accelerate();
+					map.addPosition(x0, y0);
+				}
+			}
 			break;
+		/*
+		 * if (!map.getCell((int) x0 - 2, (int) y0).isOccupied()) {
+		 * map.removePosition(x0, y0); accelerate(); map.addPosition(x0, y0); }
+		 * 
+		 * break;
+		 */
+			
+			//y++
 		case 2:
 			if (!map.getCell((int) x0, (int) y0 + 1).isOccupied()) {
-				map.removePosition(x0, y0);
-				accelerate();
-				map.addPosition(x0, y0);
+
+				if (this.canMoveFromLights()) {
+
+					
+					map.removePosition(x0, y0);
+					turn();
+					accelerate();
+					map.addPosition(x0, y0);
+
+				}
 			}
 			break;
 		case 3:
-			// if(!map.getCell((int)x0-1,(int)y0-1).isOccupied()){
+
 			if (!map.getCell((int) x0 - 1, (int) y0 - 1).isOccupied()) {
-				map.removePosition(x0, y0);
-				accelerate();
-				map.addPosition(x0, y0);
+
+				if (this.canMoveFromLights()) {
+
+					
+					map.removePosition(x0, y0);
+					turn();
+					accelerate();
+					map.addPosition(x0, y0);
+
+				}
 			}
 			break;
 		}
@@ -112,10 +141,9 @@ public class Car {
 
 	/**
 	 * This method moves the car in a direction. The directions is decided by
-	 * first checking the id of the lane.
-	 * For an even id, the car is travelling
-	 * in a northbound or westbound lane. if the id is odd: The car is in a
-	 * lane travelling in a southboun/eastbound direction.
+	 * first checking the id of the lane. For an even id, the car is travelling
+	 * in a northbound or westbound lane. if the id is odd: The car is in a lane
+	 * travelling in a southboun/eastbound direction.
 	 * 
 	 * 
 	 * 
@@ -123,6 +151,54 @@ public class Car {
 	 * @throws InterruptedException
 	 * 
 	 */
+	// private void accelerate() throws InterruptedException {
+	//
+	// // Increase speed by dx/dy (acceleration) in either direction
+	// if (speed < maxSpeed) {
+	// speed += acceleration;
+	// }
+	//
+	// if (debug) {
+	// System.out.println("Lane id: " + getId());
+	// }
+	//
+	// if (isEven(this.id)) {
+	//
+	// if (currentCell.getCol() == lane.getStart().getCol()
+	// && direction == 3) {
+	// y0 -= tileSize * speed;
+	// if (debug) {
+	// System.out.println("In y0--");
+	// System.out.println("Dir: 3 ");
+	// }
+	// } else if (currentCell.getRow() == lane.getStart().getRow()
+	// && direction == 1) {
+	// x0 -= tileSize * speed;
+	// if (debug) {
+	// System.out.println("In x0--");
+	// System.out.println("Dir:  1");
+	// }
+	// }
+	// } else { // ODD
+	//
+	// if (currentCell.getRow() == lane.getStart().getRow()
+	// && direction == 0) {
+	// x0 += tileSize * speed;
+	// if (debug) {
+	// System.out.println("In x0++");
+	// System.out.println("Dir: 0 ");
+	// }
+	// } else if (currentCell.getCol() == lane.getStart().getCol()
+	// && direction == 2) {
+	// y0 += tileSize * speed;
+	// if (debug) {
+	// System.out.println("In y0++");
+	// System.out.println("Dir: 2 ");
+	// }
+	// }
+	// }
+	// }
+
 	private void accelerate() throws InterruptedException {
 
 		// Increase speed by dx/dy (acceleration) in either direction
@@ -134,63 +210,65 @@ public class Car {
 			System.out.println("Lane id: " + getId());
 		}
 
-		if (isEven(this.id)) {
+		// if (isEven(lane.getId())) {
 
-			if (currentCell.getCol() == lane.getStart().getCol()
-					&& lane.getDirection() == 3) {
+		if (isEven(this.getLane().getId())) {
+			if (lane.getDirection() == 3) {
 				y0 -= tileSize * speed;
 				if (debug) {
-					System.out.println("In y0 -= tileSize*speed;");
+					System.out.println("In y0--");
+					System.out.println("Dir: 3 ");
 				}
-			} else if (currentCell.getRow() == lane.getStart().getRow()
-					&& lane.getDirection() == 1) {
+			} else if (lane.getDirection() == 1) {
+
 				x0 -= tileSize * speed;
 				if (debug) {
-					System.out.println("In x0-= tileSize*speed;");
+					System.out.println("In x0--");
+					System.out.println("Dir:  1");
 				}
 			}
 		} else { // ODD
 
-			if (currentCell.getRow() == lane.getStart().getRow()
-					&& lane.getDirection() == 0) {
+			if (lane.getDirection() == 0) {
+
 				x0 += tileSize * speed;
 				if (debug) {
-					System.out.println("In x0 += tileSize*speed;");
+					System.out.println("In x0++");
+					System.out.println("Dir: 0 ");
 				}
-			} else if (currentCell.getCol() == lane.getStart().getCol()
-					&& lane.getDirection() == 2) {
+			} else if (lane.getDirection() == 2) {
+
 				y0 += tileSize * speed;
+
 				if (debug) {
-					System.out.println("In y0 += tileSize*speed;");
+					System.out.println("In y0++");
+					System.out.println("Dir: 2 ");
 				}
 			}
 		}
 	}
-	
-	
-	
+
 	/**
 	 * This method is for a vehicle to switch from their current lane to the
 	 * lane next to them
+	 * 
 	 * @throws InterruptedException
 	 */
 	@SuppressWarnings("unused")
 	private void switchLanes() throws InterruptedException {
 
-		if (isEven(this.id)) {
-			
+		if (isEven(lane.getId())) {
+
 		} else { // ODD
 
 			if (currentCell.getRow() == lane.getStart().getRow()
 					&& lane.getDirection() == 0) {
-				y0 += tileSize * speed; 
+				y0 += tileSize * speed;
 				x0 += tileSize * speed;
-	
-			} 
+
+			}
 		}
 	}
-	
-	
 
 	/**
 	 * OverLoading the brake method. This tells the thread to sleep for time in
@@ -256,32 +334,37 @@ public class Car {
 		return y0;
 	}
 
-	
-	public Image getCarImage(){
-		return carImage; 
-	}
-	
 	/**
-	 * Returns the Image of the car given a direction
+	 * Returns the Image of the car
+	 * 
+	 * @return
+	 */
+	public Image getCarImage() {
+		return carImage;
+	}
+
+	/**
+	 * Overloading the getCarImage with param direction. Returns the Image of
+	 * the car given a direction
 	 * 
 	 * @return
 	 */
 	public Image getCarImage(int direction) {
-		
-		switch(direction){
-		case 0: 
+
+		switch (direction) {
+		case 0:
 			Image im0 = Toolkit.getDefaultToolkit().getImage("res/car0.png");
 			carImage = im0.getScaledInstance(tileSize * 2, tileSize * 2, 1);
-			break; 	
-		case 1: 
+			break;
+		case 1:
 			Image im1 = Toolkit.getDefaultToolkit().getImage("res/car1.png");
 			carImage = im1.getScaledInstance(tileSize * 2, tileSize * 2, 1);
-			break; 
+			break;
 		case 2:
 			Image im2 = Toolkit.getDefaultToolkit().getImage("res/car2.png");
 			carImage = im2.getScaledInstance(tileSize * 2, tileSize * 2, 1);
 			break;
-		case 3: 
+		case 3:
 			Image im3 = Toolkit.getDefaultToolkit().getImage("res/car3.png");
 			carImage = im3.getScaledInstance(tileSize * 2, tileSize * 2, 1);
 			break;
@@ -289,6 +372,109 @@ public class Car {
 		return carImage;
 	}
 
+	/**
+	 * This method first checks the light given a direction. The light, which
+	 * controls the flow of traffic in the lane, if an agent (car/bus/truck) is
+	 * near the a light it will check the statue of the light, represented as a
+	 * cell, and will decide weather or not to move through the light or stop at
+	 * the light.
+	 * 
+	 * @return boolean
+	 */
+	public boolean canMoveFromLights() {
+
+		for (Light lt : lights) {
+			if (debug) {
+				System.out.println("Method      : canMoveFromLights()");
+				System.out.println("Direction   : "
+						+ this.getLane().getDirection());
+				System.out.println("Light State : " + lt.getState());
+				System.out.println("Light State : "
+						+ lt.getPosition().isOccupied());
+			}
+
+			/*
+			 * if (this.getLane().getDirection() < 2) { //
+			 * System.out.println(y0+"     "+lt.getPosition().getRow());
+			 * 
+			 * if (x0 - lt.getPosition().getCol() < 2 && y0 ==
+			 * lt.getPosition().getRow()) { if (lt.getPosition().isOccupied())
+			 * // if the light is occupied, ie red then stop return false; }
+			 * else { // otherwise, the light is green, and return true return
+			 * true; }
+			 * 
+			 * } else {
+			 * //System.out.println(x0+"     "+lt.getPosition().getCol());
+			 * //System.out.println(lt.getPosition().getCol());
+			 * 
+			 * if (y0 - lt.getPosition().getRow() < 2 && x0 ==
+			 * lt.getPosition().getCol()) {
+			 * 
+			 * if (lt.getPosition().isOccupied()) { return false; } } else {
+			 * return true; } }
+			 */
+		}
+
+		return true;
+	}
+
+	public void turn() {
+
+		if (lane.getId() > 2) {
+
+			switch (lane.getDirection()) {
+
+			case 0:
+				for (Light l : lights) {
+					if (l.getPosition().getCol() + 2 == (int) x0 && y0==l.getPosition().getRow()) {
+						this.setLane(map.getLane(lane.getId(),
+								lane.getDirection()));
+						this.setCarImage(getCarImage(this.getLane()
+								.getDirection()));
+						break;
+					}
+				}
+				break;
+			case 1:
+				for (Light l : lights) {
+					if (l.getPosition().getCol() - 2 == (int) x0 && y0==l.getPosition().getRow()) {
+						this.setLane(map.getLane(lane.getId(),
+								lane.getDirection()));
+						this.setCarImage(getCarImage(this.getLane()
+								.getDirection()));
+						break;
+					}
+				}
+				break;
+			case 2:
+				for (Light l : lights) {
+					System.out.println(y0+"   "+l.getPosition().getRow() );
+					if (l.getPosition().getRow() + 2 == (int) y0&& x0 == l.getPosition().getCol()) {
+						this.setLane(map.getLane(lane.getId(),
+								lane.getDirection()));
+						this.setCarImage(getCarImage(this.getLane()
+								.getDirection()));
+						break;
+					}
+				}
+				System.out.println("***********");
+
+				break;
+			case 3:
+				for (Light l : lights) {
+					if (l.getPosition().getRow() - 2 == (int) y0 && x0 == l.getPosition().getCol()) {
+						this.setLane(map.getLane(lane.getId(),lane.getDirection()));
+						this.setCarImage(getCarImage(this.getLane().getDirection()));
+						break;
+					}
+				}
+
+				break;
+			}
+
+		}
+
+	}
 	/**
 	 * Sets the Image of the car
 	 * 
@@ -322,7 +508,7 @@ public class Car {
 	 * @return
 	 */
 	public int getId() {
-		return this.id;
+		return lane.getId();
 	}
 
 }
