@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Map {
 
-	public static final boolean debug = true;
+	public static final boolean debug = false;
 	private int xOffset;
 	private int yOffset;
 	private int tileSize;
@@ -111,6 +111,18 @@ public class Map {
 		return testMap.getRandomLane();
 	}
 
+	
+	/**
+	 * This returns a Lane given the Id and the direction 
+	 * @param id
+	 * @param direction
+	 * @return
+	 */
+	public Lane getLane(int id, int direction){
+
+		return testMap.getCarNewLane(id, direction); 
+	}
+	
 	/**
 	 * Gets the lights from testMap
 	 * 
@@ -237,7 +249,7 @@ public class Map {
 	 * 
 	 * @param g
 	 */
-	private void drawLights(Graphics2D g) {
+	public void drawLights(Graphics2D g) {
 
 		ArrayList<Light> lights = testMap.getLights();
 		Iterator<Light> itter = lights.iterator();
