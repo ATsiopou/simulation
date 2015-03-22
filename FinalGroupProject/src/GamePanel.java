@@ -31,13 +31,16 @@ public class GamePanel extends JPanel implements Runnable {
 	public static final int WIDTH = 1200; // 800
 	public static final int DELAY = 15;
 	public static final int TILE = 10;
-	public static final int TOTALNUMEROFCARS = 30;
-	public static final int ENTRYFREQUENCY = 20; // in milliseconds (2seconds)
+	public static final int TOTALNUMEROFCARS = 20;
+	public static final int ENTRYFREQUENCY = 50; // in milliseconds (2seconds)
+	public static final int LIGHTMECHANISM = 50; 
+	private int lightCounter = 0; 
 	private boolean running = true;
 	private Thread animator;
 	private Graphics g;
 	private Map map;
 	private ArrayList<Car> listOfCars;
+	private ArrayList<Light> listOfLights; 
 	private ArrayList<Cell> occupiedCells;
 	private int inte = 0;
 	private int MAPTYPE = 1;
@@ -94,6 +97,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 		// Draw map
 		map.paintMap(g2d);
+		map.drawLights(g2d);
 
 		// Draw the images for the cars
 		for (Car car : listOfCars) {
@@ -114,16 +118,42 @@ public class GamePanel extends JPanel implements Runnable {
 
 		// Create the list of cars
 		listOfCars = new ArrayList<Car>();
+		listOfLights = new ArrayList<Light>(); 
+
+		
+		
+		/*
+		Lane lane = new Lane(); 
+		Cell startingCell = new Cell(118,42);
+		Cell endCell = new Cell(0,42); 
+		lane.setStart(startingCell);
+		lane.setEnd(endCell);
+		lane.setDirection(1);
+		lane.setId(4);
+	*/
+		
         
 		while (running) {
 			clearOutMApCar();
+			listOfLights = map.getLightList();
 
+			
+			if( lightCounter % LIGHTMECHANISM == 0 ){
+				
+				this.lightMechanism();
+				
+			}
+			lightCounter++; 
+
+			
+			
+			
 			try {
 				if ((inte % ENTRYFREQUENCY == 0)) {
 					if (listOfCars.size() < TOTALNUMEROFCARS) {
 						Lane lane = new Lane();
 						lane = map.getRandomLane();
-						Car car = new Car(lane, g,occupiedCells,map);
+						Car car = new Car(lane, g, listOfLights,map);
 						listOfCars.add(car);
 					}
 				}
@@ -140,55 +170,6 @@ public class GamePanel extends JPanel implements Runnable {
 		}
 	}
 
-	@SuppressWarnings("unused")
-	private void addDelay(int stoppage) {
-		try {
-			Thread.sleep(stoppage * 1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * create the cells which are set as occupid a the a traffic junction
-	 */
-
-	public ArrayList<Cell> createOccupiedCells() {
-
-//	//	occupiedCells = new ArrayList<Cell>();
-//
-//		//Cell cell1 = new Cell(28, 16); // x++
-//	//	Cell cell2 = new Cell(37, 29); // x++
-/////		Cell cell3 = new Cell(40, 27); // y++
-//		Cell cell4 = new Cell(41, 27); // y++
-//		Cell cell5 = new Cell(42, 30); // x--
-//		Cell cell6 = new Cell(42, 31); // x--
-//		Cell cell7 = new Cell(38, 32); // y--
-//		Cell cell8 = new Cell(39, 32); // y--
-//
-//		occupiedCells.add(cell1);
-//		occupiedCells.add(cell2);
-//		occupiedCells.add(cell3);
-//		occupiedCells.add(cell4);
-//		occupiedCells.add(cell5);
-//		occupiedCells.add(cell6);
-//		occupiedCells.add(cell7);
-//		occupiedCells.add(cell8);
-//
-//		cell1.setOccupied(true);
-//		cell2.setOccupied(true);
-//		cell3.setOccupied(true);
-//		cell4.setOccupied(true);
-//		cell5.setOccupied(true);
-//		cell6.setOccupied(true);
-//		cell7.setOccupied(true);
-//		cell8.setOccupied(true);
-
-		return occupiedCells;
-
-	}
-
-	
 	/**
 	 * This method removes the cars from the map when they 
 	 * have passed the maps boundaries. 
@@ -204,6 +185,7 @@ public class GamePanel extends JPanel implements Runnable {
 		}
 	}
 
+	
 	/**
 	 * This method checks the direction of the car and compares 
 	 * it to the bounds of the map. If the cars next value exceeds 
@@ -214,7 +196,6 @@ public class GamePanel extends JPanel implements Runnable {
 	 */
 	private boolean shouldRemoveFromTheList(Car c) {
 		
-
 		if (c.getLane().getDirection() == 0) {
 			if (c.getX0() > c.getLane().getEnd().getCol()) {
 				return true;
@@ -233,6 +214,22 @@ public class GamePanel extends JPanel implements Runnable {
 			}
 		}
 		return false;
+	}
+	
+	private void printL(){
+		for(Light l:listOfLights){
+			System.out.println(l.getPosition().getCol()+"             "+l.getPosition().getRow());
+		}
+	}
+	
+	
+	private void lightMechanism(){
+		for(Light l:listOfLights){
+			l.changeLight();
+			//System.out.println(l.getPosition().isOccupied());
+
+		}
+
 	}
 
 }
