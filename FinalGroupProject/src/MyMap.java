@@ -9,6 +9,7 @@
  * 
  * Moded  : 
  */
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -16,17 +17,44 @@ import java.util.Random;
 public class MyMap {
 
 	List<Lane> lanes;
-	List<Cell> entryPositions; 
+	ArrayList<Light> lights;
+	List<Lane> sideWalks; 
+	
+	
 
+	/**
+	 * This returns a pedestrian walkway
+	 * @return
+	 */
+	public List<Lane> getSideWalks() {
+		return sideWalks;
+	}
+
+	/**
+	 * This method sets the sidewalk
+	 * @param sideWalks
+	 */
+	public void setSideWalks(List<Lane> sideWalks) {
+		this.sideWalks = sideWalks;
+	}
+
+	/**
+	 * This method returns the a list of Lane objects
+	 * @return
+	 */
 	public List<Lane> getLanes() {
 		return lanes;
 	}
-
+	
+	/**
+	 * This method sets a list of lanes. 
+	 * @param lanes - a List of Lane objects
+	 */
 	public void setLanes(List<Lane> lanes) {
 		this.lanes = lanes;
 	}
 
-
+	
 	/**
 	 * Returns a random lane 
 	 * @return
@@ -38,23 +66,23 @@ public class MyMap {
 		return randomLane; 
 	}
 	
-	/**
-	 * Print method for lights as an ordered pair
-	 */
-	public void printLights() {
-
-		int count = 1;
-		System.out.println("");
-		System.out.println("----------------");
-		System.out.println(" Light Position ");
-		System.out.println("     (x,y)      ");
-		System.out.println("----------------");
-		System.out.println("");
-		
 	
+	
+	/**
+	 * This gets the list of lights loaded from the JSON file
+	 * @return ArrayList
+	 */
+	public ArrayList<Light> getLights() {
+		return lights;
 	}
-
-
+	
+	/**
+	 * Sets the Lights
+	 * @param lights
+	 */
+	public void setLights(ArrayList<Light> lights) {
+		this.lights = lights;
+	}
 	/**
 	 * Prints the lanes start and end positions as ordered pair
 	 * 
@@ -78,5 +106,84 @@ public class MyMap {
 			count++;
 		}
 	}
+	
+	/**
+	 * Print method for lights as an ordered pair
+	 */
+	public void printLights() {
+
+		int count = 1;
+		System.out.println("");
+		System.out.println("----------------");
+		System.out.println(" Light Position ");
+		System.out.println("     (x,y)      ");
+		System.out.println("----------------");
+		System.out.println("");
+		Iterator<Light> ittr = lights.iterator();
+		while (ittr.hasNext()) {
+			Light light = ittr.next();
+			System.out.println("Traffic Light: " + count);
+			System.out.println("(" + light.getPosition().getCol() + ","+ light.getPosition().getRow() + ")");  
+			
+			System.out.println(" ");
+			count++;
+		}
+	}
+
+
+	
+	
+	/**
+	 * 
+	 * @param laneId
+	 * @param direction
+	 * @return
+	 */
+	public Lane getCarNewLane(int laneId, int direction){
+	   //System.out.println(laneId+"  ()  "+ direction);
+
+		if(laneId == 3 && direction == 2){
+			
+			for(Lane l: lanes){
+			
+				if(l.getDirection() == 0 && l.getId() == 3){
+					return l; 
+				}
+				
+			}
+			 
+	
+	    }else if(laneId == 3 && direction == 0){
+			
+			for(Lane l: lanes){
+			
+				if(l.getDirection() == 3 && l.getId() == 4){
+					return l; 
+				}
+			}
+				
+			}else if(laneId == 4 && direction == 3){
+				
+				for(Lane l: lanes){
+				
+					if(l.getDirection() == 1 && l.getId() == 4){
+						return l; 
+					}
+				}
+					
+				}else{
+					for(Lane l: lanes){
+						
+						if(l.getDirection() == 2 && l.getId() == 3){
+							return l; 
+						}
+					}
+				}
+
+		return null;	
+}
+	
+	
+	
 
 }

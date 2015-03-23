@@ -11,22 +11,22 @@
  * Moded  : 
  * 
  */
-import java.awt.*;
-import java.io.*;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Map {
 
+	public static final boolean debug = false;
 	private int xOffset;
 	private int yOffset;
 	private int tileSize;
@@ -36,15 +36,17 @@ public class Map {
 	private String file;
 	private MyMap testMap;
 	private List<Lane> laneCells;
+	private ArrayList<Light> listOfLights;
 
 	public Map(String file, int mapWidth, int mapHeight, int tileSize)
 			throws IOException {
 
 		this.tileSize = tileSize;
 		this.file = file;
+		// this.mapHeight = mapHeight;
+		// this.mapWidth = mapHeight;
 		this.mapHeight = mapHeight / tileSize;
 		this.mapWidth = mapWidth / tileSize;
-
 		initMap();
 	}
 
@@ -56,9 +58,7 @@ public class Map {
 
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-
 			testMap = mapper.readValue(new FileReader(this.file), MyMap.class);
-
 			map = new Cell[mapWidth][mapHeight];
 
 			for (int col = 0; col < mapWidth; col++) {
@@ -67,15 +67,15 @@ public class Map {
 				}
 			}
 
-			//TEST TEST TEST 
-			map[10][10].setOccupied(true);
-			map[25][25].setOccupied(true);
+			if(debug){
+				map[29][36].setOccupied(true);
+				testMap.printLights();	
+			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Error in initMap(): " + e.getMessage());
 		}
-
 	}
 
 	/**
@@ -84,16 +84,10 @@ public class Map {
 	 * @param x
 	 * @param y
 	 */
-	public void addPosition(Cell cell) {
-
-		int x = cell.getCol();
-		int y = cell.getRow();
-
+	public void addPosition(double x, double y) {
 		if (x < mapWidth && x > 0 && y < mapHeight && y > 0) {
-			map[x][y].setOccupied(true);
-			;
+			map[(int) x][(int) y].setOccupied(true);
 		}
-
 	}
 
 	/**
@@ -102,12 +96,9 @@ public class Map {
 	 * @param x
 	 * @param y
 	 */
-	public void removePosition(Cell cell) {
-		int x = cell.getCol();
-		int y = cell.getRow();
-
+	public void removePosition(double x, double y) {
 		if (x < mapWidth && x > 0 && y < mapHeight && y > 0) {
-			map[x][y].setOccupied(false);
+			map[(int) x][(int) y].setOccupied(false);
 		}
 	}
 
@@ -120,9 +111,20 @@ public class Map {
 		return testMap.getRandomLane();
 	}
 
-	// ////////////////////////////////////////////////////////////////
-	// Paint Methods //
-	// ////////////////////////////////////////////////////////////////
+	/**
+	 * Gets the lights from testMap
+	 * 
+	 * @return
+	 */
+	public ArrayList<Light> getLightList() {
+		return testMap.getLights();
+
+	}
+
+	/***************************************************************
+	 *                    Paint Methods                            * 
+	 ***************************************************************/
+	
 
 	/**
 	 * Draws the map my drawing the components of the map. Inside the method are
@@ -135,10 +137,11 @@ public class Map {
 		drawBoard(g);
 		drawLanes(g);
 		drawDashedLane(g);
-		// drawLights(g);
+		drawLights(g);
+
+		// drawSideWalk(g);
 		// drawLaneBoarders(g);
 		// drawIntersection(g);
-
 	}
 
 	/**
@@ -160,8 +163,6 @@ public class Map {
 	/**
 	 * This method is used to draw the lanes to the map. The lanes are held
 	 * within a JSON file.
-	 * 
-	 * The Json file changed, as a result the drawLanes method is not working
 	 * 
 	 * @param g
 	 */
@@ -191,7 +192,7 @@ public class Map {
 			for (int col = xStart; col <= xEnd; col++) {
 				for (int row = yStart; row <= yEnd; row++) {
 					g.fillRect(xOffset + col * tileSize, yOffset + row
-							* tileSize, tileSize*2, tileSize*2);
+							* tileSize, tileSize * 2, tileSize * 2);
 				}
 			}
 		}
@@ -218,18 +219,47 @@ public class Map {
 			int yEnd = l.getEnd().getRow();
 
 			if (count == 1 || count % 2 == 0) {
+
 				g.drawLine(xStart * tileSize, yStart * tileSize, xEnd
 						* tileSize, yEnd * tileSize);
 				BasicStroke dashed1 = new BasicStroke(1.0f,
 						BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
 						dash1, 0.0f);
 				g.setColor(Color.LIGHT_GRAY);
-				g.setStroke(dashed1);
-
 			}
 
 			count++;
 		} // end while
+	}
+
+	/**
+	 * Simple paint method to draw the occupied Light cell on the map.
+	 * 
+	 * @param g
+	 */
+	public void drawLights(Graphics2D g) {
+
+		ArrayList<Light> lights = testMap.getLights();
+		Iterator<Light> itter = lights.iterator();
+		while (itter.hasNext()) {
+			Light l = itter.next();
+
+			int x = l.getPosition().getCol();
+			int y = l.getPosition().getRow();
+
+			if(l.getPosition().isOccupied()){
+				
+				g.setColor(Color.RED);
+				g.fillOval(x * tileSize, y * tileSize, tileSize, tileSize);
+				//g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+			}else {
+				g.setColor(Color.GREEN);
+				g.fillOval(x * tileSize, y * tileSize, tileSize, tileSize);
+				
+			}
+	
+
+		}
 	}
 
 	/**
@@ -244,7 +274,7 @@ public class Map {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.GRAY);
 
-		//Draw the Rows
+		// Draw the Rows
 		for (int i = 0; i < mapHeight; i++) {
 			g2d.drawLine(0, i * tileSize, tileSize * mapWidth, i * tileSize);
 			g2d.setComposite(AlphaComposite.getInstance(
@@ -270,16 +300,16 @@ public class Map {
 
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-				0.08f));
+				0.2f));
 
-		for (int col = 0; col < mapWidth; col++) {
-			for (int row = 0; row < mapHeight; row++) {
+		for (int row = 0; row < mapHeight; row++) {
+			for (int col = 0; col < mapWidth; col++) {
 				if (!map[col][row].isOccupied()) {
-					g2d.setColor(Color.RED);
+					g2d.setColor(Color.GREEN);
 					g2d.fillRect(xOffset + col * tileSize, yOffset + row
 							* tileSize, tileSize, tileSize);
 				} else {
-					g2d.setColor(Color.GREEN);
+					g2d.setColor(Color.RED);
 					g2d.fillRect(xOffset + col * tileSize, yOffset + row
 							* tileSize, tileSize, tileSize);
 				}
@@ -287,4 +317,82 @@ public class Map {
 		}
 	}
 
+	/**
+	 * This method returns a cell with indices x and y.
+	 * 
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	public Cell getCell(int x, int y) {
+		return map[x][y];
+	}
+
+	/**
+	 * This method checks if a car is near. There are four cases for each
+	 * direction.
+	 * 
+	 * @param x
+	 * @param y
+	 * @param direction
+	 * @return
+	 */
+	public boolean isCarNear(int x, int y, int direction) {
+
+		switch (direction) {
+		case 0:
+			if (map[x + 1][y].isOccupied())
+				return true;
+			break;
+
+		case 1:
+			if (map[x - 1][y].isOccupied())
+				return true;
+			break;
+		case 2:
+			if (map[x][y + 1].isOccupied())
+				return true;
+			break;
+
+		case 3:
+			if (map[x][y - 1].isOccupied())
+				return true;
+			break;
+		}
+
+		return true;
+	}
+
+	/**
+	 * This method checks if an Agent is in the lane next to it. There are four
+	 * cases for each direction.
+	 * 
+	 * Add Lane lane object as param after
+	 * 
+	 * @param x
+	 * @param y
+	 * @param direction
+	 * @return
+	 */
+	public boolean isAgentBeside(int x, int y, int direction) {
+
+		switch (direction) {
+		case 0:
+			if (map[x][y + 1].isOccupied())
+				return true;
+			break;
+		}
+		return true;
+	}
+
+	/**
+	 * This returns a Lane given the Id and the direction 
+	 * @param id
+	 * @param direction
+	 * @return
+	 */
+	public Lane getLane(int id, int direction){
+
+		return testMap.getCarNewLane(id, direction); 
+	}
 }

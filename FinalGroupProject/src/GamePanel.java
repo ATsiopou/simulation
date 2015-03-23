@@ -14,45 +14,50 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 
+import com.sun.istack.internal.logging.Logger;
+
 public class GamePanel extends JPanel implements Runnable {
 
-	public static final boolean debug = false;
+	public static final boolean debug = true;
 	private static final long serialVersionUID = 1L;
 	public static final int HEIGHT = 800; // 600
 	public static final int WIDTH = 1200; // 800
-	public static final int DELAY = 20;
+	public static final int DELAY = 15;
 	public static final int TILE = 10;
-	public static final int TOTALNUMEROFCARS = 10;
-	public static final int ENTRYFREQUENCY = 100; // in milliseconds (2seconds)
+	public static  int TOTALNUMEROFCARS = 30;
+	public static  int ENTRYFREQUENCY = 10; // in milliseconds (2seconds)
+	public static  int LIGHTMECHANISM = 350; 
+	private int lightCounter = 0; 
 	private boolean running = true;
 	private Thread animator;
 	private Graphics g;
-	public Map map;
+	private Map map;
 	private ArrayList<Car> listOfCars;
-	private ArrayList<Cell> occupiedCells;
+	private ArrayList<Light> listOfLights; 
 	private int inte = 0;
-	private int totalCarCounter = 0;
 	private int MAPTYPE = 1;
+	private TimePanel  timePanel = new TimePanel();
+	
+	 
 
 	public GamePanel() {
+
+		setDoubleBuffered(true);
 		initGamePanel();
+		
 	}
 
 	/**
 	 * Private method which sets the map type
 	 */
 	private void initGamePanel() {
-		setDoubleBuffered(true);
-		switch (MAPTYPE) {
+		
+		switch (2) {
 		case 1:
 			try {
 				map = new Map("res/map1_1Intersection.json", WIDTH, HEIGHT,
@@ -68,10 +73,9 @@ public class GamePanel extends JPanel implements Runnable {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			break;	
-			
+			break;
 		}
-
+		
 	}
 
 	@Override
@@ -93,7 +97,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 		// Draw map
 		map.paintMap(g2d);
-		// Draw traffic Lights here.
+		map.drawLights(g2d);
 
 		// Draw the images for the cars
 		for (Car car : listOfCars) {
@@ -103,7 +107,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 		// For testing purpose
 		if (debug) {
-			//map.paintGrid(g2d);
+			map.paintGrid(g2d);
 			map.paintMapOccupiedValues(g2d);
 		}
 		g.dispose();
@@ -114,20 +118,44 @@ public class GamePanel extends JPanel implements Runnable {
 
 		// Create the list of cars
 		listOfCars = new ArrayList<Car>();
-		// Create the occupied cells lists
-		occupiedCells = createOccupiedCells();
+		listOfLights = new ArrayList<Light>(); 
 
+		
+		
+		
+//		Lane lane = new Lane(); 
+//		Cell startingCell = new Cell(0,56);
+//		Cell endCell = new Cell(56,120); 
+//		lane.setStart(startingCell);
+//		lane.setEnd(endCell);
+//		lane.setDirection(0);
+//		lane.setId(3);
+	
+		
+		
 		while (running) {
-			try {
+			clearOutMApCar();
+			listOfLights = map.getLightList();
 
+			
+			if( lightCounter % LIGHTMECHANISM == 0 ){
+				
+				this.lightMechanism();
+				
+			}
+			lightCounter++; 
+
+			timePanel.workTimeTraffic();
+			
+			
+			try {
 				if ((inte % ENTRYFREQUENCY == 0)) {
-					if (totalCarCounter <= TOTALNUMEROFCARS) {
-						Lane lane = new Lane();
-						lane = map.getRandomLane();
-						Car car = new Car(lane, g, occupiedCells);
+					if (listOfCars.size() < TOTALNUMEROFCARS) {
+				     	Lane lane = new Lane();
+					    lane = map.getRandomLane();
+						Car car = new Car(lane, g, listOfLights,map);
 						listOfCars.add(car);
 					}
-					totalCarCounter++;
 				}
 				for (Car car : this.listOfCars) {
 					car.move();
@@ -136,58 +164,75 @@ public class GamePanel extends JPanel implements Runnable {
 				Thread.sleep(DELAY);
 				repaint();
 			} catch (InterruptedException ex) {
-				Logger.getLogger(GamePanel.class.getName()).log(Level.SEVERE,
+				Logger.getLogger(GamePanel.class.getName(), null).log(Level.SEVERE,
 						null, ex);
 			}
 		}
 	}
 
-	@SuppressWarnings("unused")
-	private void addDelay(int stoppage) {
-		try {
-			Thread.sleep(stoppage * 1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+	/**
+	 * This method removes the cars from the map when they 
+	 * have passed the maps boundaries. 
+	 */
+	public void clearOutMApCar() {
+		ArrayList<Car> listOfCars2 = listOfCars;
+		Iterator<Car> i = listOfCars2.iterator();
+		while (i.hasNext()) {
+			Car s = i.next(); // must be called before you can call i.remove()
+			if (shouldRemoveFromTheList(s)) {
+				s.removePosition();
+				i.remove();
+			}
 		}
 	}
 
+	
 	/**
-	 * create the cells which are set as occupid a the a traffic junction
+	 * This method checks the direction of the car and compares 
+	 * it to the bounds of the map. If the cars next value exceeds 
+	 * the bounds, then the car should be removed from the map. 
+	 * 
+	 * @param c
+	 * @return boolean
 	 */
+	private boolean shouldRemoveFromTheList(Car c) {
+		
+		if (c.getLane().getDirection() == 0) {
+			if (c.getX0() > c.getLane().getEnd().getCol()-2) {
+				return true;
+			}
+		} else if (c.getLane().getDirection() == 1) {
+			if (c.getX0() < c.getLane().getEnd().getCol()+2) {
+				return true;
+			}
+		} else if (c.getLane().getDirection() == 2) {
+			if (c.getY0() > c.getLane().getEnd().getRow()-2) {
+				return true;
+			}
+		} else {
+			if (c.getY0() < c.getLane().getEnd().getRow()+2) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private void printL(){
+		for(Light l:listOfLights){
+			System.out.println(l.getPosition().getCol()+"             "+l.getPosition().getRow());
+		}
+	}
+	
+	
+	private void lightMechanism(){
+		for(Light l:listOfLights){
+		 	l.changeLight();
+			//System.out.println(l.getPosition().isOccupied());
 
-	public ArrayList<Cell> createOccupiedCells() {
-
-		occupiedCells = new ArrayList<Cell>();
-
-		Cell cell1 = new Cell(37, 28); // x++
-		Cell cell2 = new Cell(37, 29); // x++
-		Cell cell3 = new Cell(40, 27); // y++
-		Cell cell4 = new Cell(41, 27); // y++
-		Cell cell5 = new Cell(42, 30); // x--
-		Cell cell6 = new Cell(42, 31); // x--
-		Cell cell7 = new Cell(38, 32); // y--
-		Cell cell8 = new Cell(39, 32); // y--
-
-		occupiedCells.add(cell1);
-		occupiedCells.add(cell2);
-		occupiedCells.add(cell3);
-		occupiedCells.add(cell4);
-		occupiedCells.add(cell5);
-		occupiedCells.add(cell6);
-		occupiedCells.add(cell7);
-		occupiedCells.add(cell8);
-
-		cell1.setOccupied(true);
-		cell2.setOccupied(true);
-		cell3.setOccupied(true);
-		cell4.setOccupied(true);
-		cell5.setOccupied(true);
-		cell6.setOccupied(true);
-		cell7.setOccupied(true);
-		cell8.setOccupied(true);
-
-		return occupiedCells;
+		}
 
 	}
+	
+	
 
 }
