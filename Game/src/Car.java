@@ -68,8 +68,9 @@ public class Car implements Runnable {
 	 * This method is responsible for moving a car. It checks the if the cell in
 	 * front of it is occupied and it proceeds to accelerate, otherwise it will
 	 * brake.
+	 * @throws InterruptedException 
 	 */
-	public void move() {
+	public void move() throws InterruptedException {
 
 		if (currentCell.listEquals(occupiedCells)) {
 			currentCell.setOccupied(true);
@@ -81,7 +82,7 @@ public class Car implements Runnable {
 				System.out.println("Current cell: " + currentCell);
 			}
 		} else {
-			brake();
+		//	brake();
 		}
 
 	}
@@ -96,10 +97,11 @@ public class Car implements Runnable {
 	 * each cell set cell occupied set previous cell unoccoupied }
 	 * 
 	 * Try to remove the magic numbers => make it more general
+	 * @throws InterruptedException 
 	 * 
 	 * 
 	 */
-	private void accelerate() {
+	private void accelerate() throws InterruptedException {
 
 
 		
@@ -143,25 +145,41 @@ public class Car implements Runnable {
 			}
 		}
 
-		currentCell.setOccupied(false);
+		Cell obstacleCell = new Cell((int)x0,(int)y0);
+		for (Cell cell : occupiedCells) {
+			if(obstacleCell.equals(cell) && cell.isOccupied()) { 
+				brake(cell); 
+				cell.setOccupied(false);
+				System.out.println("Cell: " + cell.isOccupied());
+			}
+		}
+		System.out.println("obstacle cell: "+obstacleCell);
 		
-		int xLocation = (int)(x0/speed); 
-		int yLocation = (int)(y0/speed); 
+//		int xLocation = (int)(x0/speed); 
+//		int yLocation = (int)(y0/speed); 
+//		
+//		System.out.println("x0: " + x0 + "y0: " + y0  ); 
+//		System.out.println("x0: " + xLocation + "y0: " + yLocation  ); 
+//		
 		
-		System.out.println("x0: " + x0 + "y0: " + y0  ); 
-		System.out.println("x0: " + xLocation + "y0: " + yLocation  ); 
 		
-		
-		
-	//	currentCell.setCol( xCurrent);
-	//	currentCell.setRow( yCurrent);
+		//currentCell.setCol( (int)x0);
+		//currentCell.setRow( (int) y0);
+	}
+	
+	private void brake(int stoppage) throws InterruptedException {
+		Thread.sleep(stoppage*1000);
 	}
 
 	/**
 	 * This method (for now) will stop the car from increasing in it's current
 	 * direction
+	 * @throws InterruptedException 
 	 */
-	private void brake() {
+	private void brake(Cell cell) throws InterruptedException {
+	
+		System.out.println("Cell: "+cell+ "Occupied: " + cell.isOccupied());
+		brake(10);
 		x0 = x0;
 		y0 = y0;
 	}

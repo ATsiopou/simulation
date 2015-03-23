@@ -4,14 +4,20 @@ import javax.swing.JFrame;
 
 class Main {
 
-	
-	//create the frame and make the illusion of cars mobing
+	Menu menu; 
+	private enum STATE {
+		MENU, GAME
+	};
+
+	private static STATE state = STATE.MENU;
+
+	// create the frame and make the illusion of cars mobing
 	public static void main(String[] args) throws InterruptedException {
 		
 		//this 6 lines just create a jframe and a systemengine object
 		JFrame frame = new JFrame("");
 		SystemEngine game = new SystemEngine();
-     	frame.add(game);
+	    frame.add(game);
 		frame.setSize(1200, 800);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -22,20 +28,20 @@ class Main {
 		//every 25 miliseconds
 		int rea=0;
 		
-		while (true) {
-
-			game.repaint();
-
-			game.moveCar();
-
-			Thread.sleep(25);
+		if(state == STATE.GAME){
 			
-			if(rea%230==0){
-				game.lightsEngine();//every 230 interaction  2-3 seconds chnage the lights color (red- color)
-			}
-			rea++;
+			while (true) {
+				game.repaint();
+				game.moveCar();
+				Thread.sleep(25);
+				if(rea%230==0){
+					game.lightsEngine();//every 230 interaction  2-3 seconds chnage the lights color (red- color)
+				}
+			  game.clearOutMApCar();
+				rea++;
+			}//End While
+			
 		}
 	}
-	
-	
+
 }

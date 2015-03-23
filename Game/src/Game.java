@@ -26,7 +26,10 @@ public class Game {
 				JFrame window = new JFrame("Traffic Simulation");
 				window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				window.setLayout(new BorderLayout());
-				window.add(new GamePanel());
+				
+				GamePanel gamePanel = new GamePanel();
+				//gamePanel.setMaximumSize(null);
+				window.add(gamePanel);
 				window.pack();
 				window.setResizable(true);
 				window.setLocationRelativeTo(null);

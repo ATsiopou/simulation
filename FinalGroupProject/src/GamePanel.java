@@ -29,9 +29,15 @@ public class GamePanel extends JPanel implements Runnable {
 	public static final int WIDTH = 1200; // 800
 	public static final int DELAY = 15;
 	public static final int TILE = 10;
+<<<<<<< HEAD
 	public static  int TOTALNUMEROFCARS = 30;
 	public static  int ENTRYFREQUENCY = 10; // in milliseconds (2seconds)
 	public static  int LIGHTMECHANISM = 350; 
+=======
+	public static final int TOTALNUMEROFCARS = 20;
+	public static final int ENTRYFREQUENCY = 50; // in milliseconds (2seconds)
+	public static final int LIGHTMECHANISM = 50; 
+>>>>>>> origin/master
 	private int lightCounter = 0; 
 	private boolean running = true;
 	private Thread animator;
@@ -39,6 +45,7 @@ public class GamePanel extends JPanel implements Runnable {
 	private Map map;
 	private ArrayList<Car> listOfCars;
 	private ArrayList<Light> listOfLights; 
+<<<<<<< HEAD
 	private int inte = 0;
 	private int MAPTYPE = 1;
 	private TimePanel  timePanel = new TimePanel();
@@ -47,6 +54,14 @@ public class GamePanel extends JPanel implements Runnable {
 
 	public GamePanel() {
 
+=======
+	private ArrayList<Cell> occupiedCells;
+	private int inte = 0;
+	private int MAPTYPE = 1;
+	 
+
+	public GamePanel() {
+>>>>>>> origin/master
 		setDoubleBuffered(true);
 		initGamePanel();
 		
@@ -57,7 +72,11 @@ public class GamePanel extends JPanel implements Runnable {
 	 */
 	private void initGamePanel() {
 		
+<<<<<<< HEAD
 		switch (2) {
+=======
+		switch (MAPTYPE) {
+>>>>>>> origin/master
 		case 1:
 			try {
 				map = new Map("res/map1_1Intersection.json", WIDTH, HEIGHT,
@@ -122,6 +141,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 		
 		
+<<<<<<< HEAD
 		
 //		Lane lane = new Lane(); 
 //		Cell startingCell = new Cell(0,56);
@@ -133,6 +153,19 @@ public class GamePanel extends JPanel implements Runnable {
 	
 		
 		
+=======
+		/*
+		Lane lane = new Lane(); 
+		Cell startingCell = new Cell(118,42);
+		Cell endCell = new Cell(0,42); 
+		lane.setStart(startingCell);
+		lane.setEnd(endCell);
+		lane.setDirection(1);
+		lane.setId(4);
+	*/
+		
+        
+>>>>>>> origin/master
 		while (running) {
 			clearOutMApCar();
 			listOfLights = map.getLightList();
@@ -145,14 +178,23 @@ public class GamePanel extends JPanel implements Runnable {
 			}
 			lightCounter++; 
 
+<<<<<<< HEAD
 			timePanel.workTimeTraffic();
+=======
+			
+>>>>>>> origin/master
 			
 			
 			try {
 				if ((inte % ENTRYFREQUENCY == 0)) {
 					if (listOfCars.size() < TOTALNUMEROFCARS) {
+<<<<<<< HEAD
 				     	Lane lane = new Lane();
 					    lane = map.getRandomLane();
+=======
+						Lane lane = new Lane();
+						lane = map.getRandomLane();
+>>>>>>> origin/master
 						Car car = new Car(lane, g, listOfLights,map);
 						listOfCars.add(car);
 					}
@@ -180,7 +222,10 @@ public class GamePanel extends JPanel implements Runnable {
 		while (i.hasNext()) {
 			Car s = i.next(); // must be called before you can call i.remove()
 			if (shouldRemoveFromTheList(s)) {
+<<<<<<< HEAD
 				s.removePosition();
+=======
+>>>>>>> origin/master
 				i.remove();
 			}
 		}
@@ -198,6 +243,7 @@ public class GamePanel extends JPanel implements Runnable {
 	private boolean shouldRemoveFromTheList(Car c) {
 		
 		if (c.getLane().getDirection() == 0) {
+<<<<<<< HEAD
 			if (c.getX0() > c.getLane().getEnd().getCol()-2) {
 				return true;
 			}
@@ -211,6 +257,21 @@ public class GamePanel extends JPanel implements Runnable {
 			}
 		} else {
 			if (c.getY0() < c.getLane().getEnd().getRow()+2) {
+=======
+			if (c.getX0() > c.getLane().getEnd().getCol()) {
+				return true;
+			}
+		} else if (c.getLane().getDirection() == 1) {
+			if (c.getX0() < c.getLane().getEnd().getCol()) {
+				return true;
+			}
+		} else if (c.getLane().getDirection() == 2) {
+			if (c.getY0() > c.getLane().getEnd().getRow()) {
+				return true;
+			}
+		} else {
+			if (c.getY0() < c.getLane().getEnd().getRow()) {
+>>>>>>> origin/master
 				return true;
 			}
 		}
@@ -226,7 +287,11 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	private void lightMechanism(){
 		for(Light l:listOfLights){
+<<<<<<< HEAD
 		 	l.changeLight();
+=======
+			l.changeLight();
+>>>>>>> origin/master
 			//System.out.println(l.getPosition().isOccupied());
 
 		}

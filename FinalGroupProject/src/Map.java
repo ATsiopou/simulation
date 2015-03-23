@@ -111,6 +111,21 @@ public class Map {
 		return testMap.getRandomLane();
 	}
 
+<<<<<<< HEAD
+=======
+	
+	/**
+	 * This returns a Lane given the Id and the direction 
+	 * @param id
+	 * @param direction
+	 * @return
+	 */
+	public Lane getLane(int id, int direction){
+
+		return testMap.getCarNewLane(id, direction); 
+	}
+	
+>>>>>>> origin/master
 	/**
 	 * Gets the lights from testMap
 	 * 
@@ -250,11 +265,18 @@ public class Map {
 			if(l.getPosition().isOccupied()){
 				
 				g.setColor(Color.RED);
+<<<<<<< HEAD
 				g.fillOval(x * tileSize, y * tileSize, tileSize, tileSize);
 				//g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
 			}else {
 				g.setColor(Color.GREEN);
 				g.fillOval(x * tileSize, y * tileSize, tileSize, tileSize);
+=======
+				g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+			}else {
+				g.setColor(Color.GREEN);
+				g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+>>>>>>> origin/master
 				
 			}
 	
@@ -385,6 +407,7 @@ public class Map {
 		return true;
 	}
 
+<<<<<<< HEAD
 	/**
 	 * This returns a Lane given the Id and the direction 
 	 * @param id
@@ -395,4 +418,6 @@ public class Map {
 
 		return testMap.getCarNewLane(id, direction); 
 	}
+=======
+>>>>>>> origin/master
 }

@@ -31,7 +31,7 @@ public class GamePanel extends JPanel implements Runnable {
 	public static final int WIDTH = 800; // 800
 	public static final int DELAY = 20;
 	public static final int TILE = 10;
-	public static final int TOTALNUMEROFCARS = 10;
+	public static final int TOTALNUMEROFCARS = 1;
 	public static final int ENTRYFREQUENCY = 2000; // in milliseconds (2seconds)
 	private boolean running = true;
 	private Thread animator;
@@ -135,9 +135,15 @@ public class GamePanel extends JPanel implements Runnable {
 		while (running) {
 
 			// Set the occupied cells during the game loop
+			/*
 			for (Cell cell : occupiedCells) {
 				cell.setOccupied(true);
 			}
+			
+			for(Car car : cars) {
+				car.setOccupiedCells(occupiedCells);
+			}*/
+				
 
 			try {
 				for (Car car : this.cars) {
@@ -178,6 +184,15 @@ public class GamePanel extends JPanel implements Runnable {
 		occupiedCells.add(cell6);
 		occupiedCells.add(cell7);
 		occupiedCells.add(cell8);
+		
+		cell1.setOccupied(true);
+		cell2.setOccupied(true);
+		cell3.setOccupied(true);
+		cell4.setOccupied(true);
+		cell5.setOccupied(true);
+		cell6.setOccupied(true);
+		cell7.setOccupied(true);
+		cell8.setOccupied(true);
 
 		return occupiedCells;
 

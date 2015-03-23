@@ -25,10 +25,6 @@ public class TrafficLight extends JPanel {
 
 	private Cell start;
 	private Cell end;
-	private Lane lane1;
-
-
-	private Lane lane2; 
 	private Graphics g;
 	private ArrayList<Cell> lightCells; 
 	private int value; 
@@ -43,41 +39,10 @@ public class TrafficLight extends JPanel {
 	public TrafficLight(Graphics g, ArrayList<Cell> lightCells){
 		this.g = g; 
 		this.lightCells = lightCells; 
+		timer = new Timer();
+		timer.scheduleAtFixedRate(new LightChangeTask(lightCells), 5000, 10000);
 	}
 
-	public TrafficLight(Graphics g, Lane lane1, Lane lane2, ArrayList<Cell> lightCells){
-		this.g = g; 
-		this.lane1 = lane1; 
-		this.lane2 = lane2; 
-		this.lightCells = lightCells; 
-	//	timer = new Time();
-	//	timer.scheduleAtFixedRate(new LightChangeTask(lightCells), delay, period);
-	}
-
-	
-	/**
-	 * 
-	 * @param status
-	 */
-	public void cycleLights(int value){
-		
-		switch(value){
-		case 0:
-
-			
-			break; 
-			
-		case 1: 
-			
-			break; 
-		
-		
-		}
-		
-		
-		
-	}
-	
 	
 	
 	
@@ -133,6 +98,8 @@ public class TrafficLight extends JPanel {
 	public void setEnd(Cell end) {
 		this.end = end;
 	}
+	
+	
 
 
 }

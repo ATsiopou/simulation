@@ -1,3 +1,16 @@
+/**
+ *Class   : Car 
+ *
+ *This class is responsible for car position
+ *update the matrix information
+ *decide car's move 
+ *
+ *
+ * @author  Iordanis
+ * 			Anthony 
+ *
+ */
+
 import java.util.Random;
 
 public class Car {
@@ -7,17 +20,25 @@ public class Car {
 	 
 	private int direction;//0 for right 1 for left,2 for up,3 for down
 	 
-	private Lane lane;//the line the car will enter
-    private Matrix matri;
-    private Random random=new Random();
+	private Lane lane;//the line the car is running on
+    private Matrix matri;////matrix object where the care will update its position
+    private Random random=new Random();//random class object so the car can make some random decisions
    
-   //first contractor will be different in the future
-   //decide by the direction of the car where is the start point in the lane
-    //by taking the lanes first position
+    
+    /**
+     * Constructor
+     * 
+     *decide by the direction of the car where is the start point in the lane
+     *by taking the lanes first position (x,y)
+     *
+     * @param direction  the direction the car will take (can take values 0,1,2,3 only)
+     * @param lane in which lane the car will go
+     * @param matrix  the matrix class it will update its position
+     *
+     **/
    public Car(int direction,Lane lane,Matrix matrix) {
 		super();
         
-      
         this.matri=matrix;
 		this.lane=lane;
 		this.direction=direction;//we can change that aso it can just take the direction of the lane
@@ -38,20 +59,27 @@ public class Car {
 		}
 	}	
    
-   //this methos is how the car will decide to move
-   //now is taking the direction is going and move one position
-   //it is working for strange  roads so if we decide to put round roads it will change
-   //if not it will just has to become more clever  when to top and stuff like that
+   
+   /**
+    * 
+    * in method the car will decide to move
+    * also update the his position in the matrix
+    * and check if there is a car in front of him or ligth
+    * and their color
+    * 
+    */
    public void move(){
 		
 	   //see the direction and diecide how to move
 		switch (direction) {
 
 		case 0: 
+			System.out.println("AS");
 
 			if(!((checkLightDistance(0)) < 25) || checkLightCondition()){
+
 				if(x==lane.getLight().getX1Position()+50){
-				//	turn();
+					
 				}
 				matri.removePosition(x, y);	
 			    
@@ -95,9 +123,6 @@ public class Car {
 		       
 			if(!matri.isCarNear(x, y,3)){
 		       	y--;
-		    }else{
-				System.out.println("as");
-
 		    }
 			matri.addPosition(x, y);
     	   }
@@ -108,8 +133,15 @@ public class Car {
 	
 	
 	
-	// this method return the distace from the lights and the car
-	public int checkLightDistance(int directionxv){
+     /**
+      * 
+      * calculate and return the disttance beetween the car with the lights of the lane
+      * 
+      *	@param directionxv direction of the car
+	  * @return the distance between the car with the next lights
+	  * 
+	 */
+   private int checkLightDistance(int directionxv){
 		 int value ;
 		if(directionxv==0||directionxv==1){
 		     value = Math.abs(x - lane.getLight().getX1Position()); 
@@ -122,19 +154,22 @@ public class Car {
 	}
 	
 	
-	//get the lights condition (red or greeen)
-	public boolean checkLightCondition(){
+	/**
+	 * @return  the lights condition (red or greeen)
+	 */
+	private boolean checkLightCondition(){
 		return lane.getLight().isCondition();
 	}
 	
 	
-	//working for direction 0
-	//not htat dynamic too static
-	//not using this one dont test it
-	public void turn(){
+	  /**
+	    * 
+	    * 
+	    * 
+	    * 
+	    */
+	private void turn(){
 		int randomLane=random.nextInt(2);
-
-
 		if(direction==0){
 			 
 			 if(randomLane==1){
@@ -149,36 +184,54 @@ public class Car {
 	}
 	
 	
-	//setter getters
-
+	/**
+	 * @return  x position of the car in the matrix
+	 */
 	public int getX() {
 		return x;
 	}
 
+	/**
+	 * Sets x position of the x
+	 * 
+	 * @param x new position of the x
+	 */
 	public void setX(int x) {
 		this.x = x;
 	}
 
+	/**
+	 * @return  y position of the car in the matrix
+	 */
 	public int getY() {
 		return y;
 	}
 
+	/**
+	 * Sets x position of the y
+	 * 
+	 * @param y new position of the y
+	 */
 	public void setY(int y) {
 		this.y = y;
 	}
 
+	/**
+	 * @return  the direction of the car 
+	 */
 	public int getDirection() {
 		return direction;
 	}
 
+	/**
+	 * Sets direction of the car
+	 * 
+	 * @param direction of the car
+	 */
 	public void setDirection(int direction) {
 		this.direction = direction;
 	}
-	 
+	
 	
 
-	
-	
-	 
-	
 }

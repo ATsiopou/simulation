@@ -1,15 +1,12 @@
 import java.awt.*;
-
 import javax.swing.*;
-
-import java.io.*;
 import java.util.*;
 
 public class SystemEngine extends JPanel {
 	
-	private ArrayList <Car> listOfCars=new ArrayList<>();
+	private int carFrequency = 20; 
+	private ArrayList <Car> listOfCars=new ArrayList<Car> ();
     private Matrix matrix=new Matrix();
-
 	
 	Light l=new Light(550,350);
 	Light l2=new Light(640,391);
@@ -30,7 +27,7 @@ public class SystemEngine extends JPanel {
 
 	public void moveCar() {
 
-		if (inte%20==0){
+		if (inte%carFrequency==0){
 			
           /// add carsto the  arraylist/map
 			if(lanepo==0){
@@ -67,8 +64,26 @@ public class SystemEngine extends JPanel {
 	
 	}
 	
+	//still not working
+
+
+	public void clearOutMApCar(){
+		 ArrayList <Car> listOfCars2=listOfCars;
+       
+		 Iterator<Car> i = listOfCars2.iterator();
+		 while (i.hasNext()) {
+		    Car s = i.next(); // must be called before you can call i.remove()
+		    if(shouldRemoveFromTheList(s)){
+			    i.remove();
+
+		    }
+		 } 
+		 
+	
+
+	}
+	
 	//return true if the car should be removed from the lust
-	@SuppressWarnings("unused")
 	private boolean shouldRemoveFromTheList(Car c){
 		 if(c.getDirection()==0){
 			  
@@ -194,5 +209,17 @@ public class SystemEngine extends JPanel {
 		}
 		
 	}
+	
+	
+	
+
+	/**
+	 * Setting the car frequency 
+	 * @param carFrequency
+	 */
+	public void setCarFrequency(int carFrequency) {
+		this.carFrequency = carFrequency;
+	}
+	
 
 }
