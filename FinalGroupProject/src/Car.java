@@ -14,6 +14,7 @@
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,6 +37,7 @@ public class Car {
 	private double speed = 0.01;
 	private double maxSpeed = 0.03;
 	private double acceleration = 0.001;
+	private int turnProbability = 4; 
 
 	public Car() {
 		Image im1 = getCarImage(lane.getDirection());
@@ -71,7 +73,9 @@ public class Car {
 
 				if (this.canMoveFromLights()) {
 
-					turn();
+					if(getProbability(turnProbability)){
+						turn();
+					}
 					this.removePosition();
 					accelerate();
 					map.addPosition(x0, y0);
@@ -93,7 +97,9 @@ public class Car {
 
 				if (this.canMoveFromLights()) {
 
-					turn();
+					if(getProbability(turnProbability)){
+						turn();
+					}
 					this.removePosition();
 					accelerate();
 					map.addPosition(x0, y0);
@@ -106,7 +112,9 @@ public class Car {
 
 				if (this.canMoveFromLights()) {
 
-					turn();
+					if(getProbability(turnProbability)){
+						turn();
+					}
 					this.removePosition();
 					accelerate();
 					map.addPosition(x0, y0);
@@ -120,7 +128,9 @@ public class Car {
 
 				if (this.canMoveFromLights()) {
 
-					turn();
+					if(getProbability(turnProbability)){
+						turn();
+					}
 					this.removePosition();
 					accelerate();
 					map.addPosition(x0, y0);
@@ -306,32 +316,6 @@ public class Car {
 			return false;
 	}
 
-	/**
-	 * Returns the current x position
-	 * 
-	 * @return
-	 */
-	public double getX0() {
-		return x0;
-	}
-
-	/**
-	 * Returns the current y position
-	 * 
-	 * @return
-	 */
-	public double getY0() {
-		return y0;
-	}
-
-	/**
-	 * Returns the Image of the car
-	 * 
-	 * @return
-	 */
-	public Image getCarImage() {
-		return carImage;
-	}
 
 	/**
 	 * Overloading the getCarImage with param direction. Returns the Image of
@@ -477,6 +461,36 @@ public class Car {
 
 	}
 
+	
+	
+	
+	/**
+	 * Returns the current x position
+	 * 
+	 * @return
+	 */
+	public double getX0() {
+		return x0;
+	}
+
+	/**
+	 * Returns the current y position
+	 * 
+	 * @return
+	 */
+	public double getY0() {
+		return y0;
+	}
+
+	/**
+	 * Returns the Image of the car
+	 * 
+	 * @return
+	 */
+	public Image getCarImage() {
+		return carImage;
+	}
+
 	/**
 	 * Sets the Image of the car
 	 * 
@@ -515,7 +529,22 @@ public class Car {
 
 	public void removePosition() {
 		map.removePosition(x0, y0);
-
 	}
+	
+	public boolean getProbability(int pool){
+		
+		int prob; 
+		
+		Random rand = new Random(); 
+		prob = rand.nextInt(pool); 
+		//System.out.println("prob:" + prob);
+		
+		if(prob == 1)
+			return true; 
+		else 
+			return false; 
+		
+	}
+	
 
 }
