@@ -527,18 +527,25 @@ public class Car {
 		return lane.getId();
 	}
 
+	/**
+	 * Removes the (x,y) position in the matrix
+	 */
 	public void removePosition() {
 		map.removePosition(x0, y0);
 	}
-	
+
+	/**
+	 * Used to generate a probability. The pool is the range of the 
+	 * values. If the pool is larger, smaller probability and 
+	 * vice versa. 
+	 * 
+	 * @param pool
+	 * @return
+	 */
 	public boolean getProbability(int pool){
-		
 		int prob; 
-		
 		Random rand = new Random(); 
 		prob = rand.nextInt(pool); 
-		//System.out.println("prob:" + prob);
-		
 		if(prob == 1)
 			return true; 
 		else 

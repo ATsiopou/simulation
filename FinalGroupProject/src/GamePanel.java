@@ -31,7 +31,7 @@ public class GamePanel extends JPanel implements Runnable {
 	public static final int WIDTH = 1200; // 800
 	public static final int DELAY = 15;
 	public static final int TILE = 10;
-	public static final int TOTALNUMEROFCARS = 100;
+	public static final int TOTALNUMEROFCARS = 1;
 	public static final int ENTRYFREQUENCY = 10; // in milliseconds (2seconds)
 	public static final int LIGHTMECHANISM = 350; 
 	private int lightCounter = 0;
@@ -43,14 +43,14 @@ public class GamePanel extends JPanel implements Runnable {
 	private ArrayList<Light> listOfLights; 
 	private ArrayList<Cell> occupiedCells;
 	private int inte = 0;
-	private int MAPTYPE = 2;
+	private int MAPTYPE = 1;
 	 
 
 	public GamePanel() {
 		setDoubleBuffered(true);
 		initGamePanel();
-		
 	}
+
 
 	/**
 	 * Private method which sets the map type
@@ -69,6 +69,14 @@ public class GamePanel extends JPanel implements Runnable {
 		case 2:
 			try {
 				map = new Map("res/map2_4Intersection.json", WIDTH, HEIGHT,
+						TILE);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
+		case 3:
+			try {
+				map = new Map("res/map3_2Intersection.json", WIDTH, HEIGHT,
 						TILE);
 			} catch (Exception e) {
 				e.printStackTrace();

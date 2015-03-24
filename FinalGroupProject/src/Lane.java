@@ -8,19 +8,13 @@
  * id	   : An id is given to a single lane. The condition is that if the lane 
  * 		   	 is on the LHS of the road, the id will be odd. For a RHS lane, the
  * 			 id is even. 
-<<<<<<< HEAD
  *
-=======
->>>>>>> origin/master
  *direction: The direction is one of:
  *NORTH: 3 
  *EAST : 0
  *SOUTH: 2
  *WEST : 1
-<<<<<<< HEAD
  *
-=======
->>>>>>> origin/master
  * start   : A Cell object identifying the starting cells row and col position.
  *
  * end     : A Cell object identifying the end cells row and col position. 
@@ -90,18 +84,6 @@ public class Lane {
 	public int getDirection() {
 		return direction;
 	}
-<<<<<<< HEAD
-=======
-
-	/**
-	 * Sets the direction of the Lane
-	 * @param direction
-	 */
-	public void setDirection(int direction) {
-		this.direction = direction;
-	}
-	
->>>>>>> origin/master
 
 	/**
 	 * Sets the direction of the Lane
