@@ -31,10 +31,10 @@ public class GamePanel extends JPanel implements Runnable {
 	public static final int WIDTH = 1200; // 800
 	public static final int DELAY = 15;
 	public static final int TILE = 10;
-	public static final int TOTALNUMEROFCARS = 20;
-	public static final int ENTRYFREQUENCY = 50; // in milliseconds (2seconds)
-	public static final int LIGHTMECHANISM = 50; 
-	private int lightCounter = 0; 
+	public static final int TOTALNUMEROFCARS = 100;
+	public static final int ENTRYFREQUENCY = 10; // in milliseconds (2seconds)
+	public static final int LIGHTMECHANISM = 350; 
+	private int lightCounter = 0;
 	private boolean running = true;
 	private Thread animator;
 	private Graphics g;
@@ -43,7 +43,7 @@ public class GamePanel extends JPanel implements Runnable {
 	private ArrayList<Light> listOfLights; 
 	private ArrayList<Cell> occupiedCells;
 	private int inte = 0;
-	private int MAPTYPE = 1;
+	private int MAPTYPE = 2;
 	 
 
 	public GamePanel() {
@@ -122,15 +122,19 @@ public class GamePanel extends JPanel implements Runnable {
 
 		
 		
-		/*
-		Lane lane = new Lane(); 
-		Cell startingCell = new Cell(118,42);
-		Cell endCell = new Cell(0,42); 
-		lane.setStart(startingCell);
-		lane.setEnd(endCell);
-		lane.setDirection(1);
-		lane.setId(4);
-	*/
+//		
+//		Lane lane = new Lane(); 
+//		Cell startingCell = new Cell(2,56);
+//		Cell endCell = new Cell(118,42); 
+//
+//		Cell startingCell = new Cell(26,80);
+//		Cell endCell = new Cell(26,0);
+//		
+//		lane.setStart(startingCell);
+//		lane.setEnd(endCell);
+//		lane.setDirection(3);
+//		lane.setId(4);
+	
 		
         
 		while (running) {
@@ -180,6 +184,7 @@ public class GamePanel extends JPanel implements Runnable {
 		while (i.hasNext()) {
 			Car s = i.next(); // must be called before you can call i.remove()
 			if (shouldRemoveFromTheList(s)) {
+				s.removePosition();
 				i.remove();
 			}
 		}

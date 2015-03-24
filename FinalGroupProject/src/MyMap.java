@@ -19,6 +19,11 @@ public class MyMap {
 	List<Lane> lanes;
 	ArrayList<Light> lights;
 	List<Lane> sideWalks; 
+<<<<<<< HEAD
+	
+	
+=======
+>>>>>>> origin/master
 
 	/**
 	 * This returns a pedestrian walkway
@@ -128,6 +133,12 @@ public class MyMap {
 		}
 	}
 
+<<<<<<< HEAD
+
+	
+	
+=======
+>>>>>>> origin/master
 	/**
 	 * 
 	 * @param laneId
@@ -135,7 +146,11 @@ public class MyMap {
 	 * @return
 	 */
 	public Lane getCarNewLane(int laneId, int direction){
+<<<<<<< HEAD
+	   //System.out.println(laneId+"  ()  "+ direction);
+=======
 	
+>>>>>>> origin/master
 
 		if(laneId == 3 && direction == 2){
 			
@@ -146,6 +161,11 @@ public class MyMap {
 				}
 				
 			}
+<<<<<<< HEAD
+			 
+	
+=======
+>>>>>>> origin/master
 	    }else if(laneId == 3 && direction == 0){
 			
 			for(Lane l: lanes){
@@ -178,6 +198,9 @@ public class MyMap {
 	
 	
 	
+<<<<<<< HEAD
+=======
 	
+>>>>>>> origin/master
 
 }
