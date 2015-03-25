@@ -257,7 +257,6 @@ public class Map {
 				
 				
 			}
-System.out.println(count);
 			count++;
 		} // end while
 		

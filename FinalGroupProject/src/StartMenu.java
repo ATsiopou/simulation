@@ -50,7 +50,7 @@ public class StartMenu extends JFrame {
 		JSpinner carSpinner = new JSpinner(carSpinnerModel);
 		JSpinner carFrequencySpinner = new JSpinner(carFrequencySpinnerModel);
 		JSpinner lightFrequencySpinner = new JSpinner(lightFrequencySpinnerModel);
-		
+//			carSpinner.setBounds(x, y, width, height);
 
 		JPanel gameContainer = new JPanel();
 
@@ -64,6 +64,8 @@ public class StartMenu extends JFrame {
 				System.out.println("Cars: " + carSpinner.getValue());
 				System.out.println("Frequency: " + carFrequencyInMilli);
 				image.setVisible(false);
+				
+				
 				// start the game here
 				// remove this panel
 				game  = new GamePanel();

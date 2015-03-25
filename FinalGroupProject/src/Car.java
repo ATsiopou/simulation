@@ -30,7 +30,7 @@ public class Car {
 	private Image carImage;
 	private Map map;
 	private Cell currentCell;
-	public ArrayList<Light> lights;
+	public List<Light> lights;
 	private double x0;
 	private double y0;
 	private int tileSize = 10;
@@ -43,7 +43,7 @@ public class Car {
 		Image im1 = getCarImage(lane.getDirection());
 	}
 
-	public Car(Lane lane, Graphics g, ArrayList<Light> lights, Map map) {
+	public Car(Lane lane, Graphics g, List<Light> lights, Map map) {
 
 		Image im = getCarImage(lane.getDirection());
 		this.lane = lane;

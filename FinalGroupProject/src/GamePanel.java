@@ -18,20 +18,23 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
+
 public class GamePanel extends JPanel implements Runnable {
 
-	public static final boolean debug = true;
+	public static final boolean debug = false;
 	private static final long serialVersionUID = 1L;
 	public static final int HEIGHT = 800; // 600
 	public static final int WIDTH = 1200; // 800
 	public static final int DELAY = 15;
 	public static final int TILE = 10;
-	public static final int TOTALNUMEROFCARS = 1;
+	public static final int TOTALNUMEROFCARS = 100;
 	public static final int ENTRYFREQUENCY = 10; // in milliseconds (2seconds)
 	public static final int LIGHTMECHANISM = 350; 
 	private int lightCounter = 0;
@@ -39,11 +42,11 @@ public class GamePanel extends JPanel implements Runnable {
 	private Thread animator;
 	private Graphics g;
 	private Map map;
-	private ArrayList<Car> listOfCars;
-	private ArrayList<Light> listOfLights; 
-	private ArrayList<Cell> occupiedCells;
+	private List<Car> listOfCars;
+	private List<Light> listOfLights; 
+	private List<Cell> occupiedCells;
 	private int inte = 0;
-	private int MAPTYPE = 1;
+	private int MAPTYPE = 3;
 	 
 
 	public GamePanel() {
@@ -76,7 +79,7 @@ public class GamePanel extends JPanel implements Runnable {
 			break;
 		case 3:
 			try {
-				map = new Map("res/map3_2Intersection.json", WIDTH, HEIGHT,
+				map = new Map("res/map3_6Intersections.json", WIDTH, HEIGHT,
 						TILE);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -125,9 +128,10 @@ public class GamePanel extends JPanel implements Runnable {
 	public void run() {
 
 		// Create the list of cars
-		listOfCars = new ArrayList<Car>();
-		listOfLights = new ArrayList<Light>(); 
-
+		//This solves the repaint bug - array list was previously unlocked, now locked and unlocked and given to thread 
+		listOfCars = java.util.Collections.synchronizedList(new ArrayList<Car>()); 
+		listOfLights = java.util.Collections.synchronizedList(new ArrayList<Light>());  
+		
 		
 		
 //		
@@ -187,7 +191,7 @@ public class GamePanel extends JPanel implements Runnable {
 	 * have passed the maps boundaries. 
 	 */
 	public void clearOutMApCar() {
-		ArrayList<Car> listOfCars2 = listOfCars;
+		List<Car> listOfCars2 = listOfCars;
 		Iterator<Car> i = listOfCars2.iterator();
 		while (i.hasNext()) {
 			Car s = i.next(); // must be called before you can call i.remove()
@@ -231,7 +235,7 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	private void printL(){
 		for(Light l:listOfLights){
-			System.out.println(l.getPosition().getCol()+"             "+l.getPosition().getRow());
+			//System.out.println(l.getPosition().getCol()+"             "+l.getPosition().getRow());
 		}
 	}
 	
