@@ -34,7 +34,7 @@ public class Car {
 	private double x0;
 	private double y0;
 	private int tileSize = 10;
-	private double speed = 0.01;
+	private double speed; // = 0.01;
 	private double maxSpeed = 0.03;
 	private double acceleration = 0.001;
 	private int turnProbability = 4; 
@@ -43,7 +43,7 @@ public class Car {
 		Image im1 = getCarImage(lane.getDirection());
 	}
 
-	public Car(Lane lane, Graphics g, List<Light> lights, Map map) {
+	public Car(Lane lane, Graphics g, List<Light> lights, Map map, double speed) {
 
 		Image im = getCarImage(lane.getDirection());
 		this.lane = lane;
@@ -54,6 +54,7 @@ public class Car {
 		this.y0 = currentCell.getRow(); // initial position
 		this.lights = lights;
 		this.map = map;
+		this.speed = speed; 
 
 	}
 
@@ -327,19 +328,19 @@ public class Car {
 
 		switch (direction) {
 		case 0:
-			Image im0 = Toolkit.getDefaultToolkit().getImage("res/car0.png");
+			Image im0 = Toolkit.getDefaultToolkit().getImage("res/car00.png");
 			carImage = im0.getScaledInstance(tileSize * 2, tileSize * 2, 1);
 			break;
 		case 1:
-			Image im1 = Toolkit.getDefaultToolkit().getImage("res/car1.png");
+			Image im1 = Toolkit.getDefaultToolkit().getImage("res/car11.png");
 			carImage = im1.getScaledInstance(tileSize * 2, tileSize * 2, 1);
 			break;
 		case 2:
-			Image im2 = Toolkit.getDefaultToolkit().getImage("res/car2.png");
+			Image im2 = Toolkit.getDefaultToolkit().getImage("res/car22.png");
 			carImage = im2.getScaledInstance(tileSize * 2, tileSize * 2, 1);
 			break;
 		case 3:
-			Image im3 = Toolkit.getDefaultToolkit().getImage("res/car3.png");
+			Image im3 = Toolkit.getDefaultToolkit().getImage("res/car33.png");
 			carImage = im3.getScaledInstance(tileSize * 2, tileSize * 2, 1);
 			break;
 		}

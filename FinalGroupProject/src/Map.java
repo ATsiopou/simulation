@@ -229,6 +229,7 @@ public class Map {
 		Iterator<Lane> itter = lanes.iterator();
 		int count = 0;
 		float[] dash1 = { 2f, 0f, 2f };
+		
 		BasicStroke bs1 = new BasicStroke(1.0f,
 				BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
 				dash1, 0.1f);
@@ -252,7 +253,7 @@ public class Map {
 				//g2d.setStroke(bs1);
 				//g2d.setColor(Color.GRAY);
 				//g2d.drawLine(xStart * tileSize, yStart * tileSize, xEnd
-				//		* tileSize, yEnd * tileSize);
+		 		//		* tileSize, yEnd * tileSize);
 				
 				
 				

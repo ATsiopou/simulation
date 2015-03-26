@@ -34,60 +34,71 @@ public class GamePanel extends JPanel implements Runnable {
 	public static final int WIDTH = 1200; // 800
 	public static final int DELAY = 15;
 	public static final int TILE = 10;
-	public static final int TOTALNUMEROFCARS = 100;
-	public static final int ENTRYFREQUENCY = 10; // in milliseconds (2seconds)
-	public static final int LIGHTMECHANISM = 350; 
+	private int TOTALNUMBEROFCARS;
+	private int CARENTRYFREQUENCY;
+	private int LIGHTMECHANISM; 
+	private int MAPTYPE;
 	private int lightCounter = 0;
+	private int inte = 0;
 	private boolean running = true;
 	private Thread animator;
 	private Graphics g;
 	private Map map;
+	private double speed; 
+	private String maps[];
 	private List<Car> listOfCars;
 	private List<Light> listOfLights; 
-	private List<Cell> occupiedCells;
-	private int inte = 0;
-	private int MAPTYPE = 3;
+//	private List<Cell> occupiedCells;
+	
+	
 	 
 
+	/**
+	 * This is the default constructor for the game 
+	 */
 	public GamePanel() {
 		setDoubleBuffered(true);
+		
+		this.TOTALNUMBEROFCARS = 100; 
+		this.CARENTRYFREQUENCY = 10; // in miliseconds 
+		this.LIGHTMECHANISM = 350; 
+		this.MAPTYPE = 1; 
 		initGamePanel();
+	
 	}
 
+	/**
+	 * This constructor sets the user specified values at the start screen
+	 *  
+	 * @param TOTALNUMBEROFCARS
+	 * @param CARENTRYFREQUENCY
+	 * @param LIGHTMECHANISM
+	 * @param MAPTYPE
+	 */
+	public GamePanel(int TOTALNUMBEROFCARS,int CARENTRYFREQUENCY, int LIGHTMECHANISM, String []maps,int MAPTYPE,double speed) {
+		setDoubleBuffered(true);
+		this.TOTALNUMBEROFCARS = TOTALNUMBEROFCARS; 
+		this.CARENTRYFREQUENCY = CARENTRYFREQUENCY; 
+		this.LIGHTMECHANISM = LIGHTMECHANISM; 
+		this.maps = maps; 
+		this.MAPTYPE = MAPTYPE; 
+		//this.speed = speed; 
+		initGamePanel();
+	}
+	
+	
 
 	/**
 	 * Private method which sets the map type
 	 */
 	private void initGamePanel() {
-		
-		switch (MAPTYPE) {
-		case 1:
-			try {
-				map = new Map("res/map1_1Intersection.json", WIDTH, HEIGHT,
-						TILE);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			break;
-		case 2:
-			try {
-				map = new Map("res/map2_4Intersection.json", WIDTH, HEIGHT,
-						TILE);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			break;
-		case 3:
-			try {
-				map = new Map("res/map3_6Intersections.json", WIDTH, HEIGHT,
-						TILE);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			break;
+		try {
+			map = new Map("res/"+maps[MAPTYPE], WIDTH, HEIGHT,
+					TILE);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		
-	}
+}
 
 	@Override
 	public Dimension getPreferredSize() {
@@ -132,44 +143,22 @@ public class GamePanel extends JPanel implements Runnable {
 		listOfCars = java.util.Collections.synchronizedList(new ArrayList<Car>()); 
 		listOfLights = java.util.Collections.synchronizedList(new ArrayList<Light>());  
 		
-		
-		
-//		
-//		Lane lane = new Lane(); 
-//		Cell startingCell = new Cell(2,56);
-//		Cell endCell = new Cell(118,42); 
-//
-//		Cell startingCell = new Cell(26,80);
-//		Cell endCell = new Cell(26,0);
-//		
-//		lane.setStart(startingCell);
-//		lane.setEnd(endCell);
-//		lane.setDirection(3);
-//		lane.setId(4);
-	
-		
         
 		while (running) {
 			clearOutMApCar();
 			listOfLights = map.getLightList();
-
 			
 			if( lightCounter % LIGHTMECHANISM == 0 ){
-				
 				this.lightMechanism();
-				
 			}
 			lightCounter++; 
 
-			
-			
-			
 			try {
-				if ((inte % ENTRYFREQUENCY == 0)) {
-					if (listOfCars.size() < TOTALNUMEROFCARS) {
+				if ((inte % CARENTRYFREQUENCY == 0)) {
+					if (listOfCars.size() < TOTALNUMBEROFCARS) {
 						Lane lane = new Lane();
 						lane = map.getRandomLane();
-						Car car = new Car(lane, g, listOfLights,map);
+						Car car = new Car(lane, g, listOfLights, map,speed);
 						listOfCars.add(car);
 					}
 				}
@@ -180,12 +169,12 @@ public class GamePanel extends JPanel implements Runnable {
 				Thread.sleep(DELAY);
 				repaint();
 			} catch (InterruptedException ex) {
-				Logger.getLogger(GamePanel.class.getName()).log(Level.SEVERE,
-						null, ex);
+				Logger.getLogger(GamePanel.class.getName()).log(Level.SEVERE,null, ex);
 			}
 		}
 	}
 
+	
 	/**
 	 * This method removes the cars from the map when they 
 	 * have passed the maps boundaries. 
@@ -232,21 +221,26 @@ public class GamePanel extends JPanel implements Runnable {
 		}
 		return false;
 	}
-	
+
+	/**
+	 * This method is used for debugging, just to print the lights location
+	 * which are read from the JSON file 
+	 */
 	private void printL(){
 		for(Light l:listOfLights){
-			//System.out.println(l.getPosition().getCol()+"             "+l.getPosition().getRow());
 		}
 	}
 	
 	
+	/**
+	 * This method takes each light in the the list of lights and changes 
+	 * their values depending on their default state 
+	 */
 	private void lightMechanism(){
 		for(Light l:listOfLights){
 			l.changeLight();
-			//System.out.println(l.getPosition().isOccupied());
-
 		}
-
 	}
 
+	
 }
