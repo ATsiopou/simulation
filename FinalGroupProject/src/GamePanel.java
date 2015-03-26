@@ -48,6 +48,10 @@ public class GamePanel extends JPanel implements Runnable {
 	private String maps[];
 	private List<Car> listOfCars;
 	private List<Light> listOfLights; 
+<<<<<<< HEAD
+=======
+//	private List<Cell> occupiedCells;
+>>>>>>> origin/master
 	
 	
 	 

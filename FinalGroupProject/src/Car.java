@@ -147,10 +147,67 @@ public class Car {
 	 * first checking the id of the lane. For an even id, the car is travelling
 	 * in a northbound or westbound lane. if the id is odd: The car is in a lane
 	 * travelling in a southboun/eastbound direction.
+<<<<<<< HEAD
+=======
+	 * 
+	 * 
+	 * 
 	 * 
 	 * @throws InterruptedException
+>>>>>>> origin/master
 	 * 
 	 */
+<<<<<<< HEAD
+=======
+	// private void accelerate() throws InterruptedException {
+	//
+	// // Increase speed by dx/dy (acceleration) in either direction
+	// if (speed < maxSpeed) {
+	// speed += acceleration;
+	// }
+	//
+	// if (debug) {
+	// System.out.println("Lane id: " + getId());
+	// }
+	//
+	// if (isEven(this.id)) {
+	//
+	// if (currentCell.getCol() == lane.getStart().getCol()
+	// && direction == 3) {
+	// y0 -= tileSize * speed;
+	// if (debug) {
+	// System.out.println("In y0--");
+	// System.out.println("Dir: 3 ");
+	// }
+	// } else if (currentCell.getRow() == lane.getStart().getRow()
+	// && direction == 1) {
+	// x0 -= tileSize * speed;
+	// if (debug) {
+	// System.out.println("In x0--");
+	// System.out.println("Dir:  1");
+	// }
+	// }
+	// } else { // ODD
+	//
+	// if (currentCell.getRow() == lane.getStart().getRow()
+	// && direction == 0) {
+	// x0 += tileSize * speed;
+	// if (debug) {
+	// System.out.println("In x0++");
+	// System.out.println("Dir: 0 ");
+	// }
+	// } else if (currentCell.getCol() == lane.getStart().getCol()
+	// && direction == 2) {
+	// y0 += tileSize * speed;
+	// if (debug) {
+	// System.out.println("In y0++");
+	// System.out.println("Dir: 2 ");
+	// }
+	// }
+	// }
+	// }
+
+>>>>>>> origin/master
 	private void accelerate() throws InterruptedException {
         //System.out.println(x0 +"           "+y0);
 		// Increase speed by dx/dy (acceleration) in either direction
