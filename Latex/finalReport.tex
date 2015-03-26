@@ -1,0 +1,156 @@
+
+\documentclass[twoside,a4paper,11pt]{article} % double-sided
+%---------------------------------------------------------------------------------------------------------------------------------
+
+\usepackage{a4} % gives a4 paper format 
+\usepackage{hyperref}
+
+%%% Math symbols and fonts packages
+\usepackage{latexsym} % symbol and maths package
+\usepackage{amsmath} % symbol and maths package
+\usepackage{xspace}  % useful for macro definitions
+
+%%% Layout 
+\usepackage{fancyhdr} % for header and footer on pages
+\usepackage{float} % for graphics/including pictures
+\usepackage{listings}% very useful aid for including computer code in the document
+\usepackage{enumerate}% useful add on for numbered lists
+\usepackage{enumitem} % lets me use itemsep for enumeration .. 
+
+%%% Layout Aids [specifically json files, adding some bells]
+\lstdefinelanguage{json}{
+    basicstyle=\normalfont\ttfamily,
+    numbers=left,
+    numberstyle=\scriptsize,
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+}
+\lstdefinelanguage{java}{
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  commentstyle=\color{pgreen},
+  keywordstyle=\color{pblue},
+  stringstyle=\color{pred},
+  basicstyle=\ttfamily,
+  moredelim=[il][\textcolor{pgrey}]{$$},
+  moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
+}
+
+
+%%% Graphics
+\usepackage{pdfsync} % for source specials directly in pdf, fixed prob below. 
+\usepackage[pdftex]{graphicx,xcolor}
+%\graphicspath{ {images/} } %I'll use this when we have more images to store in it's own directory, causes problems? ->pdfsync 
+\usepackage{pgf,tikz,cite}
+
+%%% CHANGE THE PAGE LAYOUT 
+\addtolength{\textwidth}{0.5cm} % adds 0.5cm to textwidth:
+\addtolength{\evensidemargin}{-0.53cm} % Keep the text centered, make the margin of all even-numbered pages 0.53cm smaller
+\addtolength{\oddsidemargin}{-0.15cm} % make the margin of all odd-numbered pages 0.15cm smaller
+
+%%% MACROS
+% I like this macro, it makes indenting easier, solves the viewing problem for double sided pages 
+\newlength\tindent 
+\setlength{\tindent}{\parindent}
+\setlength{\parindent}{0pt}
+\renewcommand{\indent}{\hspace*{\tindent}}
+
+
+%---------------------------------------------------------------------------------------------------------------------------------
+%%% The document actually starts here
+\begin{document}
+\nocite{*}
+
+%%% Produces the title page
+% Start by centering it all 
+% write text headers 
+% minipages for the seperation for auth and sup.  
+\begin{titlepage}
+  \center
+  \textsc{\Large Kings College London}\\[1.5cm] 
+  \textsc{\Large 7CCSMGPR}\\[0.5cm] 
+  \textsc{\large Final Report}\\[0.5cm] 
+  \textbf{\LARGE Traffic Simulation}\\[1.5cm] 
+
+%------------------  
+  \begin{minipage}{0.5\textwidth} %0.5 seems to work nice 
+    \begin{flushleft} \large
+      \emph{Group Members:}\\
+      Iordanis Paschalidis\
+      \\Rolando A. Vicente Villalta\
+      \\Seyed M. Yamoot\
+      \\Orkhan Seyidov\
+      \\Anthony Tsiopoulos
+    \end{flushleft}
+  \end{minipage}
+  \begin{minipage}{0.4\textwidth}
+    \begin{flushright} \large
+      \emph{Professor:}\\ 
+      Dr. Laurence Tratt
+    \end{flushright}
+  \end{minipage}\\[3cm] 
+  
+  \textsc{\large \today} 
+  \thispagestyle{empty} % suppress page number
+    
+\end{titlepage}
+
+%---------------------------
+%%% ABSTRACT 
+% Since this is not a completed piece of work, we will leave out the abstract. 
+% We could use it to define the problem domain, but let's assume (?) the reader is aware. 
+\begin{abstract}
+In this project we have designed and implemented a novel method for the animation and synthesis of the real life scenario of the traffic management on a large scale network. Our method adapts the agent based technique where the vehicle have the ability to make turns and change speed, stop and start independent of the map type. We have created a user interaction where the user has the ability to change the parameters of the system operation such changing the number vehicle and speed. Furthermore our simulation model is preformed on multiple map putting into consideration the traffic management and traffic policy.   
+\end{abstract}
+\thispagestyle{empty} % suppresses page number
+
+
+%-----------------------------------------------------------------------------------------------------------------------------
+\newpage  
+%%% TOC
+\tableofcontents
+\thispagestyle{empty} % Use this again here, otherwise the page starts on TOC 
+
+
+%------------------------------------------------------------------------------------------------------------------------------
+\newpage
+%%% SECTIONS OF MAIN PAPER
+\setcounter{page}{1} %
+%**sigh** lolled hard. Fixed issue. Now clean then erase when clean is accomplished. **sigh**
+% Using \input{} instead of \include{} to avoid pagebreaks 
+
+\input{Introduction}
+
+\newpage
+\input{Review}
+
+\newpage
+\input{RequirementAndDesign} 
+
+\newpage
+\input{Implementation}
+
+\newpage
+\input{TeamWork}
+
+\newpage
+\input{Evaluation}
+
+\newpage
+\input{code}
+
+\newpage
+\input{gitlog}
+%-------------------------------------------------------------------------------------------------------------------------------
+\newpage
+
+%%% REFERENCES 
+\bibliographystyle{plain}{}
+\bibliography{finalReport}
+
+%-------------------------------------------------------------------------------------------------------------------------------
+\end{document}

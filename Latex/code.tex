@@ -1,0 +1,1870 @@
+\section{Code}
+
+\begin{lstlisting}[language=java]
+/*Authors : Iordanis Paschalidis, Anthony Tsiopoulos
+ * 
+ * Class   : This is the main file - the entry point of the program
+ */
+public class Main {
+   
+  public static void main (String [] args) throws InterruptedException{
+    StartMenu gui = new StartMenu(); 
+    gui.setSize(1200,920);
+    gui.setVisible(true);
+    
+    }
+
+}
+\end{lstlisting}
+
+\newpage 
+
+\begin{lstlisting}[language=java]
+/*Authors : Iordanis Paschalidis, 
+* Anthony Tsiopoulos 
+* 
+ * 
+ * Class  : GamePanel.
+ * This class is responsible for building the GamePanel. A GamePanel is the immediate
+ * class in the hierarchical view of the class diagram. The class is responsible for the 
+ * overall control of the game. 
+ * 
+ * Moded  : 03/06/15
+ * 
+ */
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.JPanel;
+
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
+
+public class GamePanel extends JPanel implements Runnable {
+
+  public static final boolean debug = false;
+  private static final long serialVersionUID = 1L;
+  public static final int HEIGHT = 800; // 600
+  public static final int WIDTH = 1200; // 800
+  public static final int DELAY = 15;
+  public static final int TILE = 10;
+  private int TOTALNUMBEROFCARS;
+  private int CARENTRYFREQUENCY;
+  private int LIGHTMECHANISM; 
+  private int MAPTYPE;
+  private int lightCounter = 0;
+  private int inte = 0;
+  private boolean running = true;
+  private Thread animator;
+  private Graphics g;
+  private Map map;
+  private double speed; 
+  private String maps[];
+  private List<Car> listOfCars;
+  private List<Light> listOfLights; 
+  
+  
+   
+
+  /**
+  * This is the default constructor for the game 
+  */
+  public GamePanel() {
+    setDoubleBuffered(true);
+    
+    this.TOTALNUMBEROFCARS = 100; 
+    this.CARENTRYFREQUENCY = 10; // in miliseconds 
+    this.LIGHTMECHANISM = 350; 
+    this.MAPTYPE = 1; 
+    initGamePanel();
+    
+  }
+  
+  /**
+  * This constructor sets the user specified values at the start screen
+  *  
+  * @param TOTALNUMBEROFCARS
+  * @param CARENTRYFREQUENCY
+  * @param LIGHTMECHANISM
+  * @param MAPTYPE
+  */
+  public GamePanel(int TOTALNUMBEROFCARS,int CARENTRYFREQUENCY, int LIGHTMECHANISM, String []maps,int MAPTYPE,double speed) {
+    setDoubleBuffered(true);
+    this.TOTALNUMBEROFCARS = TOTALNUMBEROFCARS; 
+    this.CARENTRYFREQUENCY = CARENTRYFREQUENCY; 
+    this.LIGHTMECHANISM = LIGHTMECHANISM; 
+    this.maps = maps; 
+    this.MAPTYPE = MAPTYPE; 
+    //this.speed = speed; 
+    initGamePanel();
+  }
+  
+  
+  
+  /**
+  * Private method which sets the map type
+  */
+  private void initGamePanel() {
+    try {
+      map = new Map(``res/''+maps[MAPTYPE], WIDTH, HEIGHT,
+      TILE);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+  
+  @Override
+  public Dimension getPreferredSize() {
+    return new Dimension(WIDTH, HEIGHT);
+  }
+  
+  @Override
+  public void addNotify() {
+    super.addNotify();
+    animator = new Thread(this);
+    animator.start();
+  }
+  
+  @Override
+  public void paint(Graphics g) {
+    super.paint(g);
+    Graphics2D g2d = (Graphics2D) g;
+    
+    // Draw map
+    map.paintMap(g2d);
+    map.drawLights(g2d);
+    
+    // Draw the images for the cars
+    for (Car car : listOfCars) {
+      g2d.drawImage(car.getCarImage(), (int) car.getX0() * TILE,
+      (int) car.getY0() * TILE, this);
+    }
+    
+    // For testing purpose
+    if (debug) {
+      map.paintGrid(g2d);
+      map.paintMapOccupiedValues(g2d);
+    }
+    g.dispose();
+  }
+  
+  @Override
+  public void run() {
+    
+    // Create the list of cars
+    //This solves the repaint bug - array list was previously unlocked, now locked and unlocked and given to thread 
+    listOfCars = java.util.Collections.synchronizedList(new ArrayList<Car>()); 
+    listOfLights = java.util.Collections.synchronizedList(new ArrayList<Light>());  
+    
+    
+    while (running) {
+      clearOutMApCar();
+      listOfLights = map.getLightList();
+      
+      if( lightCounter % LIGHTMECHANISM == 0 ){
+      this.lightMechanism();
+    }
+    lightCounter++; 
+    
+    try {
+      if ((inte % CARENTRYFREQUENCY == 0)) {
+      if (listOfCars.size() < TOTALNUMBEROFCARS) {
+        Lane lane = new Lane();
+        lane = map.getRandomLane();
+        Car car = new Car(lane, g, listOfLights, map,speed);
+        listOfCars.add(car);
+      }
+    }
+    for (Car car : this.listOfCars) {
+      car.move();
+    }
+    inte++;
+    Thread.sleep(DELAY);
+    repaint();
+  } catch (InterruptedException ex) {
+    Logger.getLogger(GamePanel.class.getName()).log(Level.SEVERE,null, ex);
+  }
+}
+}
+  
+  
+  /**
+  * This method removes the cars from the map when they 
+  * have passed the maps boundaries. 
+  */
+  public void clearOutMApCar() {
+    List<Car> listOfCars2 = listOfCars;
+    Iterator<Car> i = listOfCars2.iterator();
+    while (i.hasNext()) {
+      Car s = i.next(); // must be called before you can call i.remove()
+      if (shouldRemoveFromTheList(s)) {
+        s.removePosition();
+        i.remove();
+      }
+    }
+  }
+  
+  
+  /**
+  * This method checks the direction of the car and compares 
+  * it to the bounds of the map. If the cars next value exceeds 
+  * the bounds, then the car should be removed from the map. 
+  * 
+  * @param c
+  * @return boolean
+  */
+  private boolean shouldRemoveFromTheList(Car c) {
+    
+    if (c.getLane().getDirection() == 0) {
+      if (c.getX0() > c.getLane().getEnd().getCol()) {
+        return true;
+      }
+    } else if (c.getLane().getDirection() == 1) {
+      if (c.getX0() < c.getLane().getEnd().getCol()) {
+        return true;
+      }
+    } else if (c.getLane().getDirection() == 2) {
+      if (c.getY0() > c.getLane().getEnd().getRow()) {
+        return true;
+      }
+    } else {
+      if (c.getY0() < c.getLane().getEnd().getRow()) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  /**
+  * This method is used for debugging, just to print the lights location
+  * which are read from the JSON file 
+  */
+  private void printL(){
+    for(Light l:listOfLights){
+    }
+  }
+  
+  
+  /**
+  * This method takes each light in the the list of lights and changes 
+  * their values depending on their default state 
+  */
+  private void lightMechanism(){
+    for(Light l:listOfLights){
+      l.changeLight();
+    }
+  }
+  
+  
+  }
+    
+\end{lstlisting}
+\newpage
+
+\begin{lstlisting}[language=java]
+/*Authors : Iordanis Paschalidis, 
+* Anthony Tsiopoulos 
+ * 
+ * Class  : Car
+ * This class is responsible for creating a car.
+ * The class implements runnable, so the run() method is
+ *is provided as method in the class. An object of the 
+ *class Car is a Runnable object.   
+ * 
+ * Moded:  03/06/15
+ * 
+ */
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
+import javax.swing.plaf.synth.SynthSeparatorUI;
+
+public class Car {
+
+  private boolean debug = false;
+  private Lane lane;
+  private Graphics g;
+  private Image carImage;
+  private Map map;
+  private Cell currentCell;
+  public List<Light> lights;
+  private double x0;
+  private double y0;
+  private int tileSize = 10;
+  private double speed; // = 0.01;
+  private double maxSpeed = 0.03;
+  private double acceleration = 0.001;
+  private int turnProbability = 4; 
+
+  public Car() {
+    Image im1 = getCarImage(lane.getDirection());
+    }
+
+  public Car(Lane lane, Graphics g, List<Light> lights, Map map, double speed) {
+
+    Image im = getCarImage(lane.getDirection());
+    this.lane = lane;
+    this.g = g;
+    this.setLane(lane);
+    this.currentCell = lane.getStart();
+    this.x0 = currentCell.getCol(); // initial position
+    this.y0 = currentCell.getRow(); // initial position
+    this.lights = lights;
+    this.map = map;
+    this.speed = speed; 
+
+    }
+
+  /**
+   * This method is responsible for moving a car. It checks the if the cell in
+   * front of it is occupied and it proceeds to accelerate, otherwise it will
+   * brake.
+   * 
+   * @throws InterruptedException
+   */
+   public void move() throws InterruptedException {
+     
+     switch (lane.getDirection()) {
+       case 0:
+       
+       if (!map.getCell((int) x0 + 2, (int) y0).isOccupied()) {
+         
+         if (this.canMoveFromLights()) {
+           
+           if(getProbability(turnProbability)){
+             turn();
+           }
+           this.removePosition();
+           accelerate();
+           map.addPosition(x0, y0);
+           
+           //}else if(!map.getCell((int) x0 + 2, (int) y0).isOccupied() && map.isAgentBeside((int)x0, (int) y0,getLane().getDirection())){ 
+           //  
+           //  switchLanes();
+           //  this.removePosition();
+           //  accelerate();
+           //  map.addPosition(x0, y0);
+           // 
+         }
+       }
+       break;
+       
+       case 1:
+       
+       if (!map.getCell((int) x0 - 2, (int) y0).isOccupied()) {
+         
+         if (this.canMoveFromLights()) {
+           
+           if(getProbability(turnProbability)){
+             turn();
+           }
+           this.removePosition();
+           accelerate();
+           map.addPosition(x0, y0);
+         }
+       }
+       break;
+       
+       case 2: //y++
+       if (!map.getCell((int) x0, (int) y0 + 2).isOccupied()) {
+         
+         if (this.canMoveFromLights()) {
+           
+           if(getProbability(turnProbability)){
+             turn();
+           }
+           this.removePosition();
+           accelerate();
+           map.addPosition(x0, y0);
+           
+         }
+       }
+       break;
+       case 3:
+       
+       if (!map.getCell((int) x0 , (int) y0 - 2).isOccupied()) {
+         
+         if (this.canMoveFromLights()) {
+           
+           if(getProbability(turnProbability)){
+             turn();
+           }
+           this.removePosition();
+           accelerate();
+           map.addPosition(x0, y0);
+           
+         }
+       }
+       break;
+     }
+   }
+   
+   /**
+   * This method moves the car in a direction. The directions is decided by
+   * first checking the id of the lane. For an even id, the car is travelling
+   * in a northbound or westbound lane. if the id is odd: The car is in a lane
+   * travelling in a southboun/eastbound direction.
+   * 
+   * @throws InterruptedException
+   * 
+   */
+   private void accelerate() throws InterruptedException {
+     //System.out.println(x0 +''           ``+y0);
+     // Increase speed by dx/dy (acceleration) in either direction
+     if (speed < maxSpeed) {
+       speed += acceleration;
+     }
+     
+     if (debug) {
+       System.out.println(``Lane id: `` + getId());
+     }
+     
+     
+     if (isEven(this.getLane().getId())) {
+       if (lane.getDirection() == 3) {
+         y0 -= tileSize * speed;
+         if (debug) {
+           System.out.println(``In y0--'');
+           System.out.println(``Dir: 3 ``);
+         }
+       } else if (lane.getDirection() == 1) {
+         
+         x0 -= tileSize * speed;
+         if (debug) {
+           System.out.println(``In x0--'');
+           System.out.println(``Dir:  1'');
+         }
+       }
+     } else { // ODD
+       
+       if (lane.getDirection() == 0) {
+         
+         x0 += tileSize * speed;
+         if (debug) {
+           System.out.println(``In x0++'');
+           System.out.println(``Dir: 0 ``);
+         }
+       } else if (lane.getDirection() == 2) {
+         
+         y0 += tileSize * speed;
+         
+         if (debug) {
+           System.out.println(``In y0++'');
+           System.out.println(``Dir: 2 ``);
+         }
+       }
+     }
+   }
+   
+   /**
+   * This method is for a vehicle to switch from their current lane to the
+   * lane next to them
+   * 
+   * @throws InterruptedException
+   */
+   @SuppressWarnings(``unused'')
+   private void switchLanes() throws InterruptedException {
+     
+     if (isEven(lane.getId())) {
+       
+     } else { // ODD
+       
+       if (currentCell.getRow() == lane.getStart().getRow() && lane.getDirection() == 0) {
+         y0 += tileSize * speed;
+         x0 += tileSize * speed;
+         
+       }
+     }
+   }
+   
+   /**
+   * OverLoading the brake method. This tells the thread to sleep for time in
+   * seconds.
+   * 
+   * @param stoppage
+   * @throws InterruptedException
+   */
+   @SuppressWarnings(``unused'')
+   private void brake(int stoppage) throws InterruptedException {
+     Thread.sleep(stoppage * 1000);
+   }
+   
+   /**
+   * This method (for now) will stop the car from increasing in it's current
+   * direction
+   * 
+   * @throws InterruptedException
+   */
+   @SuppressWarnings(``unused'')
+   private void brake(Cell currentCell) throws InterruptedException {
+     
+     if (debug) {
+       System.out.println(``In brake'');
+     }
+     x0 = x0;
+     y0 = y0;
+   }
+   
+   @SuppressWarnings(``unused'')
+   private void randomize() {
+     // randomly call accelerate OR randomly call brake
+   }
+   
+   /**
+   * Checks if the id is odd or even
+   * 
+   * @param id
+   * @return
+   */
+   private boolean isEven(int value) {
+     if (value % 2 == 0)
+     return true;
+     else
+     return false;
+   }
+   
+   
+   /**
+   * Overloading the getCarImage with param direction. Returns the Image of
+   * the car given a direction
+   * 
+   * @return
+   */
+   public Image getCarImage(int direction) {
+     
+     switch (direction) {
+       case 0:
+       Image im0 = Toolkit.getDefaultToolkit().getImage(``res/car00.png'');
+       carImage = im0.getScaledInstance(tileSize * 2, tileSize * 2, 1);
+       break;
+       case 1:
+       Image im1 = Toolkit.getDefaultToolkit().getImage(``res/car11.png'');
+       carImage = im1.getScaledInstance(tileSize * 2, tileSize * 2, 1);
+       break;
+       case 2:
+       Image im2 = Toolkit.getDefaultToolkit().getImage(``res/car22.png'');
+       carImage = im2.getScaledInstance(tileSize * 2, tileSize * 2, 1);
+       break;
+       case 3:
+       Image im3 = Toolkit.getDefaultToolkit().getImage(``res/car33.png'');
+       carImage = im3.getScaledInstance(tileSize * 2, tileSize * 2, 1);
+       break;
+     }
+     return carImage;
+   }
+   
+   /**
+   * This method first checks the light given a direction. The light, which
+   * controls the flow of traffic in the lane, if an agent (car/bus/truck) is
+   * near the a light it will check the statue of the light, represented as a
+   * cell, and will decide weather or not to move through the light or stop at
+   * the light.
+   * 
+   * @return boolean
+   */
+   public boolean canMoveFromLights() {
+     
+     switch (lane.getDirection()) {
+       
+       case 0:
+       for (Light l : lights) {
+         if (l.getPosition().getCol()  == (int) x0+2 && (int)y0==l.getPosition().getRow()) {
+           if(l.getPosition().isOccupied()){
+             return false;
+           }
+         }
+       }
+       break;
+       
+       case 1:
+       for (Light l : lights) {
+         if (l.getPosition().getCol()  == (int) x0 - 1 && (int)y0==l.getPosition().getRow()) {
+           if(l.getPosition().isOccupied()){
+             return false;
+           }
+         }
+       }
+       break;
+       
+       case 2:
+       for (Light l : lights) {
+         if (l.getPosition().getRow()==(int)y0+2 && (int)x0==l.getPosition().getCol()) {
+           if(l.getPosition().isOccupied()){
+             return false;
+           }
+         }
+       }
+       break;
+       
+       case 3:
+       for (Light l : lights) {
+         
+         if (l.getPosition().getRow()==(int)y0-1  && (int)x0==l.getPosition().getCol()) {
+           if(l.getPosition().isOccupied()){
+             return false;
+           }
+         }
+       }
+       break;
+     }
+     return true;
+   }
+   
+   
+   
+   /**
+   * This method gives a car the ability to turn. 
+   * 
+   * 
+   */
+   public void turn() {
+     
+     if (lane.getId() > 2) {
+       
+       switch (lane.getDirection()) {
+         
+         case 0:
+         for (Light l : lights) {
+           if (l.getPosition().getCol() + 1 == (int) x0 && (int)y0 == l.getPosition().getRow()) {
+             this.setLane(map.getLane(lane.getId(),lane.getDirection()));
+             this.setCarImage(getCarImage(this.getLane().getDirection()));
+             break;
+           }
+         }
+         break;
+         case 1:
+         for (Light l : lights) {
+           if (l.getPosition().getCol() - 2 == (int) x0 && (int)y0 == l.getPosition().getRow()) {
+             this.setLane(map.getLane(lane.getId(),lane.getDirection()));
+             this.setCarImage(getCarImage(this.getLane().getDirection()));
+             break;
+           }
+         }
+         break;
+         case 2:
+         for (Light l : lights) {
+           System.out.println(y0 + ``   `` + l.getPosition().getRow());
+           if (l.getPosition().getRow() + 1 == (int) y0 && (int) x0 == l.getPosition().getCol()) {
+             this.setLane(map.getLane(lane.getId(),lane.getDirection()));
+             this.setCarImage(getCarImage(this.getLane().getDirection()));
+             break;
+           }
+         }
+         
+         break;
+         case 3:
+         for (Light l : lights) {
+           if (l.getPosition().getRow() - 2 == (int) y0 && (int)x0 == l.getPosition().getCol()) {
+             this.setLane(map.getLane(lane.getId(),lane.getDirection()));
+             this.setCarImage(getCarImage(this.getLane().getDirection()));
+             break;
+           }
+         }
+         
+         break;
+       }
+       
+     }
+     
+   }
+   
+   
+   
+   
+   /**
+   * Returns the current x position
+   * 
+   * @return
+   */
+   public double getX0() {
+     return x0;
+   }
+   
+   /**
+   * Returns the current y position
+   * 
+   * @return
+   */
+   public double getY0() {
+     return y0;
+   }
+   
+   /**
+   * Returns the Image of the car
+   * 
+   * @return
+   */
+   public Image getCarImage() {
+     return carImage;
+   }
+   
+   /**
+   * Sets the Image of the car
+   * 
+   * @param carImage
+   */
+   public void setCarImage(Image carImage) {
+     this.carImage = carImage;
+   }
+   
+   /**
+   * Returns the current Lane
+   * 
+   * @return
+   */
+   public Lane getLane() {
+     return lane;
+   }
+   
+   /**
+   * Sets the current Lane
+   * 
+   * @param lane
+   */
+   public void setLane(Lane lane) {
+     this.lane = lane;
+   }
+   
+   /**
+   * Gets the ID of the current Lane
+   * 
+   * @return
+   */
+   public int getId() {
+     return lane.getId();
+   }
+
+   /**
+   * Removes the (x,y) position in the matrix
+   */
+   public void removePosition() {
+     map.removePosition(x0, y0);
+   }
+   
+   /**
+   * Used to generate a probability. The pool is the range of the 
+   * values. If the pool is larger, smaller probability and 
+   * vice versa. 
+   * 
+   * @param pool
+   * @return
+   */
+   public boolean getProbability(int pool){
+     int prob; 
+     Random rand = new Random(); 
+     prob = rand.nextInt(pool); 
+     if(prob == 1)
+     return true; 
+     else 
+     return false;  
+   }  
+}
+
+\end{lstlisting}
+\newpage
+
+
+\begin{lstlisting}[language=java]
+
+
+import java.util.*;
+
+/*Authors : Iordanis Paschalidis, 
+* Anthony Tsiopoulos 
+ * 
+ * Class  : Cell 
+ * The Cell class represents a coordinate on a planar grid. The object has two fields, 
+ * which can be seen as an ordered pair - representing their coordinates on a 2D grid. 
+ * A cell is the basis of the program, that is everything stems from this class. 
+ * 
+ * Moded  : 03/02/15
+ * 
+ */
+
+public class Cell {
+
+  private int row;
+  private int col;
+  boolean occupied;
+  
+  public Cell() {
+    //Do Nothing 
+    }
+  
+  public Cell(int col, int row) {
+    this.row = row;
+    this.col = col;
+  }
+  
+  public Cell(int col, int row, boolean occupied ){
+    this.col = col; 
+    this.row = row; 
+    this.occupied=occupied; 
+  }
+  
+  /**
+  * Returns the Row (y) of the cell
+  * @return
+  */
+  public int getRow() {
+    return row;
+  }
+  
+  /**
+  * Sets the Row (y) value of the Cell 
+  * @param row
+  */
+  public void setRow(int row) {
+    this.row = row;
+  }
+  
+  /**
+  * Returns the Column (x) of the cell
+  * @return
+  */
+  public int getCol() {
+    return col;
+  }
+  
+  /**
+  * Sets the column (x) value of the cell
+  * @param col
+  */
+  public void setCol(int col) {
+    this.col = col;
+  }
+  
+  /**
+  * Returns true false if the cell is occupied
+  * true == occupied
+  * false == not occupied 
+  * @return
+  */
+  public boolean isOccupied() {
+    return occupied;
+  }
+  
+  /**
+  * Sets the occupied value of a single cell 
+  * @param occupied
+  */
+  public void setOccupied(boolean occupied) {
+    this.occupied = occupied;
+  }
+  
+  /**
+  * Overriding the toString method to print row and col 
+  */
+  public String toString() {
+    return ``Col: `` + col + `` Row: `` + row;
+  }
+  
+  /**
+  * This takes a single cell, extracts the row and col,and
+  * checks if the cells are equal.
+  * @param cell
+  * @return
+  */
+  public boolean equals(Cell cell) {
+    if (this.row == cell.getRow() && this.col == cell.getCol())
+    return true;
+    return false;
+  }
+  
+  /**
+  * This method takes a list of cells, checks each element for
+  * a match and returns
+  * @param occupiedCells
+  * @return
+  */
+  public boolean listEquals(ArrayList<Cell> occupiedCells) {
+    
+    for(Cell cell: occupiedCells){
+      if(this.row == cell.getRow() && this.col == cell.getCol())
+      return true;
+    }
+    return false; 
+  } 
+}
+\end{lstlisting}
+\newpage 
+
+\begin{lstlisting}[language=java]
+
+
+/*Authors  : Iordanis Paschalidis 
+*   Anthony Tsiopoulos 
+ * 
+ * Class   : Lane
+ *   The Lane class is responsible constructing a single lane. A lane consists of two 
+ *  Cell objects start and end. 
+ * 
+ * id   : An id is given to a single lane. The condition is that if the lane 
+ *     is on the LHS of the road, the id will be odd. For a RHS lane, the
+ *  id is even. 
+ *
+ *direction: The direction is one of:
+ *NORTH: 3 
+ *EAST : 0
+ *SOUTH: 2
+ *WEST : 1
+ *
+ * start   : A Cell object identifying the starting cells row and col position.
+ *
+ * end     : A Cell object identifying the end cells row and col position. 
+ * 
+ * Moded  : 
+ * 
+ */
+
+public class Lane {
+
+  private int id;
+  private int direction;
+  private Cell start;
+  private Cell end;
+  
+  /**
+  * Returns the starting Cell of a Lane 
+  * @return
+  */
+  public Cell getStart() {
+    return start;
+  }
+     
+  /**
+  * Sets the start Cell of a Lane 
+  * @param start
+  */
+  public void setStart(Cell start) {
+    this.start = start;
+  }
+  
+  /**
+  * Returns the end Cell of a Lane 
+  * @return
+  */
+  public Cell getEnd() {
+    return end;
+  }
+  
+  /**
+  * Sets the end Cell of a Lane 
+  * @param end
+  */
+  public void setEnd(Cell end) {
+    this.end = end;
+  }
+  
+  /*
+  * Returns the ID of the Lane
+  */
+  public int getId() {
+    return id;
+  }
+  
+  /**
+  * Sets the ID of the Lane
+  * @param id
+  */
+  public void setId(int id) {
+    this.id = id;
+  }
+  
+  /**
+  * Returns the direction of the Lane
+  * @return
+  */
+  public int getDirection() {
+    return direction;
+  }
+  
+  /**
+  * Sets the direction of the Lane
+  * @param direction
+  */
+  public void setDirection(int direction) {
+    this.direction = direction;
+  }
+  
+  /**
+  * Prints the x and y position of the lanes
+  */
+  public void printLanePosition() {
+    System.out.println(``Lane position'');
+    System.out.println(``(x0,y0) --> (xN,yN)'');
+    System.out.println(``(`` + start.getCol() + ``,'' + start.getRow() + ``)''
+    + ``   -->  `` + ``(`` + end.getCol() + ``,'' + end.getRow() + ``)'');
+  }
+  
+}
+\end{lstlisting}
+
+\newpage
+
+
+\begin{lstlisting}[language=java]
+
+
+import java.awt.*;
+
+/**
+ *Authors : Iordanis Paschalidis, Anthony Tsiopoulos
+ *
+ *Class   : Light 
+ *          This class is responsible for creating a traffic light. A traffic light has a state, a unique Identifier ID and a position.
+ *
+ *ID      : Determines which light is being requested 
+ *Position: The placement of the light 
+ *
+ *State:
+ * Red    : 0
+ * Yellow : 1
+ * Green  : 2
+ * 
+ */
+
+
+public class Light {
+  
+  
+  private Cell position; 
+  private int state;
+  
+  public Light(){
+    //never used
+  }
+  
+  /**
+  * Instantiates a new light.
+  * @param Cell position 
+  */
+  public Light(Cell position) {
+      this.position = position;
+    }
+  
+  public Cell getPosition() {
+    return position;
+  }
+  
+  public void setPosition(Cell position) {
+    this.position = position;
+  }
+  
+  public int getState() {
+    return state;
+  }
+  
+  public void setState(int state) {
+    this.state = state;
+  }
+  
+  /**
+  * Prints the x and y position of the lanes
+  */
+  public void printLanePosition() {
+    System.out.println(``Lane position'');
+    System.out.println(``(x0,y0) --> (xN,yN)'');
+    System.out.println(``(`` + position.getCol() + ``,'' + position.getRow() + ``)'');
+  }
+  
+   public void changeLight(){
+    
+    if(getPosition().isOccupied()){
+      this.position.setOccupied(false);
+    }else{
+      this.position.setOccupied(true);
+    }
+  }
+  
+}
+\end{lstlisting}
+\newpage
+
+\begin{lstlisting}[language=java]
+
+/*Authors : Iordanis Paschalidis, 
+* Anthony Tsiopoulos 
+* 
+ * Class   : Map
+ * This class is responsible for building the map. A map is created from a JSON text file.
+ * The file is read in, initialising the lights and lanes. The constructor takes the file
+ * (string) which is the location of the file we would like to instantiate the map with.
+ * The tileSize gives the dimension of an individual square.  
+ *
+ * 
+ */
+import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.org.glassfish.external.statistics.annotations.Reset;
+
+public class Map {
+
+  public static final boolean debug = false;
+  private int xOffset;
+  private int yOffset;
+  private int tileSize;
+  public Cell[][] map;
+  private int mapHeight; // ROW: 0 <= Y <= mapHEIGHT not in pixels
+  private int mapWidth; // COL: 0 <= X <= mapWIDTH not in pixels
+  private String file;
+  private MyMap testMap;
+  private List<Lane> laneCells;
+  private ArrayList<Light> listOfLights;
+
+  public Map(String file, int mapWidth, int mapHeight, int tileSize)
+  throws IOException {
+
+    this.tileSize = tileSize;
+    this.file = file;
+    this.mapHeight = mapHeight / tileSize;
+    this.mapWidth = mapWidth / tileSize;
+    initMap();
+    }
+
+  /**
+  * This method is responsible for reading the contents of the JSON file and
+  * mapping it into the MyMap class.
+  */
+  private void initMap() {
+    
+    try {
+      //Mapping from JSON conf file into the testMap class
+      ObjectMapper mapper = new ObjectMapper();
+      testMap = mapper.readValue(new FileReader(this.file), MyMap.class);
+      
+      //Creating a map with normailzed dimensions 
+      map = new Cell[mapWidth][mapHeight];
+      for (int col = 0; col < mapWidth; col++) {
+        for (int row = 0; row < mapHeight; row++) {
+          map[col][row] = new Cell(col, row, false);
+        }
+      }
+      
+      if(debug){
+        map[29][36].setOccupied(true);
+        testMap.printLights();
+      }
+      
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.out.println(``Error in initMap(): `` + e.getMessage());
+    }
+  }
+  
+  /**
+  * This adds the occupied value as true if a car occupies the cell.
+  * 
+  * @param x
+  * @param y
+  */
+  public void addPosition(double x, double y) {
+    if (x < mapWidth && x > 0 && y < mapHeight && y > 0) {
+      map[(int) x][(int) y].setOccupied(true);
+    }
+  }
+  
+  /**
+  * This changes the status of the cell
+  * 
+  * @param x
+  * @param y
+  */
+  public void removePosition(double x, double y) {
+    if (x < mapWidth && x > 0 && y < mapHeight && y > 0) {
+      map[(int) x][(int) y].setOccupied(false);
+    }
+  }
+  
+  /**
+  * Returns a lane - chosen at random.
+  * 
+  * @return
+  */
+  public Lane getRandomLane() {
+    return testMap.getRandomLane();
+  }
+  
+  
+  /**
+  * This returns a Lane given the Id and the direction 
+  * @param id
+  * @param direction
+  * @return
+  */
+  public Lane getLane(int id, int direction){
+    
+    return testMap.getCarNewLane(id, direction); 
+  }
+  
+  /**
+  * Gets the lights from testMap
+  * 
+  * @return
+  */
+  public ArrayList<Light> getLightList() {
+    return testMap.getLights();
+    
+  }
+  
+  /***************************************************************
+  *                    Paint Methods                            * 
+  ***************************************************************/
+  
+  
+  /**
+  * Draws the map my drawing the components of the map. Inside the method are
+  * private method calls to each component of the map.
+  * 
+  * @param g
+  */
+  public void paintMap(Graphics2D g) {
+    
+    drawBoard(g);
+    drawLanes(g);
+    drawDashedLane(g);
+    drawLights(g);
+    
+    // drawSideWalk(g);
+    // drawLaneBoarders(g);
+    // drawIntersection(g);
+  }
+  
+  /**
+  * This method draws the background of the game board
+  * 
+  * @param g
+  */
+  private void drawBoard(Graphics2D g) {
+    
+    g.setColor(Color.DARK_GRAY);
+    for (int col = 0; col < mapWidth; col++) {
+      for (int row = 0; row < mapHeight; row++) {
+        g.fillRect(xOffset + col * tileSize, yOffset + row * tileSize,
+        tileSize, tileSize);
+      }
+    }
+  }
+  
+  /**
+  * This method is used to draw the lanes to the map. The lanes are held
+  * within a JSON file.
+  * 
+  * @param g
+  */
+  private void drawLanes(Graphics2D g) {
+    
+    List<Lane> lanes = testMap.getLanes();
+    Iterator<Lane> lit = lanes.iterator();
+    while (lit.hasNext()) {
+      Lane l = lit.next();
+      
+      int xStart = l.getStart().getCol();
+      int yStart = l.getStart().getRow();
+      int xEnd = l.getEnd().getCol();
+      int yEnd = l.getEnd().getRow();
+      
+      if (xEnd < xStart) {
+        int temp = xEnd;
+        xEnd = xStart;
+        xStart = temp;
+      } else if (yEnd < yStart) {
+        int temp = yEnd;
+        yEnd = yStart;
+        yStart = temp;
+      }
+      
+      g.setColor(Color.BLACK);
+      for (int col = xStart; col <= xEnd; col++) {
+        for (int row = yStart; row <= yEnd; row++) {
+          g.fillRect(xOffset + col * tileSize, yOffset + row
+          * tileSize, tileSize * 2, tileSize * 2);
+        }
+      }
+    }
+  }
+  
+  /**
+  * Responsible for drawing the (solid/dashed lanes) in the map
+  * 
+  * @param g
+  */
+  private void drawDashedLane(Graphics g) {
+    
+    //Casting the g and making a copy of the graphics instance 
+    //making this copy solves the drawing issue
+    Graphics2D g2d = (Graphics2D) g.create(); 
+    
+    //get the lanes from testMap - MyMap object
+    //Create iterator,counter and specify the dash 
+    List<Lane> lanes = testMap.getLanes();
+    Iterator<Lane> itter = lanes.iterator();
+    int count = 0;
+    float[] dash1 = { 2f, 0f, 2f };
+    
+    BasicStroke bs1 = new BasicStroke(1.0f,
+    BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
+    dash1, 0.1f);
+    
+    while (itter.hasNext()) {
+      Lane l = itter.next();
+      // Get the start and end positions of each lane
+      int xStart = l.getStart().getCol();
+      int yStart = l.getStart().getRow();
+      int xEnd = l.getEnd().getCol();
+      int yEnd = l.getEnd().getRow();
+      
+      
+      
+      if (count == 2 || count ==6 || count == 9 || count == 13) {
+        g2d.setColor(Color.WHITE);
+        g2d.drawLine(xStart * tileSize, yStart * tileSize, xEnd
+        * tileSize, yEnd * tileSize);
+        
+      }else if(true){
+        //g2d.setStroke(bs1);
+        //g2d.setColor(Color.GRAY);
+        //g2d.drawLine(xStart * tileSize, yStart * tileSize, xEnd
+        //* tileSize, yEnd * tileSize);
+        
+        
+        
+      }
+      count++;
+    } // end while
+    
+    g2d.dispose();
+  }
+  
+  /**
+  * Simple paint method to draw the occupied Light cell on the map.
+  * 
+  * @param g
+  */
+  public void drawLights(Graphics g) {
+    
+    Graphics2D g2d =(Graphics2D) g;  
+    ArrayList<Light> lights = testMap.getLights();
+    Iterator<Light> itter = lights.iterator();
+    while (itter.hasNext()) {
+      Light l = itter.next();
+      
+      int x = l.getPosition().getCol();
+      int y = l.getPosition().getRow();
+      
+      if(l.getPosition().isOccupied()){
+        
+        g2d.setColor(Color.RED);
+        g2d.fillOval(x*tileSize, y*tileSize, tileSize, tileSize);
+        
+        
+      }else {
+        g2d.setColor(Color.GREEN);
+        g2d.fillOval(x*tileSize, y*tileSize, tileSize, tileSize);
+        
+      }
+      
+      
+    }
+  }
+  
+  /**
+  * This is for debugging purposes. Shows the Cells as we have defined them
+  * and can see where the items are being painted and if they are being
+  * painted to our liking.
+  * 
+  * @param g
+  */
+  public void paintGrid(Graphics g) {
+    
+    Graphics2D g2d = (Graphics2D) g;
+    
+    
+    // Draw the Rows
+    for (int i = 0; i < mapHeight; i++) {
+      g2d.setColor(Color.GRAY);
+      g2d.drawLine(0, i * tileSize, tileSize * mapWidth, i * tileSize);
+      g2d.setComposite(AlphaComposite.getInstance(
+      AlphaComposite.SRC_OVER, 0.3f));
+      
+    }
+    
+    // draw the columns
+    for (int i = 0; i < mapWidth; i++) {
+      g2d.setColor(Color.GRAY);
+      g2d.setComposite(AlphaComposite.getInstance(
+      AlphaComposite.SRC_OVER, 0.3f));
+      g2d.drawLine(i * tileSize, 0, i * tileSize, tileSize * mapHeight);
+      
+    }
+    
+  }
+  
+  /**
+  * For debugging purposes, set the occupied cells as (transparent) RED to
+  * test if the occupied cells are being changed.
+  * 
+  * @param g
+  */
+  public void paintMapOccupiedValues(Graphics g) {
+    
+    Graphics2D g2d = (Graphics2D) g;
+    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+    0.2f));
+    
+    for (int row = 0; row < mapHeight; row++) {
+      for (int col = 0; col < mapWidth; col++) {
+        if (!map[col][row].isOccupied()) {
+          g2d.setColor(Color.GREEN);
+          g2d.fillRect(xOffset + col * tileSize, yOffset + row
+          * tileSize, tileSize, tileSize);
+        } else {
+          g2d.setColor(Color.RED);
+          g2d.fillRect(xOffset + col * tileSize, yOffset + row
+          * tileSize, tileSize, tileSize);
+        }
+      }
+    }
+  }
+  
+  /**
+  * This method returns a cell with indices x and y.
+  * 
+  * @param x
+  * @param y
+  * @return
+  */
+  public Cell getCell(int x, int y) {
+    return map[x][y];
+  }
+  
+  /**
+  * This method checks if a car is near. There are four cases for each
+  * direction.
+  * 
+  * @param x
+  * @param y
+  * @param direction
+  * @return
+  */
+  public boolean isCarNear(int x, int y, int direction) {
+    
+    switch (direction) {
+      case 0:
+      if (map[x + 1][y].isOccupied())
+      return true;
+      break;
+      
+      case 1:
+      if (map[x - 1][y].isOccupied())
+      return true;
+      break;
+      case 2:
+      if (map[x][y + 1].isOccupied())
+      return true;
+      break;
+      
+      case 3:
+      if (map[x][y - 1].isOccupied())
+      return true;
+      break;
+    }
+    
+    return true;
+  }
+  
+  /**
+  * This method checks if an Agent is in the lane next to it. There are four
+  * cases for each direction.
+  * 
+  * Add Lane lane object as param after
+  * 
+  * @param x
+  * @param y
+  * @param direction
+  * @return
+  */
+  public boolean isAgentBeside(int x, int y, int direction) {
+    
+    switch (direction) {
+      case 0:
+      if (map[x][y + 2].isOccupied())
+      return true;
+      
+      break;
+    }
+    return true;
+  } 
+}
+\end{lstlsiting}
+\newpage
+
+\begin{lstlisting}[language=java]
+
+/*Authors : Iordanis Paschalidis, 
+* Anthony Tsiopoulos 
+* 
+ * Class  : MyMap
+ *  The MyMap class is the class used in the mapping of the JSON file to their 
+ *  respective fields. For this reason the class contains the lists of traffic 
+ *  lights and lanes. 
+ * 
+ * 
+ * Moded  : 
+ */
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+
+public class MyMap {
+
+  List<Lane> lanes;
+  ArrayList<Light> lights;
+  List<Lane> sideWalks; 
+  
+  /**
+  * This returns a pedestrian walkway
+  * @return
+  */
+  public List<Lane> getSideWalks() {
+    return sideWalks;
+  }
+  
+  /**
+  * This method sets the sidewalk
+  * @param sideWalks
+  */
+  public void setSideWalks(List<Lane> sideWalks) {
+    this.sideWalks = sideWalks;
+  }
+  
+  /**
+  * This method returns the a list of Lane objects
+  * @return
+  */
+  public List<Lane> getLanes() {
+    return lanes;
+  }
+  
+  /**
+  * This method sets a list of lanes. 
+  * @param lanes - a List of Lane objects
+  */
+  public void setLanes(List<Lane> lanes) {
+    this.lanes = lanes;
+  }
+  
+  
+  /**
+  * Returns a random lane 
+  * @return
+  */
+  public Lane getRandomLane(){
+    Lane randomLane = new Lane(); 
+    Random rand = new Random(); 
+    randomLane = lanes.get(rand.nextInt(lanes.size())); 
+    return randomLane; 
+  }
+  
+  
+  
+  /**
+  * This gets the list of lights loaded from the JSON file
+  * @return ArrayList
+  */
+  public ArrayList<Light> getLights() {
+    return lights;
+  }
+  
+  /**
+  * Sets the Lights
+  * @param lights
+  */
+  public void setLights(ArrayList<Light> lights) {
+    this.lights = lights;
+  }
+  /**
+  * Prints the lanes start and end positions as ordered pair
+  * 
+  */
+  public void printLanes() {
+    
+    int count = 1;
+    System.out.println(");
+    System.out.println(``---------------------------------'');
+    System.out.println(`` Start Position --> End Position ``);
+    System.out.println(``   (x,y)        -->     (x,y)    ``);
+    System.out.println(``---------------------------------'');
+    System.out.println(");
+    Iterator<Lane> lit = lanes.iterator();
+    while (lit.hasNext()) {
+      Lane l = lit.next();
+      System.out.println(``Lane `` + count);
+      System.out.println(``(`` + l.getStart().getCol() + ``,''
+      + l.getStart().getRow() + ``)'' + ``-->'' + ``(``
+      + l.getEnd().getCol() + ``,'' + l.getEnd().getRow() + ``)'');
+      count++;
+    }
+  }
+  
+  /**
+  * Print method for lights as an ordered pair
+  */
+  public void printLights() {
+    
+    int count = 1;
+    System.out.println(");
+    System.out.println(``----------------'');
+    System.out.println(`` Light Position ``);
+    System.out.println(``     (x,y)      ``);
+    System.out.println(``----------------'');
+    System.out.println(");
+    Iterator<Light> ittr = lights.iterator();
+    while (ittr.hasNext()) {
+      Light light = ittr.next();
+      System.out.println(``Traffic Light: `` + count);
+      System.out.println(``(`` + light.getPosition().getCol() + ``,''+ light.getPosition().getRow() + ``)'');  
+      
+      System.out.println(`` ``);
+      count++;
+    }
+  }
+  
+  /**
+  * This method is used when a (agent) car is in a turning lane 
+  * and needs to make a turn. The current lane and the direction 
+  * of the car are taken as inputs, and a Lane object is returned. 
+  * The Lane which is returned will be given to the car after the 
+  * car has turned. 
+  * 
+  * 
+  * @param laneId
+  * @param direction
+  * @return
+  */
+  public Lane getCarNewLane(int laneId, int direction){
+    
+    
+    if(laneId == 3 && direction == 2){
+      
+      for(Lane l: lanes){
+        
+        if(l.getDirection() == 0 && l.getId() == 3){
+          return l; 
+        }
+        
+      }
+    }else if(laneId == 3 && direction == 0){
+      
+      for(Lane l: lanes){
+        
+        if(l.getDirection() == 3 && l.getId() == 4){
+          return l; 
+        }
+      }
+      
+    }else if(laneId == 4 && direction == 3){
+      
+      for(Lane l: lanes){
+        
+        if(l.getDirection() == 1 && l.getId() == 4){
+          return l; 
+        }
+      }
+      
+    }else{
+      for(Lane l: lanes){
+        
+        if(l.getDirection() == 2 && l.getId() == 3){
+          return l; 
+        }
+      }
+    }
+    
+    return null;
+  }
+ 
+}
+
+\end{lstlisting}
+\newpage 
+
+
+\begin{lstlisting}[language=java]
+
+
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Scanner;
+
+import javax.swing.*;
+import javax.swing.GroupLayout.*;
+
+public class StartMenu extends JFrame {
+
+  private GamePanel defaultGame; // simulation with default parameters  
+  private GamePanel userGame;    // simulation with user specified values
+  
+  
+
+  private JPanel fLayout=new JPanel();
+  private JPanel sLayout=new JPanel();
+  private JPanel northPanel=new JPanel();
+  private JButton startButton = new JButton(``Start'');
+  private JButton endButton = new JButton(``End'');
+  private JComboBox mapBox=new JComboBox();
+  private JSlider speedSlider=new JSlider(1,40);
+  private String maps[];
+  
+  public StartMenu() {
+    super();
+    setDefaultCloseOperation(EXIT_ON_CLOSE);
+    createLayout();
+    }
+
+  private void createLayout() {
+    this.setLayout(new BorderLayout());
+    
+    // Create Labels
+    ImageIcon img = new ImageIcon(``res/LOGO.PNG'');
+    final JLabel image = new JLabel(img);
+        
+    
+    // Create Spinner Models with default/min/max/step values
+    SpinnerModel carSpinnerModel = new SpinnerNumberModel(10,10, 300, 1);
+    SpinnerModel carFrequencySpinnerModel = new SpinnerNumberModel(1, 1, 5,1);
+    SpinnerModel lightFrequencySpinnerModel = new SpinnerNumberModel(2, 2,6, 1);
+    // SpinnerModel averageCarSpeedSpinnerModel = new SpinnerNumberModel();
+    
+    // Add the set values for each SpinnerModel
+    final JSpinner carSpinner = new JSpinner(carSpinnerModel);
+    final JSpinner carFrequencySpinner = new JSpinner(carFrequencySpinnerModel);
+    final JSpinner lightFrequencySpinner = new JSpinner(lightFrequencySpinnerModel);
+    //carSpinner.setBounds(x, y, width, height);
+    
+    
+    
+    /**
+    * carFrequencyinMilli = the rate the cars enter into the map 
+    * totalNumberOfCars   = the total number of cars in the map 
+    * lightFrequnecy      = the rate at which the lights change
+    * 
+    * 
+    */
+    // For now output the fields to the console, but this should initiate the game with the field values 
+    startButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent event) {
+        
+        Integer carEntryFrequency = (Integer) carFrequencySpinner.getValue() * 10;
+        Integer lightFrequency = (Integer) lightFrequencySpinner.getValue() * 50; 
+        Integer totalNumberOfCars = (Integer) carSpinner.getValue(); 
+        double speed=(double)speedSlider.getValue()/1000;
+        
+        /*
+        System.out.println(``totalNumberOfCars: `` + totalNumberOfCars);
+        System.out.println(``carEntryFrequency: `` + carEntryFrequency);
+        System.out.println(``lightFrequency: `` + lightFrequency );
+        */
+        
+        //Set the start screen image as false and begin the simulation 
+        // remove this panel
+        image.setVisible(false);
+        // start the game here
+        if(userGame!=null){
+          remove(userGame);
+        }
+        
+        userGame = new GamePanel(totalNumberOfCars, carEntryFrequency, lightFrequency,maps,mapBox.getSelectedIndex(),speed);
+        add(userGame);
+        invalidate();
+        validate();
+        
+      }
+    });
+    
+    // Action for End button 
+    endButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent event) {
+        System.exit(0);
+      }
+    });
+    
+    
+    fLayout.add(new JLabel(``Total Cars''));
+    fLayout.add(carSpinner);
+    fLayout.add(new JLabel(``Avarage Speed''));
+    fLayout.add(speedSlider);
+    fLayout.add(startButton);
+    
+    sLayout.add(new JLabel(``Car Frequency''));
+    sLayout.add(carFrequencySpinner);
+    
+    sLayout.add(new JLabel(``Light Frequency''));
+    sLayout.add(lightFrequencySpinner);
+    sLayout.add(mapBox);
+    sLayout.add(endButton);
+    
+    northPanel.setLayout(new BorderLayout());
+    northPanel.add(fLayout,BorderLayout.NORTH);
+    northPanel.add(sLayout,BorderLayout.CENTER);
+    
+    this.add(northPanel,BorderLayout.NORTH);
+    add(image,BorderLayout.CENTER);
+    try {
+      this.readFiles();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+  
+  private void readFiles() throws IOException{
+    Scanner scanner=new Scanner(new FileReader(``res/maps.txt''));
+    try {
+      maps=scanner.nextLine().split(``,'');
+      for(int i=0;i<maps.length;i++){
+        mapBox.addItem(maps[i]);
+      }
+    } finally {
+      scanner.close();
+    }
+  }
+  
+}
+
+\end{lstlisting}
+\newpage
+
+
+
+
