@@ -14,88 +14,90 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 
-import com.sun.istack.internal.logging.Logger;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 public class GamePanel extends JPanel implements Runnable {
 
-	public static final boolean debug = true;
+	public static final boolean debug = false;
 	private static final long serialVersionUID = 1L;
 	public static final int HEIGHT = 800; // 600
 	public static final int WIDTH = 1200; // 800
 	public static final int DELAY = 15;
 	public static final int TILE = 10;
-<<<<<<< HEAD
-	public static  int TOTALNUMEROFCARS = 30;
-	public static  int ENTRYFREQUENCY = 10; // in milliseconds (2seconds)
-	public static  int LIGHTMECHANISM = 350; 
-=======
-	public static final int TOTALNUMEROFCARS = 20;
-	public static final int ENTRYFREQUENCY = 50; // in milliseconds (2seconds)
-	public static final int LIGHTMECHANISM = 50; 
->>>>>>> origin/master
-	private int lightCounter = 0; 
+	private int TOTALNUMBEROFCARS;
+	private int CARENTRYFREQUENCY;
+	private int LIGHTMECHANISM; 
+	private int MAPTYPE;
+	private int lightCounter = 0;
+	private int inte = 0;
 	private boolean running = true;
 	private Thread animator;
 	private Graphics g;
 	private Map map;
-	private ArrayList<Car> listOfCars;
-	private ArrayList<Light> listOfLights; 
-<<<<<<< HEAD
-	private int inte = 0;
-	private int MAPTYPE = 1;
-	private TimePanel  timePanel = new TimePanel();
+	private double speed; 
+	private String maps[];
+	private List<Car> listOfCars;
+	private List<Light> listOfLights; 
+	
 	
 	 
 
+	/**
+	 * This is the default constructor for the game 
+	 */
 	public GamePanel() {
-
-=======
-	private ArrayList<Cell> occupiedCells;
-	private int inte = 0;
-	private int MAPTYPE = 1;
-	 
-
-	public GamePanel() {
->>>>>>> origin/master
 		setDoubleBuffered(true);
-		initGamePanel();
 		
+		this.TOTALNUMBEROFCARS = 100; 
+		this.CARENTRYFREQUENCY = 10; // in miliseconds 
+		this.LIGHTMECHANISM = 350; 
+		this.MAPTYPE = 1; 
+		initGamePanel();
+	
 	}
+
+	/**
+	 * This constructor sets the user specified values at the start screen
+	 *  
+	 * @param TOTALNUMBEROFCARS
+	 * @param CARENTRYFREQUENCY
+	 * @param LIGHTMECHANISM
+	 * @param MAPTYPE
+	 */
+	public GamePanel(int TOTALNUMBEROFCARS,int CARENTRYFREQUENCY, int LIGHTMECHANISM, String []maps,int MAPTYPE,double speed) {
+		setDoubleBuffered(true);
+		this.TOTALNUMBEROFCARS = TOTALNUMBEROFCARS; 
+		this.CARENTRYFREQUENCY = CARENTRYFREQUENCY; 
+		this.LIGHTMECHANISM = LIGHTMECHANISM; 
+		this.maps = maps; 
+		this.MAPTYPE = MAPTYPE; 
+		//this.speed = speed; 
+		initGamePanel();
+	}
+	
+	
 
 	/**
 	 * Private method which sets the map type
 	 */
 	private void initGamePanel() {
-		
-<<<<<<< HEAD
-		switch (2) {
-=======
-		switch (MAPTYPE) {
->>>>>>> origin/master
-		case 1:
-			try {
-				map = new Map("res/map1_1Intersection.json", WIDTH, HEIGHT,
-						TILE);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			break;
-		case 2:
-			try {
-				map = new Map("res/map2_4Intersection.json", WIDTH, HEIGHT,
-						TILE);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			break;
+		try {
+			map = new Map("res/"+maps[MAPTYPE], WIDTH, HEIGHT,
+					TILE);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		
-	}
+}
 
 	@Override
 	public Dimension getPreferredSize() {
@@ -136,66 +138,26 @@ public class GamePanel extends JPanel implements Runnable {
 	public void run() {
 
 		// Create the list of cars
-		listOfCars = new ArrayList<Car>();
-		listOfLights = new ArrayList<Light>(); 
-
-		
-		
-<<<<<<< HEAD
-		
-//		Lane lane = new Lane(); 
-//		Cell startingCell = new Cell(0,56);
-//		Cell endCell = new Cell(56,120); 
-//		lane.setStart(startingCell);
-//		lane.setEnd(endCell);
-//		lane.setDirection(0);
-//		lane.setId(3);
-	
-		
-		
-=======
-		/*
-		Lane lane = new Lane(); 
-		Cell startingCell = new Cell(118,42);
-		Cell endCell = new Cell(0,42); 
-		lane.setStart(startingCell);
-		lane.setEnd(endCell);
-		lane.setDirection(1);
-		lane.setId(4);
-	*/
+		//This solves the repaint bug - array list was previously unlocked, now locked and unlocked and given to thread 
+		listOfCars = java.util.Collections.synchronizedList(new ArrayList<Car>()); 
+		listOfLights = java.util.Collections.synchronizedList(new ArrayList<Light>());  
 		
         
->>>>>>> origin/master
 		while (running) {
 			clearOutMApCar();
 			listOfLights = map.getLightList();
-
 			
 			if( lightCounter % LIGHTMECHANISM == 0 ){
-				
 				this.lightMechanism();
-				
 			}
 			lightCounter++; 
 
-<<<<<<< HEAD
-			timePanel.workTimeTraffic();
-=======
-			
->>>>>>> origin/master
-			
-			
 			try {
-				if ((inte % ENTRYFREQUENCY == 0)) {
-					if (listOfCars.size() < TOTALNUMEROFCARS) {
-<<<<<<< HEAD
-				     	Lane lane = new Lane();
-					    lane = map.getRandomLane();
-=======
+				if ((inte % CARENTRYFREQUENCY == 0)) {
+					if (listOfCars.size() < TOTALNUMBEROFCARS) {
 						Lane lane = new Lane();
 						lane = map.getRandomLane();
->>>>>>> origin/master
-						Car car = new Car(lane, g, listOfLights,map);
+						Car car = new Car(lane, g, listOfLights, map,speed);
 						listOfCars.add(car);
 					}
 				}
@@ -206,26 +168,23 @@ public class GamePanel extends JPanel implements Runnable {
 				Thread.sleep(DELAY);
 				repaint();
 			} catch (InterruptedException ex) {
-				Logger.getLogger(GamePanel.class.getName(), null).log(Level.SEVERE,
-						null, ex);
+				Logger.getLogger(GamePanel.class.getName()).log(Level.SEVERE,null, ex);
 			}
 		}
 	}
 
+	
 	/**
 	 * This method removes the cars from the map when they 
 	 * have passed the maps boundaries. 
 	 */
 	public void clearOutMApCar() {
-		ArrayList<Car> listOfCars2 = listOfCars;
+		List<Car> listOfCars2 = listOfCars;
 		Iterator<Car> i = listOfCars2.iterator();
 		while (i.hasNext()) {
 			Car s = i.next(); // must be called before you can call i.remove()
 			if (shouldRemoveFromTheList(s)) {
-<<<<<<< HEAD
 				s.removePosition();
-=======
->>>>>>> origin/master
 				i.remove();
 			}
 		}
@@ -243,21 +202,6 @@ public class GamePanel extends JPanel implements Runnable {
 	private boolean shouldRemoveFromTheList(Car c) {
 		
 		if (c.getLane().getDirection() == 0) {
-<<<<<<< HEAD
-			if (c.getX0() > c.getLane().getEnd().getCol()-2) {
-				return true;
-			}
-		} else if (c.getLane().getDirection() == 1) {
-			if (c.getX0() < c.getLane().getEnd().getCol()+2) {
-				return true;
-			}
-		} else if (c.getLane().getDirection() == 2) {
-			if (c.getY0() > c.getLane().getEnd().getRow()-2) {
-				return true;
-			}
-		} else {
-			if (c.getY0() < c.getLane().getEnd().getRow()+2) {
-=======
 			if (c.getX0() > c.getLane().getEnd().getCol()) {
 				return true;
 			}
@@ -271,33 +215,31 @@ public class GamePanel extends JPanel implements Runnable {
 			}
 		} else {
 			if (c.getY0() < c.getLane().getEnd().getRow()) {
->>>>>>> origin/master
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
+	/**
+	 * This method is used for debugging, just to print the lights location
+	 * which are read from the JSON file 
+	 */
 	private void printL(){
 		for(Light l:listOfLights){
-			System.out.println(l.getPosition().getCol()+"             "+l.getPosition().getRow());
 		}
 	}
 	
 	
+	/**
+	 * This method takes each light in the the list of lights and changes 
+	 * their values depending on their default state 
+	 */
 	private void lightMechanism(){
 		for(Light l:listOfLights){
-<<<<<<< HEAD
-		 	l.changeLight();
-=======
 			l.changeLight();
->>>>>>> origin/master
-			//System.out.println(l.getPosition().isOccupied());
-
 		}
-
 	}
-	
-	
 
+	
 }

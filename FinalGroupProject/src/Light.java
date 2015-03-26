@@ -1,8 +1,4 @@
 import java.awt.*;
-<<<<<<< HEAD
-=======
-import java.awt.Color;
->>>>>>> origin/master
 
 /**
  *Class   : Light 
@@ -56,22 +52,11 @@ public class Light {
 		return state;
 	}
 
-<<<<<<< HEAD
 
 	public void setState(int state) {
 		this.state = state;
 	}
 	
-=======
-	/**
-	 * Sets the condition.
-	 *
-	 * @param condition the new condition
-	 */
-	public void setCondition(boolean condition) {
-		this.condition = condition;
-	}
->>>>>>> origin/master
 	
 	/**
 	 * Prints the x and y position of the lanes
@@ -81,7 +66,6 @@ public class Light {
 		System.out.println("(x0,y0) --> (xN,yN)");
 		System.out.println("(" + position.getCol() + "," + position.getRow() + ")");
 	}
-<<<<<<< HEAD
 	
 	
 	
@@ -95,6 +79,3 @@ public class Light {
 	}
 	
 }
-=======
-}
->>>>>>> origin/master

@@ -19,11 +19,6 @@ public class MyMap {
 	List<Lane> lanes;
 	ArrayList<Light> lights;
 	List<Lane> sideWalks; 
-<<<<<<< HEAD
-	
-	
-=======
->>>>>>> origin/master
 
 	/**
 	 * This returns a pedestrian walkway
@@ -133,24 +128,20 @@ public class MyMap {
 		}
 	}
 
-<<<<<<< HEAD
-
-	
-	
-=======
->>>>>>> origin/master
 	/**
+	 * This method is used when a (agent) car is in a turning lane 
+	 * and needs to make a turn. The current lane and the direction 
+	 * of the car are taken as inputs, and a Lane object is returned. 
+	 * The Lane which is returned will be given to the car after the 
+	 * car has turned. 
+	 * 
 	 * 
 	 * @param laneId
 	 * @param direction
 	 * @return
 	 */
 	public Lane getCarNewLane(int laneId, int direction){
-<<<<<<< HEAD
-	   //System.out.println(laneId+"  ()  "+ direction);
-=======
 	
->>>>>>> origin/master
 
 		if(laneId == 3 && direction == 2){
 			
@@ -161,11 +152,6 @@ public class MyMap {
 				}
 				
 			}
-<<<<<<< HEAD
-			 
-	
-=======
->>>>>>> origin/master
 	    }else if(laneId == 3 && direction == 0){
 			
 			for(Lane l: lanes){
@@ -198,9 +184,6 @@ public class MyMap {
 	
 	
 	
-<<<<<<< HEAD
-=======
 	
->>>>>>> origin/master
 
 }

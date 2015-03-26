@@ -16,6 +16,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.org.glassfish.external.statistics.annotations.Reset;
 
 public class Map {
 
@@ -43,8 +45,6 @@ public class Map {
 
 		this.tileSize = tileSize;
 		this.file = file;
-		// this.mapHeight = mapHeight;
-		// this.mapWidth = mapHeight;
 		this.mapHeight = mapHeight / tileSize;
 		this.mapWidth = mapWidth / tileSize;
 		initMap();
@@ -57,10 +57,12 @@ public class Map {
 	private void initMap() {
 
 		try {
+			//Mapping from JSON conf file into the testMap class
 			ObjectMapper mapper = new ObjectMapper();
 			testMap = mapper.readValue(new FileReader(this.file), MyMap.class);
-			map = new Cell[mapWidth][mapHeight];
 
+			//Creating a map with normailzed dimensions 
+			map = new Cell[mapWidth][mapHeight];
 			for (int col = 0; col < mapWidth; col++) {
 				for (int row = 0; row < mapHeight; row++) {
 					map[col][row] = new Cell(col, row, false);
@@ -111,8 +113,6 @@ public class Map {
 		return testMap.getRandomLane();
 	}
 
-<<<<<<< HEAD
-=======
 	
 	/**
 	 * This returns a Lane given the Id and the direction 
@@ -125,7 +125,6 @@ public class Map {
 		return testMap.getCarNewLane(id, direction); 
 	}
 	
->>>>>>> origin/master
 	/**
 	 * Gets the lights from testMap
 	 * 
@@ -218,12 +217,22 @@ public class Map {
 	 * 
 	 * @param g
 	 */
-	private void drawDashedLane(Graphics2D g) {
+	private void drawDashedLane(Graphics g) {
 
+		//Casting the g and making a copy of the graphics instance 
+		//making this copy solves the drawing issue
+		Graphics2D g2d = (Graphics2D) g.create(); 
+
+		//get the lanes from testMap - MyMap object
+		//Create iterator,counter and specify the dash 
 		List<Lane> lanes = testMap.getLanes();
 		Iterator<Lane> itter = lanes.iterator();
-		int count = 1;
+		int count = 0;
 		float[] dash1 = { 2f, 0f, 2f };
+		
+		BasicStroke bs1 = new BasicStroke(1.0f,
+				BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
+				dash1, 0.1f);
 
 		while (itter.hasNext()) {
 			Lane l = itter.next();
@@ -233,18 +242,26 @@ public class Map {
 			int xEnd = l.getEnd().getCol();
 			int yEnd = l.getEnd().getRow();
 
-			if (count == 1 || count % 2 == 0) {
+			
 
-				g.drawLine(xStart * tileSize, yStart * tileSize, xEnd
+			if (count == 2 || count ==6 || count == 9 || count == 13) {
+				g2d.setColor(Color.WHITE);
+				g2d.drawLine(xStart * tileSize, yStart * tileSize, xEnd
 						* tileSize, yEnd * tileSize);
-				BasicStroke dashed1 = new BasicStroke(1.0f,
-						BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
-						dash1, 0.0f);
-				g.setColor(Color.LIGHT_GRAY);
+				
+			}else if(true){
+				//g2d.setStroke(bs1);
+				//g2d.setColor(Color.GRAY);
+				//g2d.drawLine(xStart * tileSize, yStart * tileSize, xEnd
+		 		//		* tileSize, yEnd * tileSize);
+				
+				
+				
 			}
-
 			count++;
 		} // end while
+		
+		g2d.dispose();
 	}
 
 	/**
@@ -252,8 +269,9 @@ public class Map {
 	 * 
 	 * @param g
 	 */
-	public void drawLights(Graphics2D g) {
+	public void drawLights(Graphics g) {
 
+		Graphics2D g2d =(Graphics2D) g;  
 		ArrayList<Light> lights = testMap.getLights();
 		Iterator<Light> itter = lights.iterator();
 		while (itter.hasNext()) {
@@ -264,19 +282,13 @@ public class Map {
 
 			if(l.getPosition().isOccupied()){
 				
-				g.setColor(Color.RED);
-<<<<<<< HEAD
-				g.fillOval(x * tileSize, y * tileSize, tileSize, tileSize);
-				//g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+				g2d.setColor(Color.RED);
+				g2d.fillOval(x*tileSize, y*tileSize, tileSize, tileSize);
+
+			
 			}else {
-				g.setColor(Color.GREEN);
-				g.fillOval(x * tileSize, y * tileSize, tileSize, tileSize);
-=======
-				g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
-			}else {
-				g.setColor(Color.GREEN);
-				g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
->>>>>>> origin/master
+				g2d.setColor(Color.GREEN);
+				g2d.fillOval(x*tileSize, y*tileSize, tileSize, tileSize);
 				
 			}
 	
@@ -294,20 +306,24 @@ public class Map {
 	public void paintGrid(Graphics g) {
 
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setColor(Color.GRAY);
+		
 
 		// Draw the Rows
 		for (int i = 0; i < mapHeight; i++) {
+			g2d.setColor(Color.GRAY);
 			g2d.drawLine(0, i * tileSize, tileSize * mapWidth, i * tileSize);
 			g2d.setComposite(AlphaComposite.getInstance(
 					AlphaComposite.SRC_OVER, 0.3f));
+			
 		}
 
 		// draw the columns
 		for (int i = 0; i < mapWidth; i++) {
+			g2d.setColor(Color.GRAY);
 			g2d.setComposite(AlphaComposite.getInstance(
 					AlphaComposite.SRC_OVER, 0.3f));
 			g2d.drawLine(i * tileSize, 0, i * tileSize, tileSize * mapHeight);
+			
 		}
 
 	}
@@ -400,24 +416,12 @@ public class Map {
 
 		switch (direction) {
 		case 0:
-			if (map[x][y + 1].isOccupied())
+			if (map[x][y + 2].isOccupied())
 				return true;
+	 
 			break;
 		}
 		return true;
 	}
 
-<<<<<<< HEAD
-	/**
-	 * This returns a Lane given the Id and the direction 
-	 * @param id
-	 * @param direction
-	 * @return
-	 */
-	public Lane getLane(int id, int direction){
-
-		return testMap.getCarNewLane(id, direction); 
-	}
-=======
->>>>>>> origin/master
 }
